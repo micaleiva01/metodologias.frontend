@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+.custom-toggler {
+  border: none;
+}
+
+.custom-toggler span {
+  display: block;
+}
+
+.custom-toggler:hover {
+  border: 1px solid red;
+  outline: none;
+}
+
+.custom-toggler:focus {
+  border: 2px solid red;
+  outline: none;
+  transition: border 0.2s ease-in-out;
+}
+
+.custom-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='red' stroke-width='3' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.heading-text {
+  font-family: "Oswald", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: x-large;
+}

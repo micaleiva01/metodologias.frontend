@@ -6,7 +6,7 @@ function Teams() {
   return (
     <div className="Teams">
         <header className="teams-header">
-            <h1>F1 Teams</h1>
+            <h1 className='title text-center'>EQUIPOS</h1>
         </header>
       <main>
         <TeamList />
