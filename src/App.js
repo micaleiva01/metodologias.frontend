@@ -1,6 +1,7 @@
 import React from 'react';
 import Teams from './pages/Teams.jsx';
 import Heading from './components/heading.jsx';
+import Footer from './components/footer.jsx';
 import "./App.css";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <main>
         <Heading />
         <Teams />
+        <Footer />
       </main>
     </div>
   );
