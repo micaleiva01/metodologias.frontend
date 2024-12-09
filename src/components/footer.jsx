@@ -8,7 +8,7 @@ function Footer() {
 
           {/* Quick Links */}
           <div className="col-md-4 mb-3">
-            <h5>Quick Links</h5>
+            <h5>Links</h5>
             <ul className="list-unstyled">
               <li>
                 <a href="/Teams.jsx" className="text-decoration-none text-white">
@@ -71,7 +71,7 @@ function Footer() {
 
           {/* Copyright */}
           <div className="col-md-4">
-            <h5>About</h5>
+            <h5>Info</h5>
             <p className="small">
               &copy; {new Date().getFullYear()} Sitio web de la Formula 1 . No asociado a la marca oficial. Todos los derechos reservados.
             </p>
