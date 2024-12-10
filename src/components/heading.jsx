@@ -2,6 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import f1logo from "../images/formula1logo.png";
 import "../styles/heading.css";
+import "../pages/Pilots";
 
 const logo = <img src={f1logo} alt="logo" style={{height: '30px'}}/>;
 

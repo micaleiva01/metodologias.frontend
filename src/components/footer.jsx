@@ -19,7 +19,7 @@ function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/schedule" className="text-white footer-link">
+                <a href="../pages/Pilots.jsx" className="text-white footer-link">
                   Pilotos
                 </a>
               </li>
