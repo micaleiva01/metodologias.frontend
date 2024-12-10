@@ -25,23 +25,23 @@ function Heading() {
           <div className="collapse navbar-collapse heading-text" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <a className="nav-link active text-center" aria-current="page" href="#inicio">
-                  Inicio
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link text-center" href="#noticias">
+                <a className="nav-link active text-center text-danger me-1 heading-link" href="#noticias">
                   Noticias
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-center" href="#pilotos">
+                <a className="nav-link active text-center text-danger mx-1 heading-link" href="#pilotos">
                   Pilotos
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-center" href="#votaciones">
+                <a className="nav-link active text-center text-danger mx-2 heading-link" href="#votaciones">
                   Votaciones
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link active text-center text-danger ms-2 heading-link" aria-current="page" href="#iniciosesion">
+                  Iniciar Sesión
                 </a>
               </li>
             </ul>

@@ -13,17 +13,39 @@
 
 .text {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: blue;
 }
 
-/*pie de pagina*/
+/*cabecera*/
+.heading-link {
+    transition: transform 0.3s ease;
+}
 
+.heading-link:hover {
+    transform: scale(1.1);
+}
+
+
+/*pie de pagina*/
 .footer {
     background-color: #DDA43B;
     font-family: "Montserrat", sans-serif;
-  }
+} 
 
-.ul-footer:focus {
+.footer-link {
     text-decoration: underline;
-}  
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.3s ease;
+}
+
+.footer-link:hover {
+    text-decoration-color: white;
+}
+
+
+.footer-img img {
+    transition: transform 0.3s ease;
+}
   
+.footer-img img:hover {
+    transform: scale(1.1);
+}
