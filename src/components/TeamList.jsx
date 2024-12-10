@@ -11,11 +11,15 @@ const teams = [
 
 function TeamList() {
     return (
-        <div className='team-list'>
-            {teams.map((team) => (
-                <TeamCard key={team.id} team={team} />
-            ))}
-        </div>
+    <div className="container my-4">
+      <div className="row">
+        {teams.map((team) => (
+          <div key={team.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <TeamCard team={team} />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
