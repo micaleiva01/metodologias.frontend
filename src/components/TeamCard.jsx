@@ -2,11 +2,18 @@ import React from "react";
 
 function TeamCard({ team }) {
     return (
-        <div className='team-card'>
-            <img src={team.logo} alt="logo" className="team-logo" />
-            <h2>{team.name}</h2>
-            <p>Pais de Origen:{team.country}</p>
+        <div className="card h-100">
+        <img
+          src={team.image}
+          className="card-img-top"
+          alt={`${team.name}`}
+          style={{ height: "200px", objectFit: "cover" }}
+        />
+        <div className="card-body text-center">
+          <h5 className="card-title">{team.name}</h5>
+          <p className="card-text text-muted">Pais: {team.country}</p>
         </div>
+      </div>
     );
 } 
 
