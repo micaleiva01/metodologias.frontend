@@ -2,6 +2,7 @@ import React, { useEffect , useState} from "react";
 import Votings from '../pages/Votings';
 import Teams from '../pages/Teams';
 import Pilots from "../pages/Pilots";
+import Login from "..pages/Login";
 import f1logo from "../images/formula1logo.png";
 import "../styles/heading.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -25,7 +26,9 @@ useEffect(() => {
       case 'Votings':
         return <Votings />;
       case 'Pilots':
-        return <Pilots />;  
+        return <Pilots />;
+      case 'Login':
+        return <Login />;   
       default:
         return <Votings />;
     }
@@ -69,6 +72,13 @@ useEffect(() => {
                     href="../pages/Teams.jsx"  
                     onClick={() => setActiveComponent('Teams')}>
                     EQUIPOS
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className={`nav-link ${activeComponent === 'Login' ? 'active' : ''} me-1`} 
+                    href="../pages/Login.jsx"  
+                    onClick={() => setActiveComponent('Login')}>
+                    INICIAR SESIÓN
                   </a>
                 </li>
               </ul>
