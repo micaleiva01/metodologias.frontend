@@ -2,7 +2,7 @@ import React, { useEffect , useState} from "react";
 import Votings from '../pages/Votings';
 import Teams from '../pages/Teams';
 import Pilots from "../pages/Pilots";
-import Login from "..pages/Login";
+import Login from "../pages/Login";
 import f1logo from "../images/formula1logo.png";
 import "../styles/heading.css";
 import "bootstrap/dist/css/bootstrap.min.css";

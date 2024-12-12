@@ -15,6 +15,14 @@ body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+.input-title {
+    font-family: "Oswald", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.input-login {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
 /*cabecera*/
 .heading-link {
     transition: transform 0.3s ease;
