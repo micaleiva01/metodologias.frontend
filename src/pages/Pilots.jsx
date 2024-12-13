@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import PilotList from "../components/PilotList";
 
 function Pilots() {
@@ -9,6 +10,9 @@ function Pilots() {
         </header>
         <main>
             <PilotList />
+            <Link to="/create-pilot" style={{ textDecoration: 'underline', color: 'white'}}>
+                Crear un piloto nuevo
+            </Link>
         </main>
     </div>
   );

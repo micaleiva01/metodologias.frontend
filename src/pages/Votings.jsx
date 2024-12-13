@@ -1,5 +1,6 @@
 import React from "react";
 import VotingsList from "../components/VotingsList";
+import { Link } from "react-router-dom";
 
 
 function Votings() {
@@ -11,6 +12,9 @@ function Votings() {
         <main>
              <VotingsList />
         </main>
+        <Link to="/create-voting" style={{ textDecoration: 'underline', color: 'white'}}>
+            Crear una votación nueva
+        </Link>
      </div>
     );
 }

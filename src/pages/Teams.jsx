@@ -10,10 +10,10 @@ function Teams() {
             <h1 className='title text-center'>EQUIPOS</h1>
         </header>
         <main>
-            <Link to="../components/CreateTeam.jsx" style={{ textDecoration: 'underline', color: 'white'}}>
+            <TeamList />
+            <Link to="/create-team" style={{ textDecoration: 'underline', color: 'white'}}>
                 Crear un nuevo equipo
             </Link>
-            <TeamList />
         </main>
     </div>
   );

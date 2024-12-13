@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Heading from "./components/heading";
 import Pilots from "./pages/Pilots";
 import Votings from "./pages/Votings";
-import Teams from "./pages/Teams.jsx";
-import CreateTeam from "./components/CreateTeam.jsx";
-import Login from "./pages/Login.jsx";
-import Footer from './components/footer.jsx';
+import Teams from "./pages/Teams";
+import CreateTeam from "./components/CreateTeam";
+import CreatePilot from "./components/CreatePilot";
+import CreateVoting from "./components/CreateVoting";
+import Login from "./pages/Login";
+import Footer from './components/footer';
 import './App.css';
 
 function App() {
@@ -15,9 +17,11 @@ function App() {
       <Heading />
       <Routes>
         <Route path="/pilots" element={<Pilots />} />
+        <Route path="/create-pilot" element={<CreatePilot />} />
         <Route path="/votings" element={<Votings />} />
+        <Route path="/create-voting" element={<CreateVoting />} />
         <Route path="/teams" element={<Teams />} />
-        <Route path="../components/CreateTeam.jsx" element={<CreateTeam />} />
+        <Route path="/create-team" element={<CreateTeam />} />
         <Route path="/login" element={<Login />} />
       </Routes>
         <Footer />

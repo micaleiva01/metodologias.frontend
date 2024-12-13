@@ -2,23 +2,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CreateTeam = () => {
-    const [teamName, setTeamName] = useState("");
+    const [name, setName] = useState("");
     const [logoUrl, setLogoUrl] = useState("");
     const [twitter, setTwitter] = useState("");
     const navigate = useNavigate();
 
-    const handleCreate = async () => {
+  const handleCreate = async () => {
         try {
             const token = localStorage.getItem("token");
 
-            const response = await fetch("/api/teams", {
+            const response = await fetch("http://localhost:8000/teams", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ 
-                    name: teamName, 
+                    name: name, 
                     logo_url: logoUrl, 
                     twitter: twitter 
                 }),
@@ -35,16 +35,18 @@ const CreateTeam = () => {
         }
     };
 
+
+
     return (
-        <div>
+        <div className="d-flex justify-content-center align-items-center text-white">
             <h1>CREAR EQUIPO</h1>
             <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
                 <div>
                     <label>Nombre del equipo:</label>
                     <input
                         type="text"
-                        value={teamName}
-                        onChange={(e) => setTeamName(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder="Nombre del equipo"
                         required
                     />
@@ -71,6 +73,7 @@ const CreateTeam = () => {
                 </div>
                 <button type="submit">Crear</button>
             </form>
+            
         </div>
     );
 };
