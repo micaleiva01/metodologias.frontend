@@ -7,44 +7,38 @@ function CreateTeam() {
 
     const [team, setTeam] = useState({
         name: "",
-        logoUrl: null,
+        logoUrl: "", // String for the URL of the logo
         twitter: "",
     });
 
-    const { name, twitter } = team;
+    const { name, logoUrl, twitter } = team;
 
     const onInputChange = (e) => {
-        if (e.target.name === "logoUrl") {
-            setTeam({ ...team, [e.target.name]: e.target.files[0] });
-        } else {
-            setTeam({ ...team, [e.target.name]: e.target.value });
-        }
+        setTeam({ ...team, [e.target.name]: e.target.value });
     };
-
 
     const onSubmit = async (e) => {
         e.preventDefault();
-    
-        const formData = new FormData();
-        formData.append("name", team.name);
-        formData.append("logoUrl", team.logoUrl); // Must be the File object
-        formData.append("twitter", team.twitter);
-    
+
+        const teamData = {
+            name: team.name,
+            logoUrl: team.logoUrl, // String for the logo URL
+            twitter: team.twitter,
+        };
+
         try {
-            await axios.post("http://localhost:8000/teams", formData);
+            await axios.post("http://localhost:8000/teams", teamData, {
+                headers: { "Content-Type": "application/json" },
+            });
             navigate("/teams");
         } catch (error) {
-            // Display error message properly
             console.error("Error creating team:", error);
-    
-            // Show the server's error message if available
-            const errorMessage = error.response?.data || "Failed to create team. Please try again.";
+
+            const errorMessage =
+                error.response?.data?.message || "Failed to create team. Please try again.";
             alert(errorMessage);
         }
     };
-    
-    
-    
 
     return (
         <div className="container">
@@ -68,13 +62,14 @@ function CreateTeam() {
 
                         <div className="mb-3">
                             <label htmlFor="logoUrl" className="form-label">
-                                Logo del Equipo:
+                                Logo del Equipo (URL):
                             </label>
                             <input
-                                type="file"
+                                type="text"
                                 className="form-control"
+                                placeholder="Insertar URL del logo"
                                 name="logoUrl"
-                                accept="image/*"
+                                value={logoUrl}
                                 onChange={(e) => onInputChange(e)}
                             />
                         </div>
