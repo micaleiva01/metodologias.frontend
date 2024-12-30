@@ -1,81 +1,109 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
-const CreateTeam = () => {
-    const [name, setName] = useState("");
-    const [logoUrl, setLogoUrl] = useState("");
-    const [twitter, setTwitter] = useState("");
-    const navigate = useNavigate();
+function CreateTeam() {
+    let navigate = useNavigate();
 
-  const handleCreate = async () => {
-        try {
-            const token = localStorage.getItem("token");
+    const [team, setTeam] = useState({
+        name: "",
+        logoUrl: null,
+        twitter: "",
+    });
 
-            const response = await fetch("http://localhost:8000/teams", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ 
-                    name: name, 
-                    logo_url: logoUrl, 
-                    twitter: twitter 
-                }),
-            });
+    const { name, twitter } = team;
 
-            if (!response.ok) {
-                throw new Error("Ha sucedido un error. El equipo no se ha podido crear.");
-            }
-
-            alert("Equipo creado con éxito!");
-            navigate("/");
-        } catch (error) {
-            alert(error.message);
+    const onInputChange = (e) => {
+        if (e.target.name === "logoUrl") {
+            setTeam({ ...team, [e.target.name]: e.target.files[0] });
+        } else {
+            setTeam({ ...team, [e.target.name]: e.target.value });
         }
     };
 
 
+    const onSubmit = async (e) => {
+        e.preventDefault();
+    
+        const formData = new FormData();
+        formData.append("name", team.name);
+        formData.append("logoUrl", team.logoUrl); // Must be the File object
+        formData.append("twitter", team.twitter);
+    
+        try {
+            await axios.post("http://localhost:8000/teams", formData);
+            navigate("/teams");
+        } catch (error) {
+            // Display error message properly
+            console.error("Error creating team:", error);
+    
+            // Show the server's error message if available
+            const errorMessage = error.response?.data || "Failed to create team. Please try again.";
+            alert(errorMessage);
+        }
+    };
+    
+    
+    
 
     return (
-        <div className="d-flex justify-content-center align-items-center text-white">
-            <h1>CREAR EQUIPO</h1>
-            <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
-                <div>
-                    <label>Nombre del equipo:</label>
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Nombre del equipo"
-                        required
-                    />
+        <div className="container">
+            <div className="row">
+                <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
+                    <h2 className="text-center m-4">CREAR EQUIPO</h2>
+                    <form onSubmit={(e) => onSubmit(e)}>
+                        <div className="mb-3">
+                            <label htmlFor="Name" className="form-label">
+                                Nombre:
+                            </label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Insertar nombre del equipo"
+                                name="name"
+                                value={name}
+                                onChange={(e) => onInputChange(e)}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="logoUrl" className="form-label">
+                                Logo del Equipo:
+                            </label>
+                            <input
+                                type="file"
+                                className="form-control"
+                                name="logoUrl"
+                                accept="image/*"
+                                onChange={(e) => onInputChange(e)}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="twitter" className="form-label">
+                                Twitter:
+                            </label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Insertar usuario de Twitter"
+                                name="twitter"
+                                value={twitter}
+                                onChange={(e) => onInputChange(e)}
+                            />
+                        </div>
+
+                        <button type="submit" className="btn btn-outline-danger">
+                            Añadir equipo
+                        </button>
+                        <Link className="btn btn-outline-secondary ms-2" to="/">
+                            Cancelar
+                        </Link>
+                    </form>
                 </div>
-                <div>
-                    <label>Logo URL:</label>
-                    <input
-                        type="url"
-                        value={logoUrl}
-                        onChange={(e) => setLogoUrl(e.target.value)}
-                        placeholder="URL del logo"
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Twitter:</label>
-                    <input
-                        type="url"
-                        value={twitter}
-                        onChange={(e) => setTwitter(e.target.value)}
-                        placeholder="URL del perfil de Twitter"
-                        required
-                    />
-                </div>
-                <button type="submit">Crear</button>
-            </form>
-            
+            </div>
         </div>
     );
-};
+}
 
 export default CreateTeam;

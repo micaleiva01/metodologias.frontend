@@ -3,6 +3,7 @@ import Votings from '../pages/Votings';
 import Teams from '../pages/Teams';
 import Pilots from "../pages/Pilots";
 import Login from "../pages/Login";
+import News from "../pages/News";
 import f1logo from "../images/formula1logo.png";
 import "../styles/heading.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,6 +22,8 @@ useEffect(() => {
 
   const renderComponent = () => {
     switch (activeComponent) {
+      case 'News':
+        return <News />
       case 'Teams':
         return <Teams />;
       case 'Votings':
@@ -53,6 +56,13 @@ useEffect(() => {
             </button>
             <div className="collapse navbar-collapse heading-text" id="navbarNav">
               <ul className="navbar-nav ms-auto">
+                <li className="nav-item">
+                  <a className={`nav-link ${activeComponent === 'News' ? 'active' : ''} me-2`} 
+                      href="../pages/News.jsx" 
+                      onClick={() => setActiveComponent('News')}>
+                      NOTICIAS
+                  </a>
+                </li>
                 <li className="nav-item">
                   <a className={`nav-link ${activeComponent === 'Votings' ? 'active' : ''} me-1`} 
                       href="../pages/Votings.jsx" 

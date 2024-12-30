@@ -30,16 +30,15 @@ const TeamList = () => {
 
   function TeamList() {
     const [teams, setTeams] = useState([]);
-  
-    useEffect(() => {
-        loadTeams();
-    });
 
     const loadTeams = async () => {
       const result = await axios.get("http://localhost:8000/teams");
       setTeams(result.data);
     }
-
+  
+    useEffect(() => {
+        loadTeams();
+    });
 
       return (
 

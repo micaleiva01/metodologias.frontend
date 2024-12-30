@@ -12,6 +12,10 @@ function TeamCard({ team }) {
         <div className="card-body text-center">
           <h5 className="card-title">{team.name}</h5>
           <p className="card-text text-muted">Twitter: {team.twitter}</p>
+          <div>
+            <button className="btn btn-outline-primary mx-2">Editar</button>
+            <button className="btn btn-danger mx-2">Eliminar</button>
+          </div>
         </div>
       </div>
     );
