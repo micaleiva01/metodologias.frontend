@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 function TeamCard({ team }) {
     return (
@@ -13,7 +13,8 @@ function TeamCard({ team }) {
           <h5 className="card-title">{team.name}</h5>
           <p className="card-text text-muted">Twitter: {team.twitter}</p>
           <div>
-            <button className="btn btn-outline-primary mx-2">Editar</button>
+            <Link className="btn btn-outline-primary mt-2"
+            to={`/edit-team/${team.name}`}>Editar</Link>
             <button className="btn btn-danger mx-2">Eliminar</button>
           </div>
         </div>

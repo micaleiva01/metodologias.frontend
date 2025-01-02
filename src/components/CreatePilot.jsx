@@ -22,13 +22,15 @@ function CreatePilot() {
     const {id, name, surname, initials, imageUrl, country, twitter, team} = pilot;
 
     const onInputChange = (e) => {
-        setPilot({...pilot, [e.target.name]: e.target.value });
+        console.log(`Updating field: ${e.target.name}, Value: ${e.target.value}`);
+        setPilot({ ...pilot, [e.target.name]: e.target.value });
     };
+
 
     const onSubmit = async (e) => {
         e.preventDefault();
     
-        console.log("Datos enviados:", pilot); // Verifica el contenido antes de enviarlo
+        console.log("Datos enviados:", pilot); // Verify the data before submission
     
         if (!pilot.team) {
             alert("Por favor, seleccione un equipo.");
@@ -36,7 +38,11 @@ function CreatePilot() {
         }
     
         try {
-            await axios.post("http://localhost:8000/pilots", pilot);
+            const payload = {
+                ...pilot,
+                team: pilot.team, // Ensure this matches the backend's expected format
+            };
+            await axios.post("http://localhost:8000/pilots", payload);
             navigate("/pilots");
         } catch (error) {
             console.error("Error details:", error); // Log the full error object
@@ -44,20 +50,22 @@ function CreatePilot() {
             alert("Error creando piloto: " + (error.response?.data?.message || error.message));
         }
     };
+    
 
     useEffect(() => {
-        // Fetch the list of teams from the backend
         const fetchTeams = async () => {
             try {
                 const response = await axios.get("http://localhost:8000/teams");
-                setTeams(response.data); // Assuming response.data contains the array of teams
+                console.log("Teams fetched:", response.data); // Log the fetched teams
+                setTeams(response.data);
             } catch (error) {
                 console.error("Error fetching teams: ", error);
             }
         };
-
+    
         fetchTeams();
     }, []);
+    
 
 
 return (

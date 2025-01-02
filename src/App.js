@@ -12,8 +12,12 @@ import News from "./pages/News";
 import CreateNews from "./components/CreateNews";
 import Login from "./pages/Login";
 import Footer from './components/footer';
-import './App.css';
 import EditNews from "./components/EditNews";
+import EditTeam from "./components/EditTeam";
+import CreateCalendar from "./components/CreateCalendar";
+import EditCalendar from "./components/EditCalendar";
+import DeleteCalendar from "./components/DeleteCalendar";
+import './App.css';
 
 function App() {
   return (
@@ -29,9 +33,13 @@ function App() {
               <Route path="/create-voting" element={<CreateVoting />} />
               <Route path="/teams" element={<Teams />} />
               <Route path="/create-team" element={<CreateTeam />} />
+              <Route path="/edit-team/:name" element={<EditTeam />} />             
               <Route path="/news" element={<News />} />
               <Route path="/create-news" element={<CreateNews />} />
               <Route path="/edit-news/:id" element={<EditNews />} />
+              <Route path="/create-calendar" element={<CreateCalendar />} />
+              <Route path="/edit-calendar/:race" element={<EditCalendar />} />
+              <Route path="/delete-calendar/:race" element={<DeleteCalendar />} />
               <Route path="/login" element={<Login />} />
             </Routes>
           </div>
