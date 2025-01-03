@@ -8,49 +8,56 @@ function CreateNews() {
     const [news, setNews] = useState({
         permalink: "",
         title: "",
-        image: null,
+        image: "",
         text: "",
         creator_id: "",
         date: "",
     });
 
-    const { permalink, title, text, creator_id, date } = news;
+    const { permalink, title, image, text, creator_id, date } = news;
 
     const generatePermalink = (title) => {
         return title
             .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, "") // Remove invalid characters
+            .replace(/[^a-z0-9\s-]/g, "")
             .trim()
-            .replace(/\s+/g, "-"); // Replace spaces with dashes
+            .replace(/\s+/g, "-");
     };
 
     const onInputChange = (e) => {
-        const { name, value, files } = e.target;
-
-        if (name === "image") {
-            setNews({ ...news, [name]: files[0] });
-        } else {
-            const updatedNews = { ...news, [name]: value };
-            if (name === "title") {
-                updatedNews.permalink = generatePermalink(value);
-            }
-            setNews(updatedNews);
+        const { name, value } = e.target;
+        const updatedNews = { ...news, [name]: value };
+        if (name === "title") {
+            updatedNews.permalink = generatePermalink(value);
         }
+        setNews(updatedNews);
+    };
+
+    const validateNews = () => {
+        if (!news.title || !news.text || !news.image || !news.creator_id || !news.date) {
+            alert("Todos los campos son obligatorios.");
+            return false;
+        }
+        if (!news.image.startsWith("http")) {
+            alert("La URL de la imagen debe ser válida.");
+            return false;
+        }
+        return true;
     };
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        const formData = new FormData();
-        formData.append("permalink", news.permalink);
-        formData.append("title", news.title);
-        formData.append("image", news.image); // Must be the File object
-        formData.append("text", news.text);
-        formData.append("creator_id", news.creator_id);
-        formData.append("date", news.date);
+        if (!validateNews()) return;
 
         try {
-            await axios.post("http://localhost:8000/news", formData);
+            await axios.post("http://localhost:8000/new", {
+                permalink: news.permalink,
+                title: news.title,
+                image: news.image,
+                text: news.text,
+                creator_id: news.creator_id,
+                date: news.date,
+            });
             navigate("/news");
         } catch (error) {
             console.error("Error creating news:", error);
@@ -94,13 +101,14 @@ function CreateNews() {
 
                         <div className="mb-3">
                             <label htmlFor="image" className="form-label">
-                                Imagen:
+                                Imagen URL:
                             </label>
                             <input
-                                type="file"
+                                type="text"
                                 className="form-control"
+                                placeholder="Insertar URL de la imagen"
                                 name="image"
-                                accept="image/*"
+                                value={image}
                                 onChange={(e) => onInputChange(e)}
                             />
                         </div>

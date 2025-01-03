@@ -14,7 +14,7 @@ function Footer() {
             <h5>LINKS</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="/Teams.jsx" className="text-white footer-link">
+                <a href="../pages/Teams.jsx" className="text-white footer-link">
                   Equipos
                 </a>
               </li>

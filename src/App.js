@@ -26,20 +26,26 @@ function App() {
         <Heading />
           <div className="main-content">
             <Routes>
-              <Route path="/pilots" element={<Pilots />} />
-              <Route path="/create-pilot" element={<CreatePilot />} />
-              <Route path="/edit-pilot/:id" element={<EditPilot />} />
-              <Route path="/votings" element={<Votings />} />
-              <Route path="/create-voting" element={<CreateVoting />} />
-              <Route path="/teams" element={<Teams />} />
-              <Route path="/create-team" element={<CreateTeam />} />
-              <Route path="/edit-team/:name" element={<EditTeam />} />             
+              {/*noticias*/}            
               <Route path="/news" element={<News />} />
               <Route path="/create-news" element={<CreateNews />} />
               <Route path="/edit-news/:id" element={<EditNews />} />
+              {/*votaciones*/}
+              <Route path="/votings" element={<Votings />} />
+              <Route path="/create-voting" element={<CreateVoting />} />
+              {/*pilotos*/}
+              <Route path="/pilots" element={<Pilots />} />
+              <Route path="/create-pilot" element={<CreatePilot />} />
+              <Route path="/edit-pilot/:id" element={<EditPilot />} />
+              {/*equipos*/}
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/create-team" element={<CreateTeam />} />
+              <Route path="/edit-team/:name" element={<EditTeam />} />
+              {/*calendario*/}
               <Route path="/create-calendar" element={<CreateCalendar />} />
               <Route path="/edit-calendar/:race" element={<EditCalendar />} />
               <Route path="/delete-calendar/:race" element={<DeleteCalendar />} />
+              {/*login*/}
               <Route path="/login" element={<Login />} />
             </Routes>
           </div>

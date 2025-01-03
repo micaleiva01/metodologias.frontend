@@ -15,8 +15,7 @@ function PilotList() {
     setPilots(results.data);
   }
 
-    return (
-
+  return (
     <div className="container my-4">
 
       {/* cards */}
