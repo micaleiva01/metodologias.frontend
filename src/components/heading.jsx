@@ -5,6 +5,7 @@ import Pilots from "../pages/Pilots";
 import Login from "../pages/Login";
 import News from "../pages/News";
 import Calendar from "../pages/Calendar";
+import Circuits from "../pages/Circuits";
 import f1logo from "../images/formula1logo.png";
 import "../styles/heading.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -23,6 +24,8 @@ useEffect(() => {
 
   const renderComponent = () => {
     switch (activeComponent) {
+      case 'Circuits':
+        return <Circuits />
       case 'Calendar':
         return <Calendar />
       case 'News':
@@ -92,6 +95,13 @@ useEffect(() => {
                       href="../pages/Calendar.jsx" 
                       onClick={() => setActiveComponent('Calendar')}>
                       CALENDARIO
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className={`nav-link ${activeComponent === 'Circuits' ? 'active' : ''} me-2`} 
+                      href="../pages/Circuits.jsx" 
+                      onClick={() => setActiveComponent('Circuits')}>
+                      CIRCUITS
                   </a>
                 </li>
                 <li className="nav-item">

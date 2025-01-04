@@ -83,7 +83,7 @@ function EditRace() {
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn btn-outline-primary">Guardar Cambios</button>
+                        <button type="submit" className="btn btn-outline-light">Guardar Cambios</button>
                         <Link to="/races" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
                 </div>

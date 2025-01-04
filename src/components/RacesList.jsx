@@ -33,8 +33,7 @@ function RacesList() {
 
     return (
         <div className="container my-4">
-            <h2 className="text-center">Calendario de Carreras</h2>
-            <Link to="/create-race" className="btn btn-outline-primary mb-4">
+            <Link to="/create-race" className="btn btn-outline-danger mb-4">
                 Crear Nueva Carrera
             </Link>
             <div className="row">

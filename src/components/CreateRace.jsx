@@ -68,7 +68,7 @@ function CreateRace() {
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn btn-outline-primary">Crear</button>
+                        <button type="submit" className="btn btn-outline-light">Crear</button>
                         <Link to="/races" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
                 </div>

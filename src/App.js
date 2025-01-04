@@ -1,22 +1,36 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+//heading + footer
 import Heading from "./components/heading";
+import Footer from './components/footer';
+//pilots
 import Pilots from "./pages/Pilots";
-import Votings from "./pages/Votings";
-import Teams from "./pages/Teams";
-import CreateTeam from "./components/CreateTeam";
 import CreatePilot from "./components/CreatePilot";
 import EditPilot from "./components/EditPilot";
+//votings
+import Votings from "./pages/Votings";
 import CreateVoting from "./components/CreateVoting";
+import EditVoting from "./components/EditVoting";
+import VotingSpecific from "./components/VotingSpecific";
+import VotingResults from "./components/VotingResults";
+//teams
+import Teams from "./pages/Teams";
+import CreateTeam from "./components/CreateTeam";
+import EditTeam from "./components/EditTeam";
+//news
 import News from "./pages/News";
 import CreateNews from "./components/CreateNews";
-import Login from "./pages/Login";
-import Footer from './components/footer';
 import EditNews from "./components/EditNews";
-import EditTeam from "./components/EditTeam";
+//races
 import RacesList from "./components/RacesList";
 import CreateRace from "./components/CreateRace";
 import EditRace from "./components/EditRace";
+//circuits
+import CircuitList from "./components/CircuitList";
+import CreateCircuits from "./components/CreateCircuit";
+import EditCircuit from "./components/Editcircuit";
+//login
+import Login from "./pages/Login";
 import './App.css';
 
 
@@ -34,6 +48,9 @@ function App() {
               {/*votaciones*/}
               <Route path="/votings" element={<Votings />} />
               <Route path="/create-voting" element={<CreateVoting />} />
+              <Route path="/edit-voting" element={<EditVoting />} />
+              <Route path="/votings/:permalink" element={<VotingSpecific />} />
+              <Route path="/votings/:permalink/results" element={<VotingResults />} />
               {/*pilotos*/}
               <Route path="/pilots" element={<Pilots />} />
               <Route path="/create-pilot" element={<CreatePilot />} />
@@ -46,6 +63,10 @@ function App() {
               <Route path="/races" element={<RacesList />} />
               <Route path="/create-race" element={<CreateRace />} />
               <Route path="/edit-race/:date/:city/:name" element={<EditRace />} />
+              {/*circuito*/}
+              <Route path="/circuits" element={<CircuitList />} />
+              <Route path="/create-circuit" element={<CreateCircuits />} />
+              <Route path="/edit-circuit/:name/:city" element={<EditCircuit />} />
               {/*login*/}
               <Route path="/login" element={<Login />} />
             </Routes>

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-function CreateVoting() {
+function EditVoting() {
     let navigate = useNavigate();
+    const { id } = useParams();
 
     const [voting, setVoting] = useState({
         title: "",
@@ -11,7 +12,19 @@ function CreateVoting() {
         end_date: "",
     });
 
-    const { title, description, end_date } = voting;
+    const loadVoting = useCallback(async () => {
+        try {
+            const result = await axios.get(`http://localhost:8000/votings/${id}`);
+            setVoting(result.data);
+        } catch (error) {
+            console.error("Error loading voting:", error);
+            alert("Error al cargar la votación. Inténtalo de nuevo.");
+        }
+    }, [id]);
+
+    useEffect(() => {
+        loadVoting();
+    }, [loadVoting]);
 
     const onInputChange = (e) => {
         setVoting({ ...voting, [e.target.name]: e.target.value });
@@ -21,11 +34,11 @@ function CreateVoting() {
         e.preventDefault();
 
         try {
-            await axios.post("http://localhost:8000/votings", voting); // Replace with the correct endpoint
+            await axios.put(`http://localhost:8000/votings/${id}`, voting);
             navigate("/votings");
         } catch (error) {
-            console.error("Error creating voting:", error);
-            alert("Error al crear la votación. Inténtalo de nuevo.");
+            console.error("Error updating voting:", error);
+            alert("Error al actualizar la votación. Inténtalo de nuevo.");
         }
     };
 
@@ -33,7 +46,7 @@ function CreateVoting() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center">Crear Nueva Votación</h2>
+                    <h2 className="text-center">Editar Votación</h2>
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
                             <label htmlFor="title" className="form-label">Título</label>
@@ -41,7 +54,7 @@ function CreateVoting() {
                                 type="text"
                                 className="form-control"
                                 name="title"
-                                value={title}
+                                value={voting.title}
                                 onChange={onInputChange}
                                 required
                             />
@@ -51,7 +64,7 @@ function CreateVoting() {
                             <textarea
                                 className="form-control"
                                 name="description"
-                                value={description}
+                                value={voting.description}
                                 onChange={onInputChange}
                                 rows="4"
                                 required
@@ -63,12 +76,12 @@ function CreateVoting() {
                                 type="date"
                                 className="form-control"
                                 name="end_date"
-                                value={end_date}
+                                value={voting.end_date}
                                 onChange={onInputChange}
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn btn-outline-danger">Crear</button>
+                        <button type="submit" className="btn btn-outline-danger">Guardar Cambios</button>
                         <Link to="/votings" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
                 </div>
@@ -77,4 +90,4 @@ function CreateVoting() {
     );
 }
 
-export default CreateVoting;
+export default EditVoting;
