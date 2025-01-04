@@ -6,7 +6,7 @@ function CreatePilot() {
     let navigate = useNavigate();
 
     const [pilot, setPilot] = useState({
-        id: "",
+        //id:"",
         name: "",
         surname: "",
         initials: "",
@@ -18,7 +18,7 @@ function CreatePilot() {
 
     const [teams, setTeams] = useState([]);
 
-    const { id, name, surname, initials, imageUrl, country, twitter, team_name } = pilot;
+    const { name, surname, initials, imageUrl, country, twitter, team_name } = pilot;
 
     const onInputChange = (e) => {
         setPilot({ ...pilot, [e.target.name]: e.target.value });
@@ -28,7 +28,7 @@ function CreatePilot() {
         e.preventDefault();
 
         // Validate that all required fields are filled
-        if (!id || !name || !surname || !initials || !imageUrl || !country || !twitter || !team_name) {
+        if (!name || !surname || !initials || !imageUrl || !country || !twitter || !team_name) {
             alert("Por favor, complete todos los campos requeridos.");
             return;
         }
@@ -67,7 +67,7 @@ function CreatePilot() {
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
                     <h2 className="text-center m-4">AÑADIR PILOTO</h2>
                     <form onSubmit={onSubmit}>
-                        <div className="mb-3">
+                        {/*<div className="mb-3">
                             <label htmlFor="id" className="form-label">Número del piloto:</label>
                             <input
                                 type="number"
@@ -78,7 +78,7 @@ function CreatePilot() {
                                 onChange={onInputChange}
                                 required
                             />
-                        </div>
+                        </div>*/}
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Nombre:</label>
                             <input

@@ -1,36 +1,31 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-function CreateCalendar() {
-
+function CreateRace() {
     let navigate = useNavigate();
 
-    const [calendarEvent, setCalendarEvent] = useState({
-        date: "",
+    const [race, setRace] = useState({
         name: "",
         city: "",
+        date: "",
     });
 
-    const { date, name, city } = calendarEvent;
+    const { name, city, date } = race;
 
     const onInputChange = (e) => {
-        console.log(`Updating field: ${e.target.name}, Value: ${e.target.value}`);
-        setCalendarEvent({ ...calendarEvent, [e.target.name]: e.target.value });
+        setRace({ ...race, [e.target.name]: e.target.value });
     };
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Carrera creada:", calendarEvent);
-
         try {
-            await axios.post("http://localhost:8000/calendar", calendarEvent);
-            navigate("/calendar/race");
+            await axios.post("http://localhost:8000/calendar/race", race);
+            navigate("/races");
         } catch (error) {
-            console.error("Error details:", error);
-            console.error("Error response:", error.response?.data || error.message);
-            alert("Error creating calendar event: " + (error.response?.data?.message || error.message));
+            console.error("Error creating race:", error);
+            alert("Error al crear la carrera. Inténtalo de nuevo.");
         }
     };
 
@@ -38,47 +33,43 @@ function CreateCalendar() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center m-4">Añadir Carrera</h2>
-
-                    <form onSubmit={(e) => onSubmit(e)}>
-
+                    <h2 className="text-center">Crear Nueva Carrera</h2>
+                    <form onSubmit={onSubmit}>
                         <div className="mb-3">
-                            <label htmlFor="name" className="form-label">Nombre de la carrera:</label>
+                            <label htmlFor="name" className="form-label">Nombre</label>
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter event name"
                                 name="name"
                                 value={name}
-                                onChange={(e) => onInputChange(e)}
+                                onChange={onInputChange}
+                                required
                             />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="date" className="form-label">Fecha:</label>
+                            <label htmlFor="city" className="form-label">Ciudad</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="city"
+                                value={city}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="date" className="form-label">Fecha</label>
                             <input
                                 type="date"
                                 className="form-control"
                                 name="date"
                                 value={date}
-                                onChange={(e) => onInputChange(e)}
+                                onChange={onInputChange}
+                                required
                             />
                         </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="city" className="form-label">Ciudad:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter city"
-                                name="city"
-                                value={city}
-                                onChange={(e) => onInputChange(e)}
-                            />
-                        </div>
-
-                        <button type="submit" className="btn btn-outline-danger">Añadir Carrera</button>
-                        <Link className="btn btn-outline-secondary ms-2" to="/calendar">Cancelar</Link>
+                        <button type="submit" className="btn btn-outline-light">Crear Carrera</button>
+                        <Link to="/races" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
                 </div>
             </div>
@@ -86,4 +77,4 @@ function CreateCalendar() {
     );
 }
 
-export default CreateCalendar;
+export default CreateRace;

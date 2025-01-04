@@ -12,7 +12,7 @@ function Votings() {
         <main>
              <VotingsList />
         </main>
-        <Link to="/create-voting" style={{ textDecoration: 'underline', color: 'white'}}>
+        <Link to="/create-voting" className="btn btn-outline-danger mb-4">
             Crear una votación nueva
         </Link>
      </div>

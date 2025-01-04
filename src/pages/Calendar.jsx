@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import CalendarList from "../components/CalendarList";
 
 function Calendar() {
@@ -10,9 +9,6 @@ function Calendar() {
             </header>
             <main>
             <CalendarList />
-            <Link to="/create-calendar" style={{ textDecoration: "underline", color: "white" }}>
-                Crear una carrera
-            </Link>
             </main>
         </div>
     );

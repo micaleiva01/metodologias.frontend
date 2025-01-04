@@ -14,9 +14,9 @@ import Login from "./pages/Login";
 import Footer from './components/footer';
 import EditNews from "./components/EditNews";
 import EditTeam from "./components/EditTeam";
+import CalendarList from "./components/CalendarList";
 import CreateCalendar from "./components/CreateCalendar";
 import EditCalendar from "./components/EditCalendar";
-import DeleteCalendar from "./components/DeleteCalendar";
 import './App.css';
 
 function App() {
@@ -42,9 +42,9 @@ function App() {
               <Route path="/create-team" element={<CreateTeam />} />
               <Route path="/edit-team/:name" element={<EditTeam />} />
               {/*calendario*/}
-              <Route path="/create-calendar" element={<CreateCalendar />} />
-              <Route path="/edit-calendar/:race" element={<EditCalendar />} />
-              <Route path="/delete-calendar/:race" element={<DeleteCalendar />} />
+              <Route path="/races" element={<CalendarList />} />
+              <Route path="/create-race" element={<CreateCalendar />} />
+              <Route path="/edit-race/:date/:city/:name" element={<EditCalendar />} />
               {/*login*/}
               <Route path="/login" element={<Login />} />
             </Routes>

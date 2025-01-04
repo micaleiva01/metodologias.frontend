@@ -1,78 +1,101 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 function EditNews() {
     let navigate = useNavigate();
-
     const { id } = useParams();
 
     const [news, setNews] = useState({
         permalink: "",
         title: "",
-        image: null,
+        image: "",
         text: "",
         creator_id: "",
         date: "",
     });
 
-    const { permalink, title, text, creator_id, date } = news;
+    const { permalink, title, image, text, creator_id, date } = news;
 
     const generatePermalink = (title) => {
         return title
             .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, "") // Remove invalid characters
+            .replace(/[^a-z0-9\s-]/g, "")
             .trim()
-            .replace(/\s+/g, "-"); // Replace spaces with dashes
+            .replace(/\s+/g, "-");
     };
 
     const onInputChange = (e) => {
-        const { name, value, files } = e.target;
-
-        if (name === "image") {
-            setNews({ ...news, [name]: files[0] });
-        } else {
-            const updatedNews = { ...news, [name]: value };
-            if (name === "title") {
-                updatedNews.permalink = generatePermalink(value);
-            }
-            setNews(updatedNews);
+        const { name, value } = e.target;
+        const updatedNews = { ...news, [name]: value };
+        if (name === "title") {
+            updatedNews.permalink = generatePermalink(value);
         }
+        setNews(updatedNews);
     };
 
-    const loadNews = useCallback(async () => {
-        try {
-            const result = await axios.get(`http://localhost:8000/news/${id}`);
-            setNews(result.data);
-        } catch (error) {
-            console.error("Error loading news:", error);
-            alert("Failed to load news. Please try again later.");
+    const validateNews = () => {
+        if (!news.title || !news.text || !news.image || !news.creator_id || !news.date) {
+            alert("Todos los campos son obligatorios.");
+            return false;
         }
-    }, [id]);
+        if (!news.image.startsWith("http")) {
+            alert("La URL de la imagen debe ser válida.");
+            return false;
+        }
+        return true;
+    };
 
     useEffect(() => {
+        const loadNews = async () => {
+            try {
+                console.log("Fetching news for ID:", id); // Debug
+                const result = await axios.get(`http://localhost:8000/new/${id}`);
+                console.log("News fetched:", result.data); // Debug
+                setNews(result.data);
+            } catch (error) {
+                console.error("Error loading news:", error.response || error.message);
+                if (error.response?.status === 404) {
+                    console.warn("News not found.");
+                    setNews(null); // Handle missing news gracefully
+                }
+            }
+        };
+
         loadNews();
-    }, [loadNews]);
+    }, [id]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        const formData = new FormData();
-        formData.append("permalink", news.permalink);
-        formData.append("title", news.title);
-        formData.append("image", news.image); // Must be the File object
-        formData.append("text", news.text);
-        formData.append("creator_id", news.creator_id);
-        formData.append("date", news.date);
+        if (!validateNews()) return;
 
         try {
-            await axios.put(`http://localhost:8000/news/${id}`, formData);
+            await axios.put(`http://localhost:8000/new/${id}`, {
+                permalink: news.permalink,
+                title: news.title,
+                image: news.image,
+                text: news.text,
+                creator_id: news.creator_id,
+                date: news.date,
+            });
             navigate("/news");
         } catch (error) {
             console.error("Error updating news:", error);
-            alert("Failed to update news. Please try again.");
+            const errorMessage = error.response?.data || "Failed to update news. Please try again.";
+            alert(errorMessage);
         }
     };
+
+    if (news === null) {
+        return (
+            <div className="container">
+                <h2 className="text-center m-4">Noticia no encontrada</h2>
+                <Link className="btn btn-outline-secondary ms-2" to="/news">
+                    Volver
+                </Link>
+            </div>
+        );
+    }
 
     return (
         <div className="container">
@@ -87,7 +110,6 @@ function EditNews() {
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Insertar título de la noticia"
                                 name="title"
                                 value={title}
                                 onChange={(e) => onInputChange(e)}
@@ -109,13 +131,13 @@ function EditNews() {
 
                         <div className="mb-3">
                             <label htmlFor="image" className="form-label">
-                                Imagen:
+                                Imagen URL:
                             </label>
                             <input
-                                type="file"
+                                type="text"
                                 className="form-control"
                                 name="image"
-                                accept="image/*"
+                                value={image}
                                 onChange={(e) => onInputChange(e)}
                             />
                         </div>
@@ -126,7 +148,6 @@ function EditNews() {
                             </label>
                             <textarea
                                 className="form-control"
-                                placeholder="Insertar texto de la noticia"
                                 name="text"
                                 value={text}
                                 onChange={(e) => onInputChange(e)}
@@ -141,7 +162,6 @@ function EditNews() {
                             <input
                                 type="number"
                                 className="form-control"
-                                placeholder="Insertar ID del creador"
                                 name="creator_id"
                                 value={creator_id}
                                 onChange={(e) => onInputChange(e)}

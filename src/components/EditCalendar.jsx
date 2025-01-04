@@ -1,85 +1,96 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-function EditCalendar() {
-
+function EditRace() {
     let navigate = useNavigate();
+    const { date, city, name } = useParams();
 
-    const { race } = useParams();
-
-    const [calendarEvent, setCalendarEvent] = useState({
-        date: "",
+    const [race, setRace] = useState({
         name: "",
         city: "",
+        date: "",
     });
 
-    const { date, name, city } = calendarEvent;
-
-    const onInputChange = (e) => {
-        setCalendarEvent({ ...calendarEvent, [e.target.name]: e.target.value });
-    };
-
-    const loadEvent = useCallback(async () => {
-        const result = await axios.get(`http://localhost:8000/calendar/${race}`);
-        setCalendarEvent(result.data);
-    }, [race]);
+    const loadRace = useCallback(async () => {
+        try {
+            const result = await axios.get(`http://localhost:8000/calendar`);
+            const foundRace = result.data.find(
+                (r) => r.date === date && r.city === city && r.name === name
+            );
+            if (foundRace) {
+                setRace(foundRace);
+            } else {
+                alert("Carrera no encontrada.");
+                navigate("/races");
+            }
+        } catch (error) {
+            console.error("Error loading race:", error);
+            alert("Error al cargar la carrera. Inténtalo de nuevo.");
+        }
+    }, [date, city, name, navigate]);
 
     useEffect(() => {
-        loadEvent();
-    }, [loadEvent]);
+        loadRace();
+    }, [loadRace]);
+
+    const onInputChange = (e) => {
+        setRace({ ...race, [e.target.name]: e.target.value });
+    };
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`http://localhost:8000/calendar/${race}`, calendarEvent);
-        navigate("/calendar/race");
+
+        try {
+            await axios.put(`http://localhost:8000/race/${race.date}-${race.city}-${race.name}`, race);
+            navigate("/races");
+        } catch (error) {
+            console.error("Error updating race:", error);
+            alert("Error al actualizar la carrera. Inténtalo de nuevo.");
+        }
     };
 
     return (
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center m-4">Edit Calendar Event</h2>
-
-                    <form onSubmit={(e) => onSubmit(e)}>
-
+                    <h2 className="text-center">Editar Carrera</h2>
+                    <form onSubmit={onSubmit}>
                         <div className="mb-3">
-                            <label htmlFor="name" className="form-label">Event Name:</label>
+                            <label htmlFor="name" className="form-label">Nombre</label>
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter event name"
                                 name="name"
-                                value={name}
-                                onChange={(e) => onInputChange(e)}
+                                value={race.name}
+                                onChange={onInputChange}
+                                required
                             />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="date" className="form-label">Date:</label>
+                            <label htmlFor="city" className="form-label">Ciudad</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="city"
+                                value={race.city}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="date" className="form-label">Fecha</label>
                             <input
                                 type="date"
                                 className="form-control"
                                 name="date"
-                                value={date}
-                                onChange={(e) => onInputChange(e)}
+                                value={race.date}
+                                onChange={onInputChange}
+                                required
                             />
                         </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="city" className="form-label">City:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter city"
-                                name="city"
-                                value={city}
-                                onChange={(e) => onInputChange(e)}
-                            />
-                        </div>
-
-                        <button type="submit" className="btn btn-outline-danger">Edit Event</button>
-                        <Link className="btn btn-outline-secondary ms-2" to="/calendar">Cancel</Link>
+                        <button type="submit" className="btn btn-outline-primary">Guardar Cambios</button>
+                        <Link to="/races" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
                 </div>
             </div>
@@ -87,4 +98,4 @@ function EditCalendar() {
     );
 }
 
-export default EditCalendar;
+export default EditRace;

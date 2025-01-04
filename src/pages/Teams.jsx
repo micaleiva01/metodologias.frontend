@@ -11,7 +11,7 @@ function Teams() {
       </header>
       <main>
         <TeamList />
-        <Link to="/create-team" style={{ textDecoration: "underline", color: "white" }}>
+        <Link to="/create-team" className="btn btn-outline-danger mb-4">
           Crear un nuevo equipo
         </Link>
       </main>

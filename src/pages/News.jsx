@@ -7,7 +7,7 @@ function News() {
         <div>
             <main>
                 <NewsList />
-                <Link to="/create-news" style={{ textDecoration: "underline", color: "white" }}>
+                <Link to="/create-news" className="btn btn-outline-danger mb-4">
                     Crear una noticia nueva
                 </Link>
             </main>

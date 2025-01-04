@@ -10,7 +10,7 @@ function Pilots() {
         </header>
         <main>
             <PilotList />
-            <Link to="/create-pilot" style={{ textDecoration: 'underline', color: 'white'}}>
+            <Link to="/create-pilot" className="btn btn-outline-danger mb-4">
                 Crear un piloto nuevo
             </Link>
         </main>
