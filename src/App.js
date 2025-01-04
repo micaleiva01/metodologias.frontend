@@ -14,10 +14,11 @@ import Login from "./pages/Login";
 import Footer from './components/footer';
 import EditNews from "./components/EditNews";
 import EditTeam from "./components/EditTeam";
-import CalendarList from "./components/CalendarList";
-import CreateCalendar from "./components/CreateCalendar";
-import EditCalendar from "./components/EditCalendar";
+import RacesList from "./components/RacesList";
+import CreateRace from "./components/CreateRace";
+import EditRace from "./components/EditRace";
 import './App.css';
+
 
 function App() {
   return (
@@ -42,9 +43,9 @@ function App() {
               <Route path="/create-team" element={<CreateTeam />} />
               <Route path="/edit-team/:name" element={<EditTeam />} />
               {/*calendario*/}
-              <Route path="/races" element={<CalendarList />} />
-              <Route path="/create-race" element={<CreateCalendar />} />
-              <Route path="/edit-race/:date/:city/:name" element={<EditCalendar />} />
+              <Route path="/races" element={<RacesList />} />
+              <Route path="/create-race" element={<CreateRace />} />
+              <Route path="/edit-race/:date/:city/:name" element={<EditRace />} />
               {/*login*/}
               <Route path="/login" element={<Login />} />
             </Routes>
@@ -54,5 +55,6 @@ function App() {
     </Router>
   );
 }
+
 
 export default App;

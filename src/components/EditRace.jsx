@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-function CreateRace() {
+function EditRace() {
     let navigate = useNavigate();
+    const { date, city, name } = useParams();
 
     const [race, setRace] = useState({
         name: "",
@@ -11,7 +12,21 @@ function CreateRace() {
         date: "",
     });
 
-    const { name, city, date } = race;
+    const loadRace = useCallback(async () => {
+        try {
+            const result = await axios.get("http://localhost:8000/calendar/race", {
+                params: { date, city, name },
+            });
+            setRace(result.data);
+        } catch (error) {
+            console.error("Error loading race:", error);
+            alert("Error al cargar la carrera. Inténtalo de nuevo.");
+        }
+    }, [date, city, name]);
+
+    useEffect(() => {
+        loadRace();
+    }, [loadRace]);
 
     const onInputChange = (e) => {
         setRace({ ...race, [e.target.name]: e.target.value });
@@ -21,11 +36,11 @@ function CreateRace() {
         e.preventDefault();
 
         try {
-            await axios.post("http://localhost:8000/calendar/race", race);
+            await axios.put("http://localhost:8000/calendar/race", race);
             navigate("/races");
         } catch (error) {
-            console.error("Error creating race:", error);
-            alert("Error al crear la carrera. Inténtalo de nuevo.");
+            console.error("Error updating race:", error);
+            alert("Error al actualizar la carrera. Inténtalo de nuevo.");
         }
     };
 
@@ -33,7 +48,7 @@ function CreateRace() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center">Crear Nueva Carrera</h2>
+                    <h2 className="text-center">Editar Carrera</h2>
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Nombre</label>
@@ -41,7 +56,7 @@ function CreateRace() {
                                 type="text"
                                 className="form-control"
                                 name="name"
-                                value={name}
+                                value={race.name}
                                 onChange={onInputChange}
                                 required
                             />
@@ -52,7 +67,7 @@ function CreateRace() {
                                 type="text"
                                 className="form-control"
                                 name="city"
-                                value={city}
+                                value={race.city}
                                 onChange={onInputChange}
                                 required
                             />
@@ -63,12 +78,12 @@ function CreateRace() {
                                 type="date"
                                 className="form-control"
                                 name="date"
-                                value={date}
+                                value={race.date}
                                 onChange={onInputChange}
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn btn-outline-light">Crear Carrera</button>
+                        <button type="submit" className="btn btn-outline-primary">Guardar Cambios</button>
                         <Link to="/races" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
                 </div>
@@ -77,4 +92,4 @@ function CreateRace() {
     );
 }
 
-export default CreateRace;
+export default EditRace;

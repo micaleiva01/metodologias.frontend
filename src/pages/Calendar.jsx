@@ -1,5 +1,5 @@
 import React from "react";
-import CalendarList from "../components/CalendarList";
+import RacesList from "../components/RacesList";
 
 function Calendar() {
     return (
@@ -8,7 +8,7 @@ function Calendar() {
                 <h1 className="title text-center">CALENDARIO</h1>
             </header>
             <main>
-            <CalendarList />
+            <RacesList />
             </main>
         </div>
     );

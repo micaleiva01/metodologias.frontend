@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-
 function RacesList() {
     const [races, setRaces] = useState([]);
 
@@ -19,11 +18,10 @@ function RacesList() {
         }
     };
 
-
     const deleteRace = async (race) => {
         try {
-            await axios.delete(`http://localhost:8000/calendar/race`, {
-                params: { date: race.date, city: race.city, name: race.name },
+            await axios.delete("http://localhost:8000/calendar/race", {
+                data: { date: race.date, city: race.city, name: race.name },
             });
             setRaces(races.filter((r) => r !== race));
             alert("Carrera eliminada correctamente.");
@@ -33,10 +31,10 @@ function RacesList() {
         }
     };
 
-    
     return (
         <div className="container my-4">
-            <Link to="/create-race" className="btn btn-outline-danger mb-4">
+            <h2 className="text-center">Calendario de Carreras</h2>
+            <Link to="/create-race" className="btn btn-outline-primary mb-4">
                 Crear Nueva Carrera
             </Link>
             <div className="row">
