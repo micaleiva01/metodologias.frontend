@@ -11,7 +11,7 @@ function VotingsList() {
 
     const loadVotings = async () => {
         try {
-            const result = await axios.get("http://localhost:8000/votings"); // Replace with the correct endpoint
+            const result = await axios.get("http://localhost:8000/votings");
             setVotings(result.data);
         } catch (error) {
             console.error("Error fetching votings:", error);
@@ -20,7 +20,7 @@ function VotingsList() {
 
     const deleteVoting = async (id) => {
         try {
-            await axios.delete(`http://localhost:8000/votings/${id}`); // Replace with the correct endpoint
+            await axios.delete(`http://localhost:8000/votings/${id}`);
             setVotings(votings.filter((voting) => voting.id !== id));
             alert("Votación eliminada correctamente.");
         } catch (error) {
