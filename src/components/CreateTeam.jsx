@@ -7,7 +7,7 @@ function CreateTeam() {
 
     const [team, setTeam] = useState({
         name: "",
-        logoUrl: "", // String for the URL of the logo
+        logoUrl: "",
         twitter: "",
     });
 
@@ -22,7 +22,7 @@ function CreateTeam() {
 
         const teamData = {
             name: team.name,
-            logoUrl: team.logoUrl, // String for the logo URL
+            logoUrl: team.logoUrl,
             twitter: team.twitter,
         };
 

@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+
 function EditTeam() {
+
+
   const navigate = useNavigate();
-  const { name } = useParams(); // Get the team's name from the URL
+  const { name } = useParams();
+
 
   const [team, setTeam] = useState({
     name: "",
@@ -12,44 +16,45 @@ function EditTeam() {
     twitter: "",
   });
 
-  // Fetch the team data from the backend
+
   useEffect(() => {
     const loadTeam = async () => {
       try {
-        console.log("Fetching team with name:", name); // Debugging log
-        const response = await axios.get(`http://localhost:8000/${name}`);
-        console.log("Team data fetched:", response.data); // Debugging log
-        setTeam(response.data); // Populate the form with the fetched data
+        console.log("Buscando el equipo:", name); 
+        const response = await axios.get(`http://localhost:8000/teams/${name}`);
+        console.log("Datos del equipo encontrados:", response.data);
+        setTeam(response.data);
       } catch (error) {
-        console.error("Error fetching team data:", error);
-        alert("Failed to load team data. Please check the console for details.");
+        console.error("Error al buscar datos del equipo:", error);
+        alert("Error al cargar datos. Revisar consola");
       }
     };
 
     if (name) {
       loadTeam();
     } else {
-      console.error("Team name is missing in URL.");
+      console.error("Falta de URL");
     }
   }, [name]);
 
-  // Handle input changes
+
   const onInputChange = (e) => {
     setTeam({ ...team, [e.target.name]: e.target.value });
   };
 
-  // Submit the updated data
+
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Submitting updated team data:", team); // Debugging log
-      await axios.put(`http://localhost:8000/${name}`, team); // Update the team in the backend
-      navigate("/teams"); // Redirect to the teams list
+      console.log("Submitting updated team data:", team);
+      await axios.put(`http://localhost:8000/teams/${name}`, team);
+      navigate("/teams");
     } catch (error) {
       console.error("Error updating team data:", error);
       alert("Failed to update team data. Please check the console for details.");
     }
   };
+
 
   return (
     <div className="container">
@@ -66,7 +71,7 @@ function EditTeam() {
                 className="form-control"
                 placeholder="Nombre del equipo"
                 name="name"
-                value={team.name} // Prepopulate with the team's name
+                value={team.name}
                 onChange={onInputChange}
               />
             </div>
@@ -79,7 +84,7 @@ function EditTeam() {
                 className="form-control"
                 placeholder="Logo del equipo"
                 name="logoUrl"
-                value={team.logoUrl} // Prepopulate with the team's logo URL
+                value={team.logoUrl}
                 onChange={onInputChange}
               />
             </div>
@@ -92,7 +97,7 @@ function EditTeam() {
                 className="form-control"
                 placeholder="Insertar twitter del equipo"
                 name="twitter"
-                value={team.twitter} // Prepopulate with the team's Twitter
+                value={team.twitter}
                 onChange={onInputChange}
               />
             </div>

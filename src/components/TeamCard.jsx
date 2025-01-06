@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+
 function TeamCard({ team }) {
     return (
         <div className="dflex card h-100">
@@ -21,5 +22,6 @@ function TeamCard({ team }) {
       </div>
     );
 } 
+
 
 export default TeamCard;
