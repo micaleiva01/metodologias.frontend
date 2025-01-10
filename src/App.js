@@ -17,6 +17,7 @@ import VotingResults from "./components/VotingResults";
 import Teams from "./pages/Teams";
 import CreateTeam from "./components/CreateTeam";
 import EditTeam from "./components/EditTeam";
+import TeamDetails from "./components/TeamDetails";
 //news
 import News from "./pages/News";
 import CreateNews from "./components/CreateNews";
@@ -59,6 +60,7 @@ function App() {
               <Route path="/teams" element={<Teams />} />
               <Route path="/create-team" element={<CreateTeam />} />
               <Route path="/edit-team/:name" element={<EditTeam />} />
+              <Route path="/team-details/:name" element={<TeamDetails />} />
               {/*calendario*/}
               <Route path="/races" element={<RacesList />} />
               <Route path="/create-race" element={<CreateRace />} />
@@ -69,6 +71,7 @@ function App() {
               <Route path="/edit-circuit/:name/:city" element={<EditCircuit />} />
               {/*login*/}
               <Route path="/login" element={<Login />} />
+              <Route path="/" element={<News />} />
             </Routes>
           </div>
         <Footer />
