@@ -94,6 +94,13 @@ useEffect(() => {
                   </a>
                 </li>
                 <li className="nav-item">
+                  <a className={`nav-link ${activeComponent === 'Cars' ? 'active' : ''} me-1`} 
+                    href="../pages/Cars.jsx"  
+                    onClick={() => setActiveComponent('Cars')}>
+                    COCHES
+                  </a>
+                </li>
+                <li className="nav-item">
                   <a className={`nav-link ${activeComponent === 'Calendar' ? 'active' : ''} me-2`} 
                       href="../pages/Calendar.jsx" 
                       onClick={() => setActiveComponent('Calendar')}>
