@@ -18,6 +18,11 @@ import Teams from "./pages/Teams";
 import CreateTeam from "./components/CreateTeam";
 import EditTeam from "./components/EditTeam";
 import TeamDetails from "./components/TeamDetails";
+//cars
+import Cars from "./pages/Cars";
+import CreateCar from "./components/CreateCar";
+import EditCar from "./components/EditCar";
+import CarDetails from "./components/CarDetails";
 //news
 import News from "./pages/News";
 import CreateNews from "./components/CreateNews";
@@ -33,7 +38,6 @@ import EditCircuit from "./components/Editcircuit";
 //login
 import Login from "./pages/Login";
 import './App.css';
-
 
 function App() {
   return (
@@ -61,6 +65,11 @@ function App() {
               <Route path="/create-team" element={<CreateTeam />} />
               <Route path="/edit-team/:name" element={<EditTeam />} />
               <Route path="/team-details/:name" element={<TeamDetails />} />
+              {/*coches*/}
+              <Route path="/cars" element={<Cars />} />
+              <Route path="/create-team" element={<CreateCar />} />
+              <Route path="/edit-team/:name" element={<EditCar />} />
+              <Route path="/team-details/:name" element={<CarDetails />} />
               {/*calendario*/}
               <Route path="/races" element={<RacesList />} />
               <Route path="/create-race" element={<CreateRace />} />

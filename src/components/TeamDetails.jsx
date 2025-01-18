@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 function TeamDetails() {
-  const { name } = useParams(); // Get team name from the URL
+  const { name } = useParams(); // nombre del equipo
   const [teamPilots, setTeamPilots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

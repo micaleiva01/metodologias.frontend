@@ -1,6 +1,7 @@
 import React, { useEffect , useState} from "react";
 import Votings from '../pages/Votings';
 import Teams from '../pages/Teams';
+import Cars from "../pages/Cars";
 import Pilots from "../pages/Pilots";
 import Login from "../pages/Login";
 import News from "../pages/News";
@@ -32,6 +33,8 @@ useEffect(() => {
         return <News />
       case 'Teams':
         return <Teams />;
+      case 'Cars':
+        return <Cars />;
       case 'Votings':
         return <Votings />;
       case 'Pilots':
