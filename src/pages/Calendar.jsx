@@ -8,7 +8,7 @@ function Calendar() {
                 <h1 className="title text-center">CALENDARIO</h1>
             </header>
             <main>
-            <RacesList />
+                <RacesList />
             </main>
         </div>
     );

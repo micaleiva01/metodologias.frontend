@@ -8,7 +8,7 @@ function Circuits() {
                 <h1 className="title text-center">CIRCUITS</h1>
             </header>
             <main>
-            <CircuitList />
+                <CircuitList />
             </main>
         </div>
     );

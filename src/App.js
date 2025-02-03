@@ -34,9 +34,11 @@ import EditRace from "./components/EditRace";
 //circuits
 import CircuitList from "./components/CircuitList";
 import CreateCircuits from "./components/CreateCircuit";
-import EditCircuit from "./components/Editcircuit";
-//login
+import EditCircuit from "./components/EditCircuit";
+//login + users
 import Login from "./pages/Login";
+import CreateUser from "./components/CreateUser";
+//import UserList from "./components/UserList";
 import './App.css';
 
 function App() {
@@ -80,6 +82,8 @@ function App() {
               <Route path="/edit-circuit/:name/:city" element={<EditCircuit />} />
               {/*login*/}
               <Route path="/login" element={<Login />} />
+              <Route path="/create-user" element={<CreateUser />} />
+              {/*"home"*/}
               <Route path="/" element={<News />} />
             </Routes>
           </div>
