@@ -1,7 +1,7 @@
+// Teams.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import TeamList from "../components/TeamList";
-
 
 function Teams() {
   return (

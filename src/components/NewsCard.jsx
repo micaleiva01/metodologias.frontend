@@ -17,25 +17,25 @@ function NewsCard({ new: neww }) {
     return (
         <div className="card h-100">
             <img
-                src={neww.image} // Updated to use the "image" field from the backend
+                src={neww.image}
                 className="card-img-top"
-                alt={`${neww.title}`} // Updated to use the "title" field
+                alt={`${neww.title}`}
                 style={{ height: "200px", objectFit: "cover" }}
             />
             <div className="card-body text-center">
-                <h5 className="card-title">{neww.title}</h5> {/* Updated to use the "title" field */}
-                <p className="card-text text-muted">{neww.text}</p> {/* Updated to use the "text" field */}
+                <h5 className="card-title">{neww.title}</h5>
+                <p className="card-text text-muted">{neww.text}</p>
             </div>
             <div className="m-2">
                 <Link 
                     className="btn btn-outline-primary mt-2"
-                    to={`/edit-news/${neww.permalink}`} // Use permalink as the identifier for editing
+                    to={`/edit-news/${neww.permalink}`}
                 >
                     Editar
                 </Link>
                 <button 
                     className="btn btn-danger mx-2 mt-2"
-                    onClick={() => handleDelete(neww.permalink)} // Add delete functionality later
+                    onClick={() => handleDelete(neww.permalink)}
                 >
                     Eliminar
                 </button>

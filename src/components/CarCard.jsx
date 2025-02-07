@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 
-function CarCard({ car, onDelete }) {
+function CarCard({ car, onDelete, onClick }) {
   return (
-    <div className="card h-100">
+    <div 
+      className="card h-100" 
+      style={{ cursor: "pointer", transition: "transform 0.2s" }}
+      onClick={onClick}
+      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+    >
       <img
         src={car.imageUrl}
         className="card-img-top"
@@ -23,12 +29,12 @@ function CarCard({ car, onDelete }) {
           >
             Edit
           </Link>
-          <button
+          <Link
             className="btn btn-danger mx-2"
             onClick={() => onDelete(car.id)}
           >
             Delete
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+// CreatePilot.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -5,12 +6,13 @@ import { Link, useNavigate } from "react-router-dom";
 function CreatePilot() {
   const navigate = useNavigate();
 
+  // Use field names matching your NewPilotDTO: "number" and "image_url"
   const [pilot, setPilot] = useState({
-    id: "",
+    number: "",
     name: "",
     surname: "",
     initials: "",
-    imageUrl: "",
+    image_url: "",
     country: "",
     twitter: "",
     team_name: "",
@@ -18,7 +20,8 @@ function CreatePilot() {
 
   const [teams, setTeams] = useState([]);
 
-  const { id, name, surname, initials, imageUrl, country, twitter, team_name } = pilot;
+  // Destructure using the same names
+  const { number, name, surname, initials, image_url, country, twitter, team_name } = pilot;
 
   const onInputChange = (e) => {
     setPilot({ ...pilot, [e.target.name]: e.target.value });
@@ -27,18 +30,27 @@ function CreatePilot() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!id || !name || !surname || !initials || !imageUrl || !country || !twitter || !team_name) {
+    // Validate that all required fields are provided
+    if (!number || !name || !surname || !initials || !image_url || !country || !twitter || !team_name) {
       alert("Por favor, complete todos los campos requeridos.");
       return;
     }
 
+    // Convert number to an integer
+    const numericNumber = parseInt(number, 10);
+    if (isNaN(numericNumber)) {
+      alert("Por favor, ingrese un número de piloto válido.");
+      return;
+    }
+
     try {
+      // Build the payload with the correct field names
       const payload = {
-        id: parseInt(id, 10), // Ensure `id` is sent as a number
+        number: numericNumber,
         name,
         surname,
         initials,
-        imageUrl,
+        image_url,
         country,
         twitter,
         team_name,
@@ -50,7 +62,6 @@ function CreatePilot() {
       navigate("/pilots");
     } catch (error) {
       console.error("Error creating pilot:", error);
-
       const errorMessage =
         error.response?.data?.message || "Failed to create pilot. Please try again.";
       alert(errorMessage);
@@ -77,15 +88,15 @@ function CreatePilot() {
           <h2 className="text-center m-4">AÑADIR PILOTO</h2>
           <form onSubmit={onSubmit}>
             <div className="mb-3">
-              <label htmlFor="id" className="form-label">
+              <label htmlFor="number" className="form-label">
                 Número del piloto:
               </label>
               <input
                 type="number"
                 className="form-control"
                 placeholder="Número del piloto"
-                name="id"
-                value={id}
+                name="number"
+                value={number}
                 onChange={onInputChange}
                 required
               />
@@ -133,15 +144,15 @@ function CreatePilot() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="imageUrl" className="form-label">
+              <label htmlFor="image_url" className="form-label">
                 Foto del piloto:
               </label>
               <input
                 type="text"
                 className="form-control"
                 placeholder="URL de la foto del piloto"
-                name="imageUrl"
-                value={imageUrl}
+                name="image_url"
+                value={image_url}
                 onChange={onInputChange}
                 required
               />

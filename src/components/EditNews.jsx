@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 function EditNews() {
     let navigate = useNavigate();
-    const { id } = useParams();
+    const { permalink } = useParams(); // Use permalink from URL
 
     const [news, setNews] = useState({
         permalink: "",
@@ -15,7 +15,7 @@ function EditNews() {
         date: "",
     });
 
-    const { permalink, title, image, text, creator_id, date } = news;
+    const [loading, setLoading] = useState(true); // To handle loading state
 
     const generatePermalink = (title) => {
         return title
@@ -49,42 +49,46 @@ function EditNews() {
     useEffect(() => {
         const loadNews = async () => {
             try {
-                console.log("Fetching news for ID:", id); // Debug
-                const result = await axios.get(`http://localhost:8000/new/${id}`);
-                console.log("News fetched:", result.data); // Debug
-                setNews(result.data);
-            } catch (error) {
-                console.error("Error loading news:", error.response || error.message);
-                if (error.response?.status === 404) {
+                console.log("Fetching all news to find the correct one...");
+                const result = await axios.get("http://localhost:8000/new");
+                console.log("All news fetched:", result.data);
+
+                // Find the news item that matches the permalink
+                const foundNews = result.data.find((item) => item.permalink === permalink);
+
+                if (foundNews) {
+                    setNews(foundNews);
+                } else {
                     console.warn("News not found.");
-                    setNews(null); // Handle missing news gracefully
+                    setNews(null);
                 }
+            } catch (error) {
+                console.error("Error loading news:", error);
+                setNews(null);
+            } finally {
+                setLoading(false);
             }
         };
 
         loadNews();
-    }, [id]);
+    }, [permalink]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
         if (!validateNews()) return;
 
         try {
-            await axios.put(`http://localhost:8000/new/${id}`, {
-                permalink: news.permalink,
-                title: news.title,
-                image: news.image,
-                text: news.text,
-                creator_id: news.creator_id,
-                date: news.date,
-            });
+            await axios.put("http://localhost:8000/new", news); // PUT request as per backend
             navigate("/news");
         } catch (error) {
             console.error("Error updating news:", error);
-            const errorMessage = error.response?.data || "Failed to update news. Please try again.";
-            alert(errorMessage);
+            alert("Failed to update news. Please try again.");
         }
     };
+
+    if (loading) {
+        return <h2 className="text-center m-4">Cargando...</h2>;
+    }
 
     if (news === null) {
         return (
@@ -102,91 +106,69 @@ function EditNews() {
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
                     <h2 className="text-center m-4">EDITAR NOTICIA</h2>
-                    <form onSubmit={(e) => onSubmit(e)}>
+                    <form onSubmit={onSubmit}>
                         <div className="mb-3">
-                            <label htmlFor="title" className="form-label">
-                                Título:
-                            </label>
+                            <label htmlFor="title" className="form-label">Título:</label>
                             <input
                                 type="text"
                                 className="form-control"
                                 name="title"
-                                value={title}
-                                onChange={(e) => onInputChange(e)}
+                                value={news.title}
+                                onChange={onInputChange}
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="permalink" className="form-label">
-                                Enlace Permanente (Autogenerado):
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="permalink"
-                                value={permalink}
-                                readOnly
-                            />
+                            <label htmlFor="permalink" className="form-label">Enlace Permanente (Autogenerado):</label>
+                            <input type="text" className="form-control" name="permalink" value={news.permalink} readOnly />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="image" className="form-label">
-                                Imagen URL:
-                            </label>
+                            <label htmlFor="image" className="form-label">Imagen URL:</label>
                             <input
                                 type="text"
                                 className="form-control"
                                 name="image"
-                                value={image}
-                                onChange={(e) => onInputChange(e)}
+                                value={news.image}
+                                onChange={onInputChange}
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="text" className="form-label">
-                                Texto:
-                            </label>
+                            <label htmlFor="text" className="form-label">Texto:</label>
                             <textarea
                                 className="form-control"
                                 name="text"
-                                value={text}
-                                onChange={(e) => onInputChange(e)}
+                                value={news.text}
+                                onChange={onInputChange}
                                 rows="4"
                             ></textarea>
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="creator_id" className="form-label">
-                                ID del Creador:
-                            </label>
+                            <label htmlFor="creator_id" className="form-label">ID del Creador:</label>
                             <input
                                 type="number"
                                 className="form-control"
                                 name="creator_id"
-                                value={creator_id}
-                                onChange={(e) => onInputChange(e)}
+                                value={news.creator_id}
+                                onChange={onInputChange}
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="date" className="form-label">
-                                Fecha:
-                            </label>
+                            <label htmlFor="date" className="form-label">Fecha:</label>
                             <input
                                 type="date"
                                 className="form-control"
                                 name="date"
-                                value={date}
-                                onChange={(e) => onInputChange(e)}
+                                value={news.date}
+                                onChange={onInputChange}
                             />
                         </div>
 
-                        <button type="submit" className="btn btn-outline-danger">
-                            Guardar Cambios
-                        </button>
-                        <Link className="btn btn-outline-secondary ms-2" to="/news">
-                            Cancelar
-                        </Link>
+                        <button type="submit" className="btn btn-outline-danger">Guardar Cambios</button>
+                        <Link className="btn btn-outline-secondary ms-2" to="/news">Cancelar</Link>
                     </form>
                 </div>
             </div>

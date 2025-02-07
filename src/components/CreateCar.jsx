@@ -41,9 +41,14 @@ function CreateCar() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8000/cars", car, {
-        headers: { "Content-Type": "application/json" },
-      });
+      // Include the teamName as a query parameter in the URL.
+      await axios.post(
+        `http://localhost:8000/cars?teamName=${encodeURIComponent(teamName)}`,
+        car,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       navigate("/cars");
     } catch (error) {
       console.error("Error creating car:", error);
