@@ -13,9 +13,8 @@ function EditTeam() {
     pilots: [],
   });
 
-  const [availablePilots, setAvailablePilots] = useState([]); // List of pilots for dropdown
+  const [availablePilots, setAvailablePilots] = useState([]);
 
-  // Load team data on mount
   useEffect(() => {
     const loadTeam = async () => {
       try {
@@ -25,14 +24,14 @@ function EditTeam() {
         setTeam(response.data);
       } catch (error) {
         console.error("Error fetching team data:", error);
-        alert("Error al cargar los datos del equipo.");
+        alert("Error loading team data.");
       }
     };
 
     const loadPilots = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/pilots`);
-        setAvailablePilots(response.data); // Load all available pilots
+        const response = await axios.get("http://localhost:8000/pilots");
+        setAvailablePilots(response.data);
       } catch (error) {
         console.error("Error loading pilots:", error);
       }
@@ -44,12 +43,10 @@ function EditTeam() {
     }
   }, [name]);
 
-  // Handle form input changes
   const onInputChange = (e) => {
     setTeam({ ...team, [e.target.name]: e.target.value });
   };
 
-  // Add a pilot to the team
   const addPilot = (pilotId) => {
     const selectedPilot = availablePilots.find((pilot) => pilot.id === parseInt(pilotId));
     if (selectedPilot && !team.pilots.some((pilot) => pilot.id === selectedPilot.id)) {
@@ -60,7 +57,6 @@ function EditTeam() {
     }
   };
 
-  // Remove a pilot from the team
   const removePilot = (pilotId) => {
     setTeam((prevTeam) => ({
       ...prevTeam,
@@ -70,15 +66,13 @@ function EditTeam() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-  
-    console.log("🚀 Preparing team update...");
-  
+
     if (!team || !team.name) {
-      console.error("❌ Error: Missing team data.");
-      alert("Error: No se puede actualizar un equipo sin datos válidos.");
+      console.error("Error: Missing team data.");
+      alert("Error: No valid team data provided.");
       return;
     }
-  
+
     const updatedTeam = {
       name: team.name,
       logoUrl: team.logoUrl,
@@ -91,120 +85,67 @@ function EditTeam() {
         imageUrl: p.imageUrl,
         country: p.country || "UNKNOWN",
         twitter: p.twitter,
-        team: { name: team.name }, // ✅ Ensure team is assigned
+        team: { name: team.name },
       })),
     };
-  
-    console.log("✅ Submitting updated team data:", JSON.stringify(updatedTeam, null, 2));
-  
+
+    console.log("Submitting updated team data:", JSON.stringify(updatedTeam, null, 2));
+
     try {
       await axios.put(`http://localhost:8000/teams/${encodeURIComponent(team.name)}`, updatedTeam, {
         headers: { "Content-Type": "application/json" },
       });
-  
-      alert("✅ Equipo actualizado correctamente");
+
+      alert("Team updated successfully");
       navigate("/teams");
     } catch (error) {
-      console.error("❌ Error updating team data:", error);
-      alert("Error al actualizar el equipo. Ver consola.");
+      console.error("Error updating team data:", error);
+      alert("Error updating team. Check the console.");
     }
-  };  
-  
+  };
 
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-8 offset-md-2 border rounded p-4 mt-2 mb-4 shadow text-white">
-          <h2 className="text-center m-4">EDITAR EQUIPO</h2>
+          <h2 className="text-center m-4">EDIT TEAM</h2>
           <form onSubmit={onSubmit}>
-            {/* Team Name (Disabled) */}
             <div className="mb-3">
-              <label htmlFor="name" className="form-label">
-                Nombre:
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                value={team.name}
-                disabled // Prevent editing team name
-              />
+              <label htmlFor="name" className="form-label">Name:</label>
+              <input type="text" className="form-control" name="name" value={team.name} disabled />
             </div>
 
-            {/* Logo URL */}
             <div className="mb-3">
-              <label htmlFor="logoUrl" className="form-label">
-                Logo del equipo:
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="logoUrl"
-                value={team.logoUrl}
-                onChange={onInputChange}
-              />
+              <label htmlFor="logoUrl" className="form-label">Team Logo:</label>
+              <input type="text" className="form-control" name="logoUrl" value={team.logoUrl} onChange={onInputChange} />
             </div>
 
-            {/* Twitter Handle */}
             <div className="mb-3">
-              <label htmlFor="twitter" className="form-label">
-                Twitter:
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="twitter"
-                value={team.twitter}
-                onChange={onInputChange}
-              />
+              <label htmlFor="twitter" className="form-label">Twitter:</label>
+              <input type="text" className="form-control" name="twitter" value={team.twitter} onChange={onInputChange} />
             </div>
 
-            {/* Pilots List */}
             <div className="mb-3">
-              <label htmlFor="pilots" className="form-label">
-                Pilotos:
-              </label>
+              <label htmlFor="pilots" className="form-label">Pilots:</label>
               <ul className="list-group mb-3">
                 {team.pilots.map((pilot) => (
                   <li key={pilot.id} className="list-group-item d-flex justify-content-between align-items-center">
                     {pilot.name} {pilot.surname}
-                    <button
-                      type="button"
-                      className="btn btn-danger btn-sm"
-                      onClick={() => removePilot(pilot.id)}
-                    >
-                      Eliminar
-                    </button>
+                    <button type="button" className="btn btn-danger btn-sm" onClick={() => removePilot(pilot.id)}>Remove</button>
                   </li>
                 ))}
               </ul>
 
-              {/* Add Pilot Dropdown */}
-              <select
-                className="form-select"
-                onChange={(e) => addPilot(e.target.value)}
-                defaultValue=""
-              >
-                <option value="" disabled>
-                  Agregar piloto
-                </option>
-                {availablePilots
-                  .filter((pilot) => !team.pilots.some((p) => p.id === pilot.id))
-                  .map((pilot) => (
-                    <option key={pilot.id} value={pilot.id}>
-                      {pilot.name} {pilot.surname}
-                    </option>
-                  ))}
+              <select className="form-select" onChange={(e) => addPilot(e.target.value)} defaultValue="">
+                <option value="" disabled>Add Pilot</option>
+                {availablePilots.filter((pilot) => !team.pilots.some((p) => p.id === pilot.id)).map((pilot) => (
+                  <option key={pilot.id} value={pilot.id}>{pilot.name} {pilot.surname}</option>
+                ))}
               </select>
             </div>
 
-            {/* Submit & Cancel Buttons */}
-            <button type="submit" className="btn btn-outline-danger">
-              Guardar cambios
-            </button>
-            <Link className="btn btn-outline-secondary ms-2" to="/teams">
-              Cancelar
-            </Link>
+            <button type="submit" className="btn btn-outline-danger">Save Changes</button>
+            <Link className="btn btn-outline-secondary ms-2" to="/teams">Cancel</Link>
           </form>
         </div>
       </div>

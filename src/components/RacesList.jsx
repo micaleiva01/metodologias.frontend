@@ -7,60 +7,54 @@ function RacesList() {
 
     useEffect(() => {
         loadRaces();
+        return () => setRaces([]);
     }, []);
 
     const loadRaces = async () => {
         try {
             const result = await axios.get("http://localhost:8000/calendar");
-            setRaces(result.data);
+            const formattedRaces = result.data.map((race) => ({
+                ...race,
+                date: new Date(race.id.date).toISOString().split("T")[0],
+            }));
+            setRaces(formattedRaces);
         } catch (error) {
             console.error("Error fetching races:", error);
         }
     };
 
-    const deleteRace = async (race) => {
-        try {
-            await axios.delete("http://localhost:8000/calendar/race", {
-                data: { date: race.date, city: race.city, name: race.name },
-            });
-            setRaces(races.filter((r) => r !== race));
-            alert("Carrera eliminada correctamente.");
-        } catch (error) {
-            console.error("Error deleting race:", error);
-            alert("Error al eliminar la carrera. Inténtalo de nuevo.");
-        }
-    };
-
     return (
-        <div className="container my-4">
-            <Link to="/create-race" className="btn btn-outline-danger mb-4">
-                Crear Nueva Carrera
-            </Link>
-            <div className="row">
-                {races.map((race) => (
-                    <div key={`${race.date}-${race.city}-${race.name}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                        <div className="card h-100">
+        <div className="container my-5">
+            <div className="row row-cols-1 row-cols-md-3 g-4">
+                {races.map((race, index) => (
+                    <div key={index} className="col">
+                        <div className="card shadow-sm h-100 bg-transparent text-white border-white text-center">
                             <div className="card-body">
-                                <h5 className="card-title">{race.name}</h5>
-                                <p className="card-text">Ciudad: {race.city}</p>
-                                <p className="card-text">Fecha: {race.date}</p>
-                                <Link
-                                    to={`/edit-race/${race.date}/${race.city}/${race.name}`}
-                                    className="btn btn-outline-primary"
-                                >
-                                    Editar
-                                </Link>
-                                <button
-                                    className="btn btn-danger ms-2"
-                                    onClick={() => deleteRace(race)}
-                                >
-                                    Eliminar
+                                <h5 className="card-title fw-bold">
+                                    {race.id.name}
+                                </h5>
+                                <h6 className="card-subtitle mb-2 text-white">
+                                    {race.id.city}
+                                </h6>
+                                <p className="card-text">
+                                    <strong>Date:</strong> {race.date}
+                                </p>
+                            </div>
+                            <div className="card-footer d-flex justify-content-center">
+                                <button className="btn btn-outline-primary btn-sm m-1">
+                                    Edit
+                                </button>
+                                <button className="btn btn-outline-danger btn-sm m-1">
+                                    Delete
                                 </button>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
+            <Link to="/create-race" className="btn btn-outline-danger m-3">
+                Crear Nueva Carrera
+            </Link>
         </div>
     );
 }

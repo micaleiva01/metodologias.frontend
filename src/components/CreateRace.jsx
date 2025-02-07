@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -6,22 +6,54 @@ function CreateRace() {
     let navigate = useNavigate();
 
     const [race, setRace] = useState({
+        date: "",
         name: "",
         city: "",
-        date: "",
     });
 
-    const { name, city, date } = race;
+    const [circuits, setCircuits] = useState([]);
+
+    useEffect(() => {
+        fetchCircuits();
+    }, []);
+
+    const fetchCircuits = async () => {
+        try {
+            const result = await axios.get("http://localhost:8000/circuits");
+            setCircuits(result.data);
+        } catch (error) {
+            console.error("Error fetching circuits:", error);
+        }
+    };
 
     const onInputChange = (e) => {
         setRace({ ...race, [e.target.name]: e.target.value });
     };
 
+    const onCircuitSelect = (e) => {
+        const selectedCircuit = circuits.find(
+            (circuit) => circuit.name === e.target.value
+        );
+        if (selectedCircuit) {
+            setRace({
+                ...race,
+                name: selectedCircuit.name,
+                city: selectedCircuit.city,
+            });
+        }
+    };
+
     const onSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            await axios.post("http://localhost:8000/calendar/race", race);
+            const newRace = {
+                id: {
+                    date: race.date,
+                    name: race.name,
+                    city: race.city,
+                },
+            };
+            await axios.post("http://localhost:8000/calendar/race", newRace);
             navigate("/races");
         } catch (error) {
             console.error("Error creating race:", error);
@@ -36,40 +68,42 @@ function CreateRace() {
                     <h2 className="text-center">Crear Nueva Carrera</h2>
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
-                            <label htmlFor="name" className="form-label">Nombre</label>
-                            <input
-                                type="text"
+                            <label htmlFor="circuit" className="form-label">
+                                Seleccionar Circuito
+                            </label>
+                            <select
                                 className="form-control"
-                                name="name"
-                                value={name}
-                                onChange={onInputChange}
+                                name="circuit"
+                                onChange={onCircuitSelect}
                                 required
-                            />
+                            >
+                                <option value="">-- Seleccionar Circuito --</option>
+                                {circuits.map((circuit) => (
+                                    <option key={circuit.name} value={circuit.name}>
+                                        {circuit.name} ({circuit.city})
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="city" className="form-label">Ciudad</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="city"
-                                value={city}
-                                onChange={onInputChange}
-                                required
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="date" className="form-label">Fecha</label>
+                            <label htmlFor="date" className="form-label">
+                                Fecha
+                            </label>
                             <input
                                 type="date"
                                 className="form-control"
                                 name="date"
-                                value={date}
+                                value={race.date}
                                 onChange={onInputChange}
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn btn-outline-light">Crear</button>
-                        <Link to="/races" className="btn btn-outline-secondary ms-2">Cancelar</Link>
+                        <button type="submit" className="btn btn-outline-light">
+                            Crear
+                        </button>
+                        <Link to="/races" className="btn btn-outline-secondary ms-2">
+                            Cancelar
+                        </Link>
                     </form>
                 </div>
             </div>

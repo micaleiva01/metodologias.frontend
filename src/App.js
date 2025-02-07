@@ -27,8 +27,8 @@ import TeamDetails from "./components/TeamDetails";
 // Cars
 import Cars from "./pages/Cars";
 import CreateCar from "./components/CreateCar";
-import EditCar from "./components/EditCar";
 import CarDetails from "./components/CarDetails";
+import EditCar from "./components/EditCar";
 
 // News
 import News from "./pages/News";
@@ -91,8 +91,8 @@ function App() {
             {/* Cars */}
             <Route path="/cars" element={<Cars />} />
             <Route path="/create-car" element={<CreateCar />} />
-            <Route path="/edit-car/:name" element={<EditCar />} />
-            <Route path="/car-details/:name" element={<CarDetails />} />
+            <Route path="/edit-car/:id" element={<EditCar />} />
+            <Route path="/car-details/:id" element={<CarDetails />} />
 
             {/* Races */}
             <Route path="/races" element={<RacesList />} />

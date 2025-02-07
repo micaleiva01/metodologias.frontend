@@ -1,32 +1,35 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
 function EditRace() {
-    let navigate = useNavigate();
-    const { date, city, name } = useParams();
+    const navigate = useNavigate();
+    const { date, city, name } = useParams(); // Extracting parameters from URL
 
     const [race, setRace] = useState({
+        date: "",
         name: "",
         city: "",
-        date: "",
     });
 
     const loadRace = useCallback(async () => {
         try {
-            const result = await axios.get("http://localhost:8000/calendar/race", {
-                params: { date, city, name },
+            const result = await axios.get(
+                `http://localhost:8000/calendar/race?date=${date}&name=${name}&city=${city}`
+            );
+            setRace({
+                date: result.data.id.date,
+                name: result.data.id.name,
+                city: result.data.id.city,
             });
-            setRace(result.data);
         } catch (error) {
-            console.error("Error loading race:", error);
-            alert("Error al cargar la carrera. Inténtalo de nuevo.");
+            console.error("Error fetching race details:", error);
         }
-    }, [date, city, name]);
+    }, [date, name, city]); // Memoize the function based on these dependencies
 
     useEffect(() => {
         loadRace();
-    }, [loadRace]);
+    }, [loadRace]); // Include the memoized function as a dependency
 
     const onInputChange = (e) => {
         setRace({ ...race, [e.target.name]: e.target.value });
@@ -34,13 +37,22 @@ function EditRace() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            await axios.put("http://localhost:8000/calendar/race", race);
+            const updatedRace = {
+                id: {
+                    date: race.date,
+                    name: race.name,
+                    city: race.city,
+                },
+            };
+            await axios.put(
+                `http://localhost:8000/calendar/race?date=${date}&name=${name}&city=${city}`,
+                updatedRace
+            );
             navigate("/races");
         } catch (error) {
             console.error("Error updating race:", error);
-            alert("Error al actualizar la carrera. Inténtalo de nuevo.");
+            alert("Error al actualizar la carrera. Verifica los datos e inténtalo nuevamente.");
         }
     };
 

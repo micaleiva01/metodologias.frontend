@@ -6,41 +6,56 @@ function EditCircuit() {
     let navigate = useNavigate();
     const { name, city } = useParams();
 
+    // ✅ Ensure `id` is stored properly
     const [circuit, setCircuit] = useState({
-        name: "",
-        city: "",
+        id: { name: "", city: "" },
         country: "",
-        n_laps: "",
+        track: "",
+        nLaps: "",
         length: "",
+        slowCorners: "",
+        midCorners: "",
+        fastCorners: "",
     });
 
-    const loadCircuit = useCallback(async () => {
+    // ✅ Fix request URL by encoding `name` and `city`
+    const fetchCircuit = useCallback(async () => {
+        const encodedName = encodeURIComponent(name.trim());
+        const encodedCity = encodeURIComponent(city.trim());
+
+        console.log(`Fetching circuit: /circuits/${encodedName}/${encodedCity}`); // ✅ Debugging request
+
         try {
-            const result = await axios.get("http://localhost:8000/circuits", {
-                params: { name, city },
-            });
+            const result = await axios.get(`http://localhost:8000/circuits/${encodedName}/${encodedCity}`);
+            console.log("Circuit data received:", result.data); // ✅ Debugging response
             setCircuit(result.data);
         } catch (error) {
-            console.error("Error loading circuit:", error);
+            console.error("Error loading circuit:", error.response?.data || error.message);
             alert("Error al cargar el circuito. Inténtalo de nuevo.");
         }
     }, [name, city]);
 
     useEffect(() => {
-        loadCircuit();
-    }, [loadCircuit]);
+        fetchCircuit();
+    }, [fetchCircuit]);
 
     const onInputChange = (e) => {
-        setCircuit({ ...circuit, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setCircuit({ ...circuit, [name]: value });
     };
 
+    // ✅ Ensure update request sends correct data
     const onSubmit = async (e) => {
         e.preventDefault();
 
+        const encodedName = encodeURIComponent(name.trim());
+        const encodedCity = encodeURIComponent(city.trim());
+
+        console.log("Updating circuit:", circuit); // ✅ Debugging request payload
+
         try {
-            await axios.put("http://localhost:8000/circuits", circuit, {
-                params: { name, city },
-            });
+            await axios.put(`http://localhost:8000/circuits/${encodedName}/${encodedCity}`, circuit);
+            alert("Circuito actualizado correctamente.");
             navigate("/circuits");
         } catch (error) {
             console.error("Error updating circuit:", error.response?.data || error.message);
@@ -60,8 +75,7 @@ function EditCircuit() {
                                 type="text"
                                 className="form-control"
                                 name="name"
-                                value={circuit.name}
-                                onChange={onInputChange}
+                                value={circuit.id.name}
                                 readOnly
                             />
                         </div>
@@ -72,8 +86,7 @@ function EditCircuit() {
                                 type="text"
                                 className="form-control"
                                 name="city"
-                                value={circuit.city}
-                                onChange={onInputChange}
+                                value={circuit.id.city}
                                 readOnly
                             />
                         </div>
@@ -91,12 +104,24 @@ function EditCircuit() {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="n_laps" className="form-label">Número de Vueltas</label>
+                            <label htmlFor="track" className="form-label">Pista</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="track"
+                                value={circuit.track}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="nLaps" className="form-label">Número de Vueltas</label>
                             <input
                                 type="number"
                                 className="form-control"
-                                name="n_laps"
-                                value={circuit.n_laps}
+                                name="nLaps"
+                                value={circuit.nLaps}
                                 onChange={onInputChange}
                                 required
                             />
@@ -109,6 +134,42 @@ function EditCircuit() {
                                 className="form-control"
                                 name="length"
                                 value={circuit.length}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="slowCorners" className="form-label">Curvas Lentas</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="slowCorners"
+                                value={circuit.slowCorners}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="midCorners" className="form-label">Curvas Medias</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="midCorners"
+                                value={circuit.midCorners}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="fastCorners" className="form-label">Curvas Rápidas</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="fastCorners"
+                                value={circuit.fastCorners}
                                 onChange={onInputChange}
                                 required
                             />

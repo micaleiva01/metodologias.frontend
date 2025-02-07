@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 function CarDetails() {
+  
   const { name } = useParams();
   const [carDetails, setCarDetails] = useState(null);
   const [loading, setLoading] = useState(true);

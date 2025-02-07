@@ -21,19 +21,22 @@ function TeamCard({ team, onDelete, onClick }) {
         <div>
           <Link
             className="btn btn-outline-primary mt-2"
-            to={`/edit-team/${team.name}`}
+            to={`/edit-team/${encodeURIComponent(team.name)}`}
             onClick={(e) => e.stopPropagation()}
           >
-            Editar
+            Edit
           </Link>
           <button
             className="btn btn-danger mx-2 mt-2"
             onClick={(e) => {
               e.stopPropagation();
-              onDelete(team.name); // Use team.name instead of team.id
+              if (window.confirm("Are you sure you want to delete this team?")) {
+                console.log(`Deleting team: ${team.name}`);
+                onDelete(team.name);
+              }
             }}
           >
-            Eliminar
+            Delete
           </button>
         </div>
       </div>

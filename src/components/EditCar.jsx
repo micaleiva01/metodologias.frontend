@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 function EditCar() {
   const navigate = useNavigate();
-  const { id } = useParams(); // Assuming cars are fetched by ID
+  const { id } = useParams();
 
   const [car, setCar] = useState({
     name: "",
@@ -26,6 +26,9 @@ function EditCar() {
     const loadCar = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/cars/${id}`);
+        if (!response.data) {
+          throw new Error("Car not found");
+        }
         setCar(response.data);
       } catch (error) {
         console.error("Error fetching car data:", error);
@@ -51,7 +54,9 @@ function EditCar() {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:8000/cars/${id}`, car);
+      await axios.put(`http://localhost:8000/cars/${id}`, car, {
+        params: { teamName: car.teamName },
+      });
       navigate("/cars");
     } catch (error) {
       console.error("Error updating car:", error);
@@ -75,85 +80,6 @@ function EditCar() {
                 placeholder="Enter car name"
                 name="name"
                 value={car.name}
-                onChange={onInputChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="ersSlow" className="form-label">
-                ERS Slow (Float):
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                className="form-control"
-                placeholder="Enter ERS Slow value"
-                name="ersSlow"
-                value={car.ersSlow}
-                onChange={onInputChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="ersMid" className="form-label">
-                ERS Mid (Float):
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                className="form-control"
-                placeholder="Enter ERS Mid value"
-                name="ersMid"
-                value={car.ersMid}
-                onChange={onInputChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="ersFast" className="form-label">
-                ERS Fast (Float):
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                className="form-control"
-                placeholder="Enter ERS Fast value"
-                name="ersFast"
-                value={car.ersFast}
-                onChange={onInputChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="consumption" className="form-label">
-                Consumption (Integer):
-              </label>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Enter consumption"
-                name="consumption"
-                value={car.consumption}
-                onChange={onInputChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="batteryCapacity" className="form-label">
-                Battery Capacity (Float):
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                className="form-control"
-                placeholder="Enter battery capacity"
-                name="batteryCapacity"
-                value={car.batteryCapacity}
                 onChange={onInputChange}
                 required
               />

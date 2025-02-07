@@ -2,29 +2,37 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-function CreateCircuits() {
+function CreateCircuit() {
     let navigate = useNavigate();
 
     const [circuit, setCircuit] = useState({
-        name: "",
-        city: "",
+        id: { name: "", city: "" },  // ✅ Ensure ID is included
         country: "",
-        n_laps: "",
+        track: "",  // ✅ Added missing field
+        nLaps: "",
         length: "",
+        slowCorners: "",
+        midCorners: "",
+        fastCorners: "",
     });
 
-    const { name, city, country, n_laps, length } = circuit;
+    const { id, country, track, nLaps, length, slowCorners, midCorners, fastCorners } = circuit;
 
     const onInputChange = (e) => {
-        setCircuit({ ...circuit, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        if (name === "name" || name === "city") {
+            setCircuit({ ...circuit, id: { ...circuit.id, [name]: value } }); // ✅ Update composite key
+        } else {
+            setCircuit({ ...circuit, [name]: value });
+        }
     };
 
     const validateCircuit = () => {
-        if (!name || !city || !country || !n_laps || !length) {
+        if (!id.name || !id.city || !country || !track || !nLaps || !length || !slowCorners || !midCorners || !fastCorners) {
             alert("Todos los campos son obligatorios.");
             return false;
         }
-        if (isNaN(n_laps) || n_laps <= 0) {
+        if (isNaN(nLaps) || nLaps <= 0) {
             alert("Número de vueltas debe ser un número positivo.");
             return false;
         }
@@ -32,22 +40,33 @@ function CreateCircuits() {
             alert("La longitud debe ser un número positivo.");
             return false;
         }
+        if (isNaN(slowCorners) || slowCorners < 0) {
+            alert("Las curvas lentas deben ser un número válido.");
+            return false;
+        }
+        if (isNaN(midCorners) || midCorners < 0) {
+            alert("Las curvas medias deben ser un número válido.");
+            return false;
+        }
+        if (isNaN(fastCorners) || fastCorners < 0) {
+            alert("Las curvas rápidas deben ser un número válido.");
+            return false;
+        }
         return true;
     };
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
         if (!validateCircuit()) return;
 
+        console.log("Sending data:", circuit); // ✅ Debugging
+
         try {
-            await axios.post("http://localhost:8000/circuits", circuit); // Adjust endpoint if necessary
+            await axios.post("http://localhost:8000/circuits", circuit);
             navigate("/circuits");
         } catch (error) {
             console.error("Error creating circuit:", error.response?.data || error.message);
-            const errorMessage =
-                error.response?.data?.message || "Error al crear el circuito. Inténtalo de nuevo.";
-            alert(errorMessage);
+            alert(error.response?.data?.message || "Error al crear el circuito.");
         }
     };
 
@@ -64,7 +83,7 @@ function CreateCircuits() {
                                 className="form-control"
                                 placeholder="Nombre del circuito"
                                 name="name"
-                                value={name}
+                                value={id.name}
                                 onChange={onInputChange}
                                 required
                             />
@@ -77,7 +96,7 @@ function CreateCircuits() {
                                 className="form-control"
                                 placeholder="Ciudad del circuito"
                                 name="city"
-                                value={city}
+                                value={id.city}
                                 onChange={onInputChange}
                                 required
                             />
@@ -97,13 +116,26 @@ function CreateCircuits() {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="n_laps" className="form-label">Número de Vueltas</label>
+                            <label htmlFor="track" className="form-label">Pista</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Nombre de la pista"
+                                name="track"
+                                value={track}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="nLaps" className="form-label">Número de Vueltas</label>
                             <input
                                 type="number"
                                 className="form-control"
                                 placeholder="Número de vueltas"
-                                name="n_laps"
-                                value={n_laps}
+                                name="nLaps"
+                                value={nLaps}
                                 onChange={onInputChange}
                                 required
                             />
@@ -122,12 +154,47 @@ function CreateCircuits() {
                             />
                         </div>
 
-                        <button type="submit" className="btn btn-outline-danger">
-                            Crear
-                        </button>
-                        <Link to="/circuits" className="btn btn-outline-secondary ms-2">
-                            Cancelar
-                        </Link>
+                        <div className="mb-3">
+                            <label htmlFor="slowCorners" className="form-label">Curvas Lentas</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                placeholder="Número de curvas lentas"
+                                name="slowCorners"
+                                value={slowCorners}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="midCorners" className="form-label">Curvas Medias</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                placeholder="Número de curvas medias"
+                                name="midCorners"
+                                value={midCorners}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="fastCorners" className="form-label">Curvas Rápidas</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                placeholder="Número de curvas rápidas"
+                                name="fastCorners"
+                                value={fastCorners}
+                                onChange={onInputChange}
+                                required
+                            />
+                        </div>
+
+                        <button type="submit" className="btn btn-outline-danger">Crear</button>
+                        <Link to="/circuits" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
                 </div>
             </div>
@@ -135,4 +202,4 @@ function CreateCircuits() {
     );
 }
 
-export default CreateCircuits;
+export default CreateCircuit;
