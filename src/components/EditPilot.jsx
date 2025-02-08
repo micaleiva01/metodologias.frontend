@@ -172,7 +172,7 @@ function EditPilot() {
                         </div>
 
                         <button type="submit" className="btn btn-outline-danger">Editar piloto</button>
-                        <Link className="btn btn-outline-secondary ms-2" to="/pilots">Cancelar</Link>
+                        <Link className="btn btn-outline-secondary ms-2" to="/pages/pilots">Cancelar</Link>
                     </form>
                 </div>
             </div>

@@ -2,22 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function ErsCalculationTool() {
-
   const [cars, setCars] = useState([]); 
   const [selectedCar, setSelectedCar] = useState(null); 
   const [drivingMode, setDrivingMode] = useState("normal"); 
   const [energyPerLap, setEnergyPerLap] = useState(0); 
   const [lapsNeeded, setLapsNeeded] = useState(0); 
-  const energyCap = 4; // max capacidad
-
+  const energyCap = 4; // Max ERS capacity
 
   const modeFactors = {
-    saver: 1.05, // 5% +
-    normal: 0.75, // 25% -
-    sport: 0.40, // 60% -
+    saver: 1.05, // 5% more recovery
+    normal: 0.75, // 25% less recovery
+    sport: 0.40, // 60% less recovery
   };
 
-
+  // Fetch the list of cars from the backend
   useEffect(() => {
     const fetchCars = async () => {
       try {
@@ -31,43 +29,28 @@ function ErsCalculationTool() {
     fetchCars();
   }, []);
 
-
+  // Handle car selection
   const handleCarChange = (e) => {
     const carId = parseInt(e.target.value, 10);
-    console.log("Selected Car ID:", carId);
-
-    if (!cars.length) {
-      console.error("Car list is empty.");
-      return;
-    }
-
     const car = cars.find((c) => c.id === carId);
-    if (!car) {
-      console.error("Selected car not found.");
-      return;
-    }
+    if (!car) return;
 
     setSelectedCar(car);
-    console.log("Car selected:", car.name);
-
-    // Recalculate ERS based on selected car and mode
     calculateErs(car, drivingMode);
   };
 
-  // Handles mode selection
+  // Handle driving mode selection
   const handleModeChange = (e) => {
     const mode = e.target.value;
     setDrivingMode(mode);
-    console.log("Driving Mode Selected:", mode); // Debugging log
-
     if (selectedCar) {
       calculateErs(selectedCar, mode);
     }
   };
 
-  // Calculates ERS energy per lap & laps needed
+  // Calculate ERS energy per lap & laps needed
   const calculateErs = (car, mode) => {
-    const baseEnergy = car.ersSlow || 0; // Use ersSlow as the base recovery
+    const baseEnergy = car.ersSlow || 0; // Default to 0 if no ERS data
     const factor = modeFactors[mode] || 1;
     const calculatedEnergyPerLap = baseEnergy * factor;
     const calculatedLapsNeeded = calculatedEnergyPerLap > 0 ? Math.ceil(energyCap / calculatedEnergyPerLap) : 0;

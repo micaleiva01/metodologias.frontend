@@ -16,14 +16,15 @@ function Cars() {
           Add a New Car
         </Link>
         <div className="container">
-            <div className="row justify-content-md-center text-light">
-                <div className="col col-lg-4 border border-danger p-4 m-4">
-                    <FuelConsumptionTool />
-                </div>
-                <div className="col col-lg-4 border border-danger p-4 m-4">
-                    <ErsCalculationTool />
-                </div>
+          <div className="row justify-content-md-center text-light">
+            <div className="col col-lg-4 border border-danger p-4 m-4">
+              <FuelConsumptionTool />
             </div>
+            <div className="col col-lg-4 border border-danger p-4 m-4">
+              {/* ✅ No references to setSelectedCar */}
+              <ErsCalculationTool />
+            </div>
+          </div>
         </div>
       </main>
     </div>

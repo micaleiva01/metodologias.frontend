@@ -4,11 +4,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 function EditCircuit() {
     let navigate = useNavigate();
-    const { name, city } = useParams();
+    const { city, name } = useParams();
 
-    // ✅ Ensure `id` is stored properly
     const [circuit, setCircuit] = useState({
-        id: { name: "", city: "" },
+        id: { city: "", name: "" },
         country: "",
         track: "",
         nLaps: "",
@@ -18,43 +17,56 @@ function EditCircuit() {
         fastCorners: "",
     });
 
-    // ✅ Fix request URL by encoding `name` and `city`
+
     const fetchCircuit = useCallback(async () => {
-        const encodedName = encodeURIComponent(name.trim());
+
         const encodedCity = encodeURIComponent(city.trim());
-
-        console.log(`Fetching circuit: /circuits/${encodedName}/${encodedCity}`); // ✅ Debugging request
-
+        const encodedName = encodeURIComponent(name.trim());
+    
+        console.log(`Fetching circuit: /circuits/${encodedCity}/${encodedName}`); 
+    
         try {
-            const result = await axios.get(`http://localhost:8000/circuits/${encodedName}/${encodedCity}`);
-            console.log("Circuit data received:", result.data); // ✅ Debugging response
+            const result = await axios.get(`http://localhost:8000/circuits/${encodedCity}/${encodedName}`);
+            console.log("Circuit data received:", result.data);
             setCircuit(result.data);
         } catch (error) {
-            console.error("Error loading circuit:", error.response?.data || error.message);
+            console.error("Error loading circuit: ", error.response?.data || error.message);
             alert("Error al cargar el circuito. Inténtalo de nuevo.");
         }
-    }, [name, city]);
+    }, [city, name]);
+    
 
     useEffect(() => {
         fetchCircuit();
     }, [fetchCircuit]);
+
 
     const onInputChange = (e) => {
         const { name, value } = e.target;
         setCircuit({ ...circuit, [name]: value });
     };
 
-    // ✅ Ensure update request sends correct data
+
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        const encodedName = encodeURIComponent(name.trim());
+    
         const encodedCity = encodeURIComponent(city.trim());
-
-        console.log("Updating circuit:", circuit); // ✅ Debugging request payload
-
+        const encodedName = encodeURIComponent(name.trim());
+    
+        console.log(`Updating circuit: /circuits/${encodedCity}/${encodedName}`);
+    
+        const updatedCircuit = {
+            country: circuit.country,
+            track: circuit.track,
+            nLaps: circuit.nLaps,
+            length: circuit.length,
+            slowCorners: circuit.slowCorners,
+            midCorners: circuit.midCorners,
+            fastCorners: circuit.fastCorners
+        };
+    
         try {
-            await axios.put(`http://localhost:8000/circuits/${encodedName}/${encodedCity}`, circuit);
+            await axios.put(`http://localhost:8000/circuits/${encodedCity}/${encodedName}`, updatedCircuit);
             alert("Circuito actualizado correctamente.");
             navigate("/circuits");
         } catch (error) {
@@ -62,6 +74,8 @@ function EditCircuit() {
             alert("Error al actualizar el circuito. Inténtalo de nuevo.");
         }
     };
+        
+    
 
     return (
         <div className="container">

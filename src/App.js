@@ -101,8 +101,8 @@ function App() {
 
             {/* Circuits */}
             <Route path="/circuits" element={<CircuitList />} />
-            <Route path="/create-circuit" element={<CreateCircuits />} />
-            <Route path="/edit-circuit/:name/:city" element={<EditCircuit />} />
+            <Route path="/circuits/create" element={<CreateCircuits />} />
+            <Route path="/circuits/edit/:city/:name" element={<EditCircuit />} />
 
             {/* Login & Users */}
             <Route path="/login" element={<Login />} />

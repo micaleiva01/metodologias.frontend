@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-
 function FuelConsumptionTool() {
   const [cars, setCars] = useState([]);
-  const [/*selectedCar,*/ setSelectedCar] = useState(null);
+  const [selectedCar, setSelectedCar] = useState(null);  // ✅ Correctly defined state
   const [laps, setLaps] = useState(1);
   const [fuelConsumption, setFuelConsumption] = useState(0);
-
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -22,18 +20,19 @@ function FuelConsumptionTool() {
     fetchCars();
   }, []);
 
-
   const handleCarChange = (e) => {
     const carId = e.target.value;
     const car = cars.find((c) => c.id === parseInt(carId, 10));
-    setSelectedCar(car);
-    setFuelConsumption(car ? car.consumption : 0);
+
+    if (car) {
+      setSelectedCar(car);  // ✅ No more undefined function
+      setFuelConsumption(car.consumption);
+    }
   };
 
   const calculateTotalFuel = () => {
-    return fuelConsumption * laps; // consumo por vuelta * vueltas = consumicion total por carrera
+    return fuelConsumption * laps; 
   };
-
 
   return (
     <div className="container mt-4">

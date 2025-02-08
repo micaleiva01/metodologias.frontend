@@ -12,7 +12,7 @@ function CircuitList() {
     const loadCircuits = async () => {
         try {
             const result = await axios.get("http://localhost:8000/circuits");
-            console.log("Fetched circuits:", result.data); // ✅ Debugging
+            console.log("Fetched circuits:", result.data);
             setCircuits(result.data);
         } catch (error) {
             console.error("Error fetching circuits:", error);
@@ -21,26 +21,26 @@ function CircuitList() {
     };
 
     const deleteCircuit = async (circuit) => {
-        if (!circuit.id || !circuit.id.name || !circuit.id.city) {
-            alert("Error: Circuit ID is missing.");
-            return;
-        }
+    if (!circuit.id || !circuit.id.name || !circuit.id.city) {
+        alert("Error: Circuit ID is missing.");
+        return;
+    }
 
-        const encodedName = encodeURIComponent(circuit.id.name.trim());
-        const encodedCity = encodeURIComponent(circuit.id.city.trim());
+    const encodedCity = encodeURIComponent(circuit.id.city.trim());
+    const encodedName = encodeURIComponent(circuit.id.name.trim());
 
-        console.log(`Deleting circuit: /circuits/${encodedName}/${encodedCity}`); // ✅ Debugging
+    console.log(`Deleting circuit: /circuits/${encodedCity}/${encodedName}`);
 
-        try {
-            await axios.delete(`http://localhost:8000/circuits/${encodedName}/${encodedCity}`);
-            // ✅ Remove circuit from UI after successful delete
-            setCircuits(circuits.filter((c) => c.id.name !== circuit.id.name || c.id.city !== circuit.id.city));
-            alert("Circuito eliminado correctamente.");
-        } catch (error) {
-            console.error("Error deleting circuit:", error.response?.data || error.message);
-            alert("Error al eliminar el circuito. Inténtalo de nuevo.");
-        }
-    };
+    try {
+        await axios.delete(`http://localhost:8000/circuits/${encodedCity}/${encodedName}`);
+        setCircuits(circuits.filter((c) => c.id.name !== circuit.id.name || c.id.city !== circuit.id.city));
+        alert("Circuito eliminado correctamente.");
+    } catch (error) {
+        console.error("Error deleting circuit:", error.response?.data || error.message);
+        alert("Error al eliminar el circuito. Inténtalo de nuevo.");
+    }
+};
+
 
     return (
         <div className="container my-4">
@@ -58,7 +58,9 @@ function CircuitList() {
                                     <p className="card-text">País: {circuit.country}</p>
                                     <p className="card-text">Vueltas: {circuit.nLaps}</p>
                                     <p className="card-text">Longitud: {circuit.length} km</p>
-                                    <Link to={`/edit-circuit/${circuit.id.name}/${circuit.id.city}`} className="btn btn-outline-primary">Editar</Link>
+                                    <Link to={`/circuits/edit/${circuit.id.city}/${circuit.id.name}`} className="btn btn-outline-primary">
+                                        Editar
+                                    </Link>
                                     <button className="btn btn-danger ms-2" onClick={() => deleteCircuit(circuit)}>Eliminar</button>
                                 </div>
                             </div>
