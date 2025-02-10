@@ -1,103 +1,56 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("No estás autenticado");
-        }
-
-        const response = await fetch("/api/auth/me", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("No se pudo obtener la información del usuario");
-        }
-
-        const data = await response.json();
-        setUser(data);
-      } catch (err) {
-        setError(err.message);
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    };
-
-
-    fetchUserData();
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser) {
+      navigate("/login");
+    } else {
+      setUser(storedUser);
+    }
   }, [navigate]);
 
-
-  if (error) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   if (!user) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    return <p className="text-white text-center mt-5">Cargando...</p>; // Prevents the error
   }
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-md-8 offset-md-2 border rounded p-4 shadow">
-          <h1 className="text-center mb-4">Bienvenido, {user.name}!</h1>
-          <h5 className="text-center mb-3">Selecciona una opción:</h5>
-          <ul className="list-group">
-            <li
-              className="list-group-item list-group-item-action"
-              onClick={() => navigate("/profile")}
-            >
-              Ver perfil
-            </li>
-            <li
-              className="list-group-item list-group-item-action"
-              onClick={() => navigate("/settings")}
-            >
-              Configuración
-            </li>
-            <li
-              className="list-group-item list-group-item-action"
-              onClick={() => navigate("/help")}
-            >
-              Ayuda
-            </li>
-            <li
-              className="list-group-item list-group-item-action text-danger"
-              onClick={() => {
-                localStorage.removeItem("token");
-                navigate("/");
-              }}
-            >
-              Cerrar sesión
-            </li>
-          </ul>
+    <div className="container m-5 text-white text-center">
+      <h1>Bienvenido, {user.name}!</h1>
+      {user.rol === "ADMIN" ? (
+        <div>
+          <h3>¿Qué deseas hacer?</h3>
+          <div className="d-flex flex-column align-items-center">
+            <button className="btn btn-primary mb-2">Gestionar Usuarios</button>
+            <button className="btn btn-primary mb-2">Gestionar Noticias</button>
+            <button className="btn btn-primary mb-2">Gestionar Carreras</button>
+            <button className="btn btn-primary mb-2">Gestionar Circuitos</button>
+          </div>
+          <button className="btn btn-danger mt-3" onClick={handleLogout}>
+            Cerrar Sesión
+          </button>
         </div>
-      </div>
+      ) : (
+        <div>
+          <h3>¿Qué deseas hacer?</h3>
+          <div className="d-flex flex-column align-items-center">
+            <button className="btn btn-primary mb-2">Gestionar Pilotos</button>
+            <button className="btn btn-primary mb-2">Gestionar Autos</button>
+          </div>
+          <button className="btn btn-danger mt-3" onClick={handleLogout}>
+            Cerrar Sesión
+          </button>
+        </div>
+      )}
     </div>
   );
 };

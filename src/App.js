@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Heading + Footer
@@ -48,15 +48,22 @@ import EditCircuit from "./components/EditCircuit";
 // Login + Users
 import Login from "./pages/Login";
 import CreateUser from "./components/CreateUser";
+import Dashboard from "./pages/Dashboard";
 
 import './App.css';
 
-// --- Create a wrapper for pilot-related routes ---
 function PilotsWrapper() {
   return <Outlet />;
 }
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+  }, []);
+
   return (
     <Router>
       <div>
@@ -104,9 +111,15 @@ function App() {
             <Route path="/circuits/create" element={<CreateCircuits />} />
             <Route path="/circuits/edit/:city/:name" element={<EditCircuit />} />
 
-            {/* Login & Users */}
-            <Route path="/login" element={<Login />} />
+            {/* Login */}
+            {!user ? (
+              <Route path="/login" element={<Login />} />
+            ) : (
+              <Route path="/login" element={<Navigate to="/admin/dashboard" />} />
+            )}
             <Route path="/create-user" element={<CreateUser />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/team-manager/dashboard" element={<Dashboard />} />
 
             {/* Home */}
             <Route path="/" element={<News />} />
