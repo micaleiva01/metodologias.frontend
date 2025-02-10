@@ -48,23 +48,29 @@ function CreateNews() {
     const onSubmit = async (e) => {
         e.preventDefault();
         if (!validateNews()) return;
-
+    
+        const newsData = {
+            permalink: news.permalink,
+            title: news.title,
+            image: news.image,
+            text: news.text,
+            creator_id: parseInt(news.creator_id, 10), // Ensure it's an integer
+            date: news.date,
+        };
+    
+        console.log("🚀 Sending News Data:", JSON.stringify(newsData, null, 2)); // ✅ Log JSON data before sending request
+    
         try {
-            await axios.post("http://localhost:8000/new", {
-                permalink: news.permalink,
-                title: news.title,
-                image: news.image,
-                text: news.text,
-                creator_id: news.creator_id,
-                date: news.date,
-            });
+            const response = await axios.post("http://localhost:8000/new", newsData);
+            console.log("✅ News created successfully:", response.data);
             navigate("/news");
         } catch (error) {
-            console.error("Error creating news:", error);
-            const errorMessage = error.response?.data || "Failed to create news. Please try again.";
-            alert(errorMessage);
+            console.error("❌ Error creating news:", error.response?.data || error.message);
+            alert(error.response?.data || "Failed to create news. Please try again.");
         }
     };
+    
+    
 
     return (
         <div className="container">

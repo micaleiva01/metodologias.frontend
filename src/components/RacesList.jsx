@@ -4,9 +4,14 @@ import { Link } from "react-router-dom";
 
 function RacesList() {
     const [races, setRaces] = useState([]);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         loadRaces();
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser) {
+            setUser(storedUser);
+        }
         return () => setRaces([]);
     }, []);
 
@@ -40,21 +45,28 @@ function RacesList() {
                                     <strong>Date:</strong> {race.date}
                                 </p>
                             </div>
-                            <div className="card-footer d-flex justify-content-center">
-                                <button className="btn btn-outline-primary btn-sm m-1">
-                                    Edit
-                                </button>
-                                <button className="btn btn-outline-danger btn-sm m-1">
-                                    Delete
-                                </button>
-                            </div>
+                            {/* solo admins */}
+                            {user && user.rol === "ADMIN" && (
+                                <div className="card-footer d-flex justify-content-center">
+                                    <Link to={`/edit-race/${race.id.date}/${race.id.city}/${race.id.name}`} className="btn btn-outline-primary btn-sm m-1">
+                                        Edit
+                                    </Link>
+                                    <button className="btn btn-outline-danger btn-sm m-1">
+                                        Delete
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
             </div>
-            <Link to="/create-race" className="btn btn-outline-danger m-3">
-                Crear Nueva Carrera
-            </Link>
+
+            {/* solo admins */}
+            {user && user.rol === "ADMIN" && (
+                <Link to="/create-race" className="btn btn-outline-danger m-3">
+                    Crear Nueva Carrera
+                </Link>
+            )}
         </div>
     );
 }

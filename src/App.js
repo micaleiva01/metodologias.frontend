@@ -48,7 +48,6 @@ import EditCircuit from "./components/EditCircuit";
 // Login + Users
 import Login from "./pages/Login";
 import CreateUser from "./components/CreateUser";
-import Dashboard from "./pages/Dashboard";
 
 import './App.css';
 
@@ -118,9 +117,7 @@ function App() {
               <Route path="/login" element={<Navigate to="/admin/dashboard" />} />
             )}
             <Route path="/create-user" element={<CreateUser />} />
-            <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/team-manager/dashboard" element={<Dashboard />} />
-
+          
             {/* Home */}
             <Route path="/" element={<News />} />
           </Routes>

@@ -4,7 +4,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 function EditNews() {
     let navigate = useNavigate();
-    const { permalink } = useParams(); // Use permalink from URL
+    const { permalink } = useParams();
+    console.log("Permalink recibido en la URL:", permalink); // 🔍 Verificación
 
     const [news, setNews] = useState({
         permalink: "",
@@ -15,7 +16,7 @@ function EditNews() {
         date: "",
     });
 
-    const [loading, setLoading] = useState(true); // To handle loading state
+    const [loading, setLoading] = useState(true);
 
     const generatePermalink = (title) => {
         return title
@@ -49,40 +50,43 @@ function EditNews() {
     useEffect(() => {
         const loadNews = async () => {
             try {
-                console.log("Fetching all news to find the correct one...");
+                console.log("🔎 Fetching all news to find the correct one...");
                 const result = await axios.get("http://localhost:8000/new");
-                console.log("All news fetched:", result.data);
-
-                // Find the news item that matches the permalink
+                console.log("✅ All news fetched:", result.data);
+    
                 const foundNews = result.data.find((item) => item.permalink === permalink);
-
+    
                 if (foundNews) {
+                    console.log("News found:", foundNews);
                     setNews(foundNews);
                 } else {
-                    console.warn("News not found.");
+                    console.warn("News not found for permalink:", permalink);
                     setNews(null);
                 }
             } catch (error) {
-                console.error("Error loading news:", error);
+                console.error("❌ Error loading news:", error);
                 setNews(null);
             } finally {
                 setLoading(false);
             }
         };
-
+    
         loadNews();
     }, [permalink]);
+    
+    
+    
 
     const onSubmit = async (e) => {
         e.preventDefault();
         if (!validateNews()) return;
 
         try {
-            await axios.put("http://localhost:8000/new", news); // PUT request as per backend
+            await axios.put("http://localhost:8000/new", news);
             navigate("/news");
         } catch (error) {
-            console.error("Error updating news:", error);
-            alert("Failed to update news. Please try again.");
+            console.error("Error actualizando la noticia:", error);
+            alert("Error al actualizar la noticia. Inténtalo de nuevo.");
         }
     };
 

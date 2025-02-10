@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUser from "../components/CreateUser";
@@ -8,8 +8,16 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [redirecting, setRedirecting] = useState(false); // ✅ To handle transition
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
 
   const handleShowRegister = () => setShowRegister(true);
   const handleHideRegister = () => setShowRegister(false);
@@ -17,37 +25,95 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
-    
+
     try {
       const response = await fetch("http://localhost:8000/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
       });
-      
+
       if (!response.ok) {
         throw new Error("Credenciales incorrectas");
       }
-      
+
       const user = await response.json();
       localStorage.setItem("user", JSON.stringify(user));
-      setIsLoggedIn(true);
+      setUser(user);
 
-      // Redirect only after successful authentication
-      setTimeout(() => {
-        if (user.rol === "ADMIN") {
-          navigate("/admin/dashboard");
-        } else if (user.rol === "TEAM_MANAGER") {
-          navigate("/team-manager/dashboard");
-        }
-      }, 100);
+      // ✅ Redirect user based on role
+      if (user.rol === "ADMIN") {
+        navigate("/admin/dashboard", { replace: true });
+      } else if (user.rol === "TEAM_MANAGER") {
+        navigate("/team-manager/dashboard", { replace: true });
+      }
     } catch (err) {
       setError(err.message);
     }
   };
 
-  if (isLoggedIn) {
-    return null; // Hide login component once logged in
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("¿Estás seguro de que deseas cerrar sesión?");
+    if (confirmLogout) {
+      localStorage.removeItem("user");
+      setUser(null);
+      navigate("/login", { replace: true });
+    }
+  };
+
+  const handleNavigation = (path) => {
+    setRedirecting(true); // ✅ Hides dashboard before navigating
+    setTimeout(() => {
+      navigate(path, { replace: true });
+    }, 100); // Ensures smooth transition
+  };
+
+  if (redirecting) {
+    return null; // ✅ Prevents dashboard from flashing while navigating
+  }
+
+  if (user) {
+    return (
+      <div className="container my-5 text-white text-center">
+        <h1>Bienvenido, {user.name}!</h1>
+        <h3>¿Qué deseas hacer?</h3>
+        <div className="d-flex flex-column align-items-center">
+          {user.rol === "ADMIN" && (
+            <>
+              <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/news")}>
+                Gestionar Noticias
+              </button>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/votings")}>
+                Gestionar Votaciones
+              </button>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/calendar")}>
+                Gestionar Carreras
+              </button>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/circuits")}>
+                Gestionar Circuitos
+              </button>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/admin/users")}>
+                Gestionar Usuarios
+              </button>
+            </>
+          )}
+
+          {user.rol === "TEAM_MANAGER" && (
+            <>
+              <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/team-manager/pilots")}>
+                Gestionar Pilotos
+              </button>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/team-manager/cars")}>
+                Gestionar Coches
+              </button>
+            </>
+          )}
+        </div>
+        <button className="btn btn-danger mt-3" onClick={handleLogout}>
+          Cerrar Sesión
+        </button>
+      </div>
+    );
   }
 
   if (showRegister) {
