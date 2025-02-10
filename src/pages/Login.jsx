@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
-  const [redirecting, setRedirecting] = useState(false); // ✅ To handle transition
+  const [redirecting, setRedirecting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +41,6 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
 
-      // ✅ Redirect user based on role
       if (user.rol === "ADMIN") {
         navigate("/admin/dashboard", { replace: true });
       } else if (user.rol === "TEAM_MANAGER") {
@@ -62,15 +61,17 @@ const Login = () => {
   };
 
   const handleNavigation = (path) => {
-    setRedirecting(true); // ✅ Hides dashboard before navigating
+    setRedirecting(true);
     setTimeout(() => {
       navigate(path, { replace: true });
-    }, 100); // Ensures smooth transition
+    }, 100);
   };
 
+
   if (redirecting) {
-    return null; // ✅ Prevents dashboard from flashing while navigating
+    return null;
   }
+
 
   if (user) {
     return (
@@ -100,10 +101,13 @@ const Login = () => {
 
           {user.rol === "TEAM_MANAGER" && (
             <>
-              <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/team-manager/pilots")}>
+              <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/teams")}>
+                Gestionar Equipo
+              </button>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/pilots")}>
                 Gestionar Pilotos
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/team-manager/cars")}>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/cars")}>
                 Gestionar Coches
               </button>
             </>
