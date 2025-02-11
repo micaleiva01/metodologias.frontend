@@ -6,7 +6,6 @@ function PilotDetailsModal({ show, onHide, pilot }) {
 
   return (
     <>
-      {/* Modal */}
       <div
         className="modal fade show"
         style={{ display: "block" }}
@@ -18,7 +17,7 @@ function PilotDetailsModal({ show, onHide, pilot }) {
           role="document"
         >
           <div className="modal-content">
-            {/* Modal Header */}
+
             <div className="modal-header">
               <h5 className="modal-title">{pilot.name} {pilot.surname}</h5>
               <button
@@ -31,7 +30,6 @@ function PilotDetailsModal({ show, onHide, pilot }) {
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="modal-body">
               <img
                 src={pilot.imageUrl}
@@ -48,7 +46,6 @@ function PilotDetailsModal({ show, onHide, pilot }) {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="modal-footer">
               <button
                 type="button"
@@ -61,7 +58,7 @@ function PilotDetailsModal({ show, onHide, pilot }) {
           </div>
         </div>
       </div>
-      {/* Modal Backdrop */}
+
       <div className="modal-backdrop fade show"></div>
     </>
   );

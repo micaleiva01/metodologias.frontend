@@ -87,7 +87,7 @@ const Login = () => {
               <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/votings")}>
                 Gestionar Votaciones
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/calendar")}>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/races")}>
                 Gestionar Carreras
               </button>
               <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/circuits")}>

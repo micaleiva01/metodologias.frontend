@@ -11,8 +11,9 @@ function CarCard({ car, onDelete }) {
     }
   }, []);
 
+  // Allow admins or the team manager of the car's team to manage it
   const canManageCar =
-    user?.rol === "ADMIN" || (user?.rol === "TEAM_MANAGER" && user.teamName?.id === car.teamName.id);
+    (user?.rol === "TEAM_MANAGER" && user?.team?.name === car.teamName?.name);
 
   return (
     <div 

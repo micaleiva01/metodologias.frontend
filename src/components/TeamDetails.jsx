@@ -16,7 +16,7 @@ function TeamDetails() {
         }
         const pilots = await response.json();
 
-        // Filter pilots by the team name
+
         const filteredPilots = pilots.filter((pilot) => pilot.team?.name === name);
         setTeamPilots(filteredPilots);
         setLoading(false);
@@ -39,17 +39,17 @@ function TeamDetails() {
 
   return (
     <div className="container-fluid bg-dark text-light min-vh-100 p-5">
-      {/* Banner Section */}
+
       <div className="text-center mb-5">
         <img
-          src={`https://via.placeholder.com/1200x400`} // Placeholder banner
+          src={`https://via.placeholder.com/1200x400`}
           alt={`${name} Banner`}
           className="img-fluid mb-4"
         />
         <h1 className="display-4 text-uppercase text-danger">Escudería {name}</h1>
       </div>
 
-      {/* Pilots Section */}
+
       <div className="mb-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="text-uppercase">Pilotos</h2>

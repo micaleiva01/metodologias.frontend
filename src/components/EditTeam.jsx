@@ -1,151 +1,127 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
 
 function EditTeam() {
+  const { name } = useParams(); // Get team name from URL
   const navigate = useNavigate();
-  const { name } = useParams();
-
   const [team, setTeam] = useState({
     name: "",
     logoUrl: "",
     twitter: "",
-    pilots: [],
   });
-
-  const [availablePilots, setAvailablePilots] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadTeam = async () => {
       try {
-        console.log("Fetching team:", name);
-        const response = await axios.get(`http://localhost:8000/teams/${encodeURIComponent(name)}`);
-        console.log("Team data fetched:", response.data);
-        setTeam(response.data);
+        const response = await axios.get(`http://localhost:8000/teams/${name}`);
+        console.log("Team fetched:", response.data);
+  
+        setTeam({
+          name: response.data.name,
+          logoUrl: response.data.logoUrl || "",
+          twitter: response.data.twitter || "",
+        });
       } catch (error) {
-        console.error("Error fetching team data:", error);
-        alert("Error loading team data.");
+        console.error("Error loading team data:", error);
+        setError("Error loading team. Please try again.");
       }
     };
-
-    const loadPilots = async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/pilots");
-        setAvailablePilots(response.data);
-      } catch (error) {
-        console.error("Error loading pilots:", error);
-      }
-    };
-
-    if (name) {
-      loadTeam();
-      loadPilots();
-    }
+  
+    loadTeam();
   }, [name]);
+  
 
   const onInputChange = (e) => {
     setTeam({ ...team, [e.target.name]: e.target.value });
   };
 
-  const addPilot = (pilotId) => {
-    const selectedPilot = availablePilots.find((pilot) => pilot.id === parseInt(pilotId));
-    if (selectedPilot && !team.pilots.some((pilot) => pilot.id === selectedPilot.id)) {
-      setTeam((prevTeam) => ({
-        ...prevTeam,
-        pilots: [...prevTeam.pilots, selectedPilot],
-      }));
+  const validateTeam = () => {
+    if (!team.logoUrl || !team.twitter) {
+      alert("Both logo URL and Twitter handle are required.");
+      return false;
     }
+    return true;
   };
 
-  const removePilot = (pilotId) => {
-    setTeam((prevTeam) => ({
-      ...prevTeam,
-      pilots: prevTeam.pilots.filter((pilot) => pilot.id !== pilotId),
-    }));
-  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
-    if (!team || !team.name) {
-      console.error("Error: Missing team data.");
-      alert("Error: No valid team data provided.");
-      return;
-    }
-
-    const updatedTeam = {
-      name: team.name,
-      logoUrl: team.logoUrl,
-      twitter: team.twitter,
-      pilots: team.pilots.map((p) => ({
-        id: p.id,
-        name: p.name,
-        surname: p.surname,
-        initials: p.initials,
-        imageUrl: p.imageUrl,
-        country: p.country || "UNKNOWN",
-        twitter: p.twitter,
-        team: { name: team.name },
-      })),
-    };
-
-    console.log("Submitting updated team data:", JSON.stringify(updatedTeam, null, 2));
-
+    setError(null);
+  
+    if (!validateTeam()) return;
+  
     try {
-      await axios.put(`http://localhost:8000/teams/${encodeURIComponent(team.name)}`, updatedTeam, {
-        headers: { "Content-Type": "application/json" },
+      const { name, logoUrl, twitter } = team;
+      const payload = { logoUrl, twitter }; 
+      
+      console.log("Sending update request (PUT):", JSON.stringify(payload, null, 2));
+  
+      // Axios PUT request
+      const response = await axios({
+        method: "put",
+        url: `http://localhost:8000/teams/${name}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: payload,
       });
-
-      alert("Team updated successfully");
+  
+      console.log("Update successful:", response.data);
+      alert("Team updated successfully!");
       navigate("/teams");
     } catch (error) {
-      console.error("Error updating team data:", error);
-      alert("Error updating team. Check the console.");
+      console.error("Error updating team data:", error.response?.data || error.message);
+      setError("Failed to update the team. Please check the input and try again.");
     }
-  };
+  };  
+   
+
+  if (error) {
+    return <h2 className="text-danger text-center">{error}</h2>;
+  }
 
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-8 offset-md-2 border rounded p-4 mt-2 mb-4 shadow text-white">
-          <h2 className="text-center m-4">EDIT TEAM</h2>
+        <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
+          <h2 className="text-center m-4">EDITAR EQUIPO</h2>
           <form onSubmit={onSubmit}>
             <div className="mb-3">
-              <label htmlFor="name" className="form-label">Name:</label>
-              <input type="text" className="form-control" name="name" value={team.name} disabled />
+              <label htmlFor="name" className="form-label">Nombre del Equipo:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={team.name}
+                readOnly
+              />
             </div>
 
             <div className="mb-3">
-              <label htmlFor="logoUrl" className="form-label">Team Logo:</label>
-              <input type="text" className="form-control" name="logoUrl" value={team.logoUrl} onChange={onInputChange} />
+              <label htmlFor="logoUrl" className="form-label">Logo URL:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="logoUrl"
+                value={team.logoUrl}
+                onChange={onInputChange}
+              />
             </div>
 
             <div className="mb-3">
               <label htmlFor="twitter" className="form-label">Twitter:</label>
-              <input type="text" className="form-control" name="twitter" value={team.twitter} onChange={onInputChange} />
+              <input
+                type="text"
+                className="form-control"
+                name="twitter"
+                value={team.twitter}
+                onChange={onInputChange}
+              />
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="pilots" className="form-label">Pilots:</label>
-              <ul className="list-group mb-3">
-                {team.pilots.map((pilot) => (
-                  <li key={pilot.id} className="list-group-item d-flex justify-content-between align-items-center">
-                    {pilot.name} {pilot.surname}
-                    <button type="button" className="btn btn-danger btn-sm" onClick={() => removePilot(pilot.id)}>Remove</button>
-                  </li>
-                ))}
-              </ul>
-
-              <select className="form-select" onChange={(e) => addPilot(e.target.value)} defaultValue="">
-                <option value="" disabled>Add Pilot</option>
-                {availablePilots.filter((pilot) => !team.pilots.some((p) => p.id === pilot.id)).map((pilot) => (
-                  <option key={pilot.id} value={pilot.id}>{pilot.name} {pilot.surname}</option>
-                ))}
-              </select>
-            </div>
-
-            <button type="submit" className="btn btn-outline-danger">Save Changes</button>
-            <Link className="btn btn-outline-secondary ms-2" to="/teams">Cancel</Link>
+            <button type="submit" className="btn btn-outline-danger">Guardar Cambios</button>
           </form>
         </div>
       </div>

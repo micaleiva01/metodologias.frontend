@@ -3,9 +3,10 @@ import axios from "axios";
 
 function FuelConsumptionTool() {
   const [cars, setCars] = useState([]);
-  const [selectedCar, setSelectedCar] = useState(null);  // ✅ Correctly defined state
+  const [selectedCar, setSelectedCar] = useState(null); 
   const [laps, setLaps] = useState(1);
   const [fuelConsumption, setFuelConsumption] = useState(0);
+
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -19,13 +20,14 @@ function FuelConsumptionTool() {
     };
     fetchCars();
   }, []);
+  
 
   const handleCarChange = (e) => {
     const carId = e.target.value;
     const car = cars.find((c) => c.id === parseInt(carId, 10));
 
     if (car) {
-      setSelectedCar(car);  // ✅ No more undefined function
+      setSelectedCar(car); 
       setFuelConsumption(car.consumption);
     }
   };

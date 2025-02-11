@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -21,9 +21,9 @@ function PilotCard({ pilot, onClick, user }) {
     }
   };
 
-  const isAdmin = user?.rol === "ADMIN";
+
   const isTeamManager = user?.rol === "TEAM_MANAGER";
-  const canManagePilot = isAdmin || (isTeamManager && user?.teamName?.name === pilot.team.name);
+  const canManagePilot =  (isTeamManager && user?.teamName?.name === pilot.team.name);
 
   return (
     <div
@@ -47,7 +47,6 @@ function PilotCard({ pilot, onClick, user }) {
         <p className="card-text text-muted">País: {pilot.country}</p>
         <p className="card-text text-muted">Twitter: {pilot.twitter}</p>
 
-        {/* Show buttons only if user has permission */}
         {canManagePilot && (
           <div>
             <Link className="btn btn-outline-primary mt-2" to={`/pilots/edit/${pilot.id}`} onClick={(e) => e.stopPropagation()}>

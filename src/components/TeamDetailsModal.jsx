@@ -34,7 +34,6 @@ function TeamDetailsModal({ show, onHide, team }) {
 
   return (
     <>
-      {/* Modal */}
       <div
         className="modal fade show"
         style={{ display: "block" }}
@@ -46,7 +45,7 @@ function TeamDetailsModal({ show, onHide, team }) {
           role="document"
         >
           <div className="modal-content">
-            {/* Modal Header */}
+
             <div className="modal-header">
               <h5 className="modal-title">Escudería {team.name}</h5>
               <button
@@ -59,7 +58,7 @@ function TeamDetailsModal({ show, onHide, team }) {
               </button>
             </div>
 
-            {/* Modal Body */}
+
             <div className="modal-body">
               <img
                 src={team.logoUrl}
@@ -107,7 +106,7 @@ function TeamDetailsModal({ show, onHide, team }) {
               )}
             </div>
 
-            {/* Modal Footer */}
+
             <div className="modal-footer">
               <button
                 type="button"
@@ -120,7 +119,7 @@ function TeamDetailsModal({ show, onHide, team }) {
           </div>
         </div>
       </div>
-      {/* Modal Backdrop */}
+
       <div className="modal-backdrop fade show"></div>
     </>
   );

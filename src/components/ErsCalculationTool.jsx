@@ -15,21 +15,19 @@ function ErsCalculationTool() {
     sport: 0.40, // 60% less recovery
   };
 
-  // Fetch the list of cars from the backend
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const response = await axios.get("http://localhost:8000/cars");
         setCars(response.data);
       } catch (error) {
-        console.error("Error fetching cars:", error);
-        alert("Failed to load cars. Please check the console.");
+        console.error("Error:", error);
+        alert("Error al cargar coches.");
       }
     };
     fetchCars();
   }, []);
 
-  // Handle car selection
   const handleCarChange = (e) => {
     const carId = parseInt(e.target.value, 10);
     const car = cars.find((c) => c.id === carId);
@@ -39,7 +37,6 @@ function ErsCalculationTool() {
     calculateErs(car, drivingMode);
   };
 
-  // Handle driving mode selection
   const handleModeChange = (e) => {
     const mode = e.target.value;
     setDrivingMode(mode);

@@ -9,7 +9,6 @@ function TeamList() {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [modalShow, setModalShow] = useState(false);
 
-  // Load all teams
   const loadTeams = async () => {
     try {
       const result = await axios.get("http://localhost:8000/teams");
@@ -19,7 +18,6 @@ function TeamList() {
     }
   };
 
-  // Delete a team
   const deleteTeam = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/teams/${id}`);
@@ -53,7 +51,6 @@ function TeamList() {
         ))}
       </div>
 
-      {/* Render the modal when a team is selected */}
       {selectedTeam && (
         <TeamDetailsModal
           show={modalShow}

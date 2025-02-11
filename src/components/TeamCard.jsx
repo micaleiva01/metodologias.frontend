@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
-
-function TeamCard({ team, onDelete, onClick }) {
+function TeamCard({ team, isAdmin, onClick }) {
   return (
     <div
       className="card h-100"
@@ -18,27 +16,13 @@ function TeamCard({ team, onDelete, onClick }) {
       <div className="card-body text-center">
         <h5 className="card-title">{team.name}</h5>
         <p className="card-text text-muted">Twitter: {team.twitter}</p>
-        <div>
-          <Link
-            className="btn btn-outline-primary mt-2"
-            to={`/edit-team/${encodeURIComponent(team.name)}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            Edit
-          </Link>
-          <button
-            className="btn btn-danger mx-2 mt-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (window.confirm("Are you sure you want to delete this team?")) {
-                console.log(`Deleting team: ${team.name}`);
-                onDelete(team.name);
-              }
-            }}
-          >
-            Delete
-          </button>
-        </div>
+
+        {/* ✅ Admins cannot edit or delete teams */}
+        {isAdmin && (
+          <div>
+            <p className="text-white-50">Solo lectura</p>
+          </div>
+        )}
       </div>
     </div>
   );
