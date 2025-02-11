@@ -79,16 +79,15 @@ function VotingsList() {
                                 <h5 className="card-title">{voting.title}</h5>
                                 <p className="card-text">{voting.description}</p>
                                 <button className="btn btn-outline-success" onClick={() => handleVote(voting)}>
-                                    View Details and Vote
+                                    Ver detalles y votar
                                 </button>
 
-                                {/* ✅ Delete button (Only visible for ADMIN users) */}
                                 {user && user.rol === "ADMIN" && (
                                     <button
                                         className="btn btn-danger ms-2"
                                         onClick={() => handleDeleteVoting(voting.permalink)}
                                     >
-                                        Delete
+                                        Eliminar
                                     </button>
                                 )}
                             </div>
@@ -97,7 +96,6 @@ function VotingsList() {
                 ))}
             </div>
 
-            {/* ✅ Modal Component */}
             {showModal && selectedVoting && (
                 <VotingDetailsModal
                     show={showModal}

@@ -32,20 +32,19 @@ const VotingSpecific = () => {
     if (!voting) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-                <h3>Loading voting details...</h3>
+                <h3>Cargando detalles de la votación...</h3>
             </div>
         );
     }
 
     return (
         <div className="container mt-5">
-            {/* Voting Title & Description */}
+
             <div className="text-center mb-5 text-white">
                 <h1 className="fw-bold">{voting.title}</h1>
                 <p className="fs-4 text-muted">{voting.description}</p>
             </div>
 
-            {/* Pilots Section - Bigger Cards */}
             <div className="row justify-content-center">
                 {voting.pilots.map((pilot) => (
                     <div key={pilot.id} className="col-12 col-md-6 col-lg-4 mb-4">
@@ -70,14 +69,13 @@ const VotingSpecific = () => {
                 ))}
             </div>
 
-            {/* Voting Form */}
             <div className="mt-5 text-center text-white">
-                <h3>Submit Your Vote</h3>
-                <p className="text-muted text-white">Enter your details to vote for your favorite pilot.</p>
+                <h3>VOTACIÓN</h3>
+                <p className="text-muted text-white">Por favor ingresar su nombre y correo electrónico.</p>
 
                 <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "400px" }}>
                     <div className="mb-3">
-                        <label htmlFor="name" className="form-label">Your Name</label>
+                        <label htmlFor="name" className="form-label">Nombre:</label>
                         <input
                             type="text"
                             className="form-control"
@@ -88,7 +86,7 @@ const VotingSpecific = () => {
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="email" className="form-label">Your Email</label>
+                        <label htmlFor="email" className="form-label">Correo Electrónico:</label>
                         <input
                             type="email"
                             className="form-control"
@@ -98,7 +96,7 @@ const VotingSpecific = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary w-100">Submit Vote</button>
+                    <button type="submit" className="btn btn-primary w-100">Enviar voto</button>
                 </form>
 
                 {/*message && <div className="alert alert-info mt-3">{message}</div>*/}
