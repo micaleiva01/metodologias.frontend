@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
 
 function CreateVoting() {
@@ -9,25 +10,88 @@ function CreateVoting() {
         title: "",
         description: "",
         end_date: "",
+        permalink: "",
+        pilots: []
     });
 
-    const { title, description, end_date } = voting;
+    const [availablePilots, setAvailablePilots] = useState([]); 
+    const { title, description, end_date, permalink, pilots } = voting;
+
+    useEffect(() => {
+        const fetchPilots = async () => {
+            try {
+                const res = await axios.get("http://localhost:8000/pilots");
+                setAvailablePilots(res.data);
+            } catch (error) {
+                console.error("Error fetching pilots:", error);
+            }
+        };
+
+        fetchPilots();
+    }, []);
 
     const onInputChange = (e) => {
-        setVoting({ ...voting, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        let updatedVoting = { ...voting, [name]: value };
+
+        if (name === "title") {
+            updatedVoting.permalink = value
+                .toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[^a-z0-9-]/g, "");
+        }
+
+        setVoting(updatedVoting);
     };
+
+    const handlePilotSelection = (e) => {
+        const selectedPilotId = parseInt(e.target.value);
+
+        if (!pilots.some(pilot => pilot.id === selectedPilotId)) {
+            if (pilots.length < 5) {
+                const selectedPilot = availablePilots.find(pilot => pilot.id === selectedPilotId);
+                setVoting({ ...voting, pilots: [...pilots, selectedPilot] });
+            } else {
+                alert("You can only select up to 5 pilots.");
+            }
+        }
+    };
+
+    const removePilot = (pilotId) => {
+        setVoting({ ...voting, pilots: pilots.filter(pilot => pilot.id !== pilotId) });
+    };
+
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
+    
+        if (pilots.length < 5) {
+            alert("You must select at least 5 pilots for the voting.");
+            return;
+        }
+    
+        const formattedEndDate = moment(voting.end_date, "YYYY-MM-DD").format("DD-MM-YYYY 00:00:00");
+    
+        const votingData = {
+            permalink: voting.permalink,
+            title: voting.title,
+            description: voting.description,
+            end_date: formattedEndDate,
+            pilots: pilots.map(pilot => pilot.id)
+        };
+    
+        console.log("Submitting voting:", JSON.stringify(votingData, null, 2));
+    
         try {
-            await axios.post("http://localhost:8000/votings", voting); // Replace with the correct endpoint
+            await axios.post("http://localhost:8000/voting", votingData);
             navigate("/votings");
         } catch (error) {
-            console.error("Error creating voting:", error);
-            alert("Error al crear la votación. Inténtalo de nuevo.");
+            console.error("Error creating voting:", error.response ? error.response.data : error);
+            alert("Error: " + (error.response ? JSON.stringify(error.response.data) : "Unknown error"));
         }
     };
+           
+    
 
     return (
         <div className="container">
@@ -44,6 +108,16 @@ function CreateVoting() {
                                 value={title}
                                 onChange={onInputChange}
                                 required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="permalink" className="form-label">Permalink (Autogenerado)</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="permalink"
+                                value={permalink}
+                                readOnly
                             />
                         </div>
                         <div className="mb-3">
@@ -68,6 +142,41 @@ function CreateVoting() {
                                 required
                             />
                         </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">Seleccionar Pilotos (mínimo 5)</label>
+                            <select className="form-control" onChange={handlePilotSelection}>
+                                <option value="">-- Select a Pilot --</option>
+                                {availablePilots.map((pilot) => (
+                                    <option key={pilot.id} value={pilot.id}>
+                                        {pilot.name} {pilot.surname} - {pilot.team.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <h6>Pilotos Seleccionados:</h6>
+                            {pilots.length > 0 ? (
+                                <ul className="list-group">
+                                    {pilots.map((pilot) => (
+                                        <li key={pilot.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                            {pilot.name} {pilot.surname} ({pilot.team.name})
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => removePilot(pilot.id)}
+                                            >
+                                                X
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-muted">No pilots selected.</p>
+                            )}
+                        </div>
+
                         <button type="submit" className="btn btn-outline-danger">Crear</button>
                         <Link to="/votings" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>

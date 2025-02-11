@@ -1,46 +1,94 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import VotingDetailsModal from "./VotingDetailsModal";
 
 function VotingsList() {
     const [votings, setVotings] = useState([]);
+    const [selectedVoting, setSelectedVoting] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [user, setUser] = useState(null); // ✅ User state for role check
 
     useEffect(() => {
-        axios.get("http://localhost:8000/votings")
-            .then(res => setVotings(res.data))
-            .catch(error => console.error("Error fetching votings:", error));
+        loadVotings();
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser) {
+            setUser(storedUser);
+        }
     }, []);
 
-    const handleVote = (permalink) => {
-        if (!name || !email) {
-            alert("Please enter your name and email to vote.");
+    const loadVotings = async () => {
+        try {
+            const results = await axios.get("http://localhost:8000/voting");
+            setVotings(results.data);
+        } catch (error) {
+            console.error("Error loading votings:", error);
+        }
+    };
+
+    const handleVote = (voting) => {
+        setSelectedVoting(voting);
+        setShowModal(true);
+    };
+
+    const handleSubmit = async (e, selectedPilot) => {
+        e.preventDefault();
+        if (!selectedPilot) {
+            alert("Please select a pilot before voting.");
             return;
         }
-        window.location.href = `/votings/${permalink}?name=${name}&email=${email}`;
+
+        try {
+            await axios.post("http://localhost:8000/fan-voting/vote", {
+                name,
+                email,
+                permalink: selectedVoting.permalink,
+                number: selectedPilot
+            });
+            alert("Vote submitted successfully!");
+            setShowModal(false);
+        } catch (error) {
+            console.error("Error submitting vote:", error);
+            alert("Error submitting vote. Please try again.");
+        }
+    };
+
+    const handleDeleteVoting = async (permalink) => {
+        if (!window.confirm("Are you sure you want to delete this voting?")) {
+            return;
+        }
+
+        try {
+            await axios.delete(`http://localhost:8000/voting`, { params: { permalink } });
+            alert("Voting deleted successfully.");
+            loadVotings(); // ✅ Refresh votings after delete
+        } catch (error) {
+            console.error("Error deleting voting:", error);
+            alert("Error deleting voting. Try again.");
+        }
     };
 
     return (
         <div className="container my-4">
-            <div className="mb-4 d-flex gap-2">
-                <input type="text" placeholder="Your Name" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
-                <input type="email" placeholder="Your Email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
             <div className="row">
                 {votings.map((voting) => (
-                    <div key={voting.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div key={voting.permalink} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                         <div className="card h-100">
                             <div className="card-body">
                                 <h5 className="card-title">{voting.title}</h5>
                                 <p className="card-text">{voting.description}</p>
-                                {new Date(voting.end_date) < new Date() ? (
-                                    <Link to={`/votings/${voting.permalink}/results`} className="btn btn-outline-info">
-                                        Ver Resultados
-                                    </Link>
-                                ) : (
-                                    <button className="btn btn-outline-success" onClick={() => handleVote(voting.permalink)}>
-                                        Ver Detalles y Votar
+                                <button className="btn btn-outline-success" onClick={() => handleVote(voting)}>
+                                    View Details and Vote
+                                </button>
+
+                                {/* ✅ Delete button (Only visible for ADMIN users) */}
+                                {user && user.rol === "ADMIN" && (
+                                    <button
+                                        className="btn btn-danger ms-2"
+                                        onClick={() => handleDeleteVoting(voting.permalink)}
+                                    >
+                                        Delete
                                     </button>
                                 )}
                             </div>
@@ -48,7 +96,22 @@ function VotingsList() {
                     </div>
                 ))}
             </div>
+
+            {/* ✅ Modal Component */}
+            {showModal && selectedVoting && (
+                <VotingDetailsModal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    voting={selectedVoting}
+                    name={name}
+                    setName={setName}
+                    email={email}
+                    setEmail={setEmail}
+                    handleSubmit={handleSubmit}
+                />
+            )}
         </div>
     );
 }
+
 export default VotingsList;

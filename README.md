@@ -8,6 +8,8 @@ npm install --save-dev @babel/plugin-proposal-private-property-in-object
 
 npm i bootstrap
 
+npm install moment
+
 In the project directory, you can run:
 
 ### `npm start`
