@@ -4,7 +4,7 @@ function VotingDetailsModal({ show, onHide, voting, name, setName, email, setEma
     const [selectedPilot, setSelectedPilot] = useState(null);
     const [voteSubmitted, setVoteSubmitted] = useState(false);
 
-    if (!show || !voting) return null; // ✅ Prevents modal from showing when `show` is false
+    if (!show || !voting) return null;
 
     const onVoteSubmit = async (e) => {
         e.preventDefault();
@@ -18,7 +18,6 @@ function VotingDetailsModal({ show, onHide, voting, name, setName, email, setEma
                 <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div className="modal-content">
 
-                        {/* Modal Header */}
                         <div className="modal-header">
                             <h5 className="modal-title">{voting.title}</h5>
                             <button type="button" className="close" onClick={onHide} aria-label="Close">
@@ -26,19 +25,17 @@ function VotingDetailsModal({ show, onHide, voting, name, setName, email, setEma
                             </button>
                         </div>
 
-                        {/* Modal Body */}
                         <div className="modal-body">
                             {voteSubmitted ? (
                                 <div className="text-center">
-                                    <h4>Your vote has been successfully submitted!</h4>
-                                    <p>Thank you for participating!</p>
+                                    <h4>Tu voto ha sido enviado!</h4>
+                                    <p>Gracias por participar!</p>
                                 </div>
                             ) : (
                                 <>
                                     <p className="text-muted">{voting.description}</p>
 
-                                    {/* Pilots Selection */}
-                                    <h6 className="mt-3 text-center">Select a Pilot to Vote</h6>
+                                    <h6 className="mt-3 text-center">Seleccionar piloto para votar</h6>
                                     <div className="row">
                                         {voting.pilots.map((pilot) => (
                                             <div key={pilot.id} className="col-md-6 mb-3">
@@ -58,11 +55,10 @@ function VotingDetailsModal({ show, onHide, voting, name, setName, email, setEma
                                         ))}
                                     </div>
 
-                                    {/* Voting Form */}
-                                    <h5 className="mt-4">Submit Your Vote</h5>
+                                    <h5 className="mt-4">Enviar voto</h5>
                                     <form onSubmit={onVoteSubmit}>
                                         <div className="mb-3">
-                                            <label htmlFor="name" className="form-label">Your Name</label>
+                                            <label htmlFor="name" className="form-label">Nombre:</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -73,7 +69,7 @@ function VotingDetailsModal({ show, onHide, voting, name, setName, email, setEma
                                             />
                                         </div>
                                         <div className="mb-3">
-                                            <label htmlFor="email" className="form-label">Your Email</label>
+                                            <label htmlFor="email" className="form-label">Correo Electronico:</label>
                                             <input
                                                 type="email"
                                                 className="form-control"
@@ -84,16 +80,15 @@ function VotingDetailsModal({ show, onHide, voting, name, setName, email, setEma
                                             />
                                         </div>
                                         <button type="submit" className="btn btn-primary w-100" disabled={!selectedPilot}>
-                                            Submit Vote
+                                            Enviar Voto
                                         </button>
                                     </form>
                                 </>
                             )}
                         </div>
 
-                        {/* Modal Footer */}
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={onHide}>Close</button>
+                            <button type="button" className="btn btn-secondary" onClick={onHide}>Cerrar</button>
                         </div>
 
                     </div>

@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import NewsCard from "./NewsCard";
+import NewsDetailsModal from "./NewsDetailsModal";
+
 
 function NewsList() {
     const [news, setNews] = useState([]);
     const [user, setUser] = useState(null);
+    const [selectedNews, setSelectedNews] = useState(null);
+    const [showModal, setShowModal] = useState(false); 
 
     useEffect(() => {
         loadNews();
@@ -25,6 +29,11 @@ function NewsList() {
         }
     };
 
+    const handleNewsClick = (newsItem) => {
+        setSelectedNews(newsItem);
+        setShowModal(true);
+    };
+
     if (news.length === 0) {
         return <div className="container my-4">No news available.</div>;
     }
@@ -35,16 +44,15 @@ function NewsList() {
     return (
         <div className="container my-4">
             <div className="row mt-4 g-4">
-                {/* Sticky Box on the Left */}
-                <div className="col-12 col-md-6 top-0">
+                
+                <div className="col-12 col-md-6 top-0" onClick={() => handleNewsClick(stickyItem)}>
                     <NewsCard new={stickyItem} expanded={true} user={user} />
                 </div>
 
-                {/* Four Small News Cards in a 2x2 Grid on the Right */}
                 <div className="col-12 col-md-6 d-flex flex-wrap" style={{ maxHeight: "100vh" }}>
-                    {scrollableItems.map((neww, index) => (
+                    {scrollableItems.map((neww) => (
                         <div key={neww.permalink} className="col-6 p-2 d-flex flex-column">
-                            <div className="card flex-grow-1">
+                            <div className="card flex-grow-1" onClick={() => handleNewsClick(stickyItem)} style={{ cursor: "pointer" }}>
                                 <img
                                     src={neww.image}
                                     className="card-img-top"
@@ -67,6 +75,15 @@ function NewsList() {
                     ))}
                 </div>
             </div>
+
+
+            {showModal && selectedNews && (
+                <NewsDetailsModal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    news={selectedNews}
+                />
+            )}
         </div>
     );
 }

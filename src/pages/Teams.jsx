@@ -121,7 +121,8 @@ function Teams() {
     );
   }
 
-  if (user?.rol === "ADMIN" || user?.rol === "USER") {
+  //admin y publico solo ven la lista, no pueden editar
+  if (user?.rol !== "TEAM_MANAGER") {
     console.log("Rendering Admin/User view");
     return (
       <div className="container my-4 text-white">

@@ -14,25 +14,29 @@ function CarList() {
   }, []);
 
   useEffect(() => {
-    if (user) {
-      loadCars(user);
-    }
-  }, [user]);
+    loadCars();
+  }, []); // ✅ Load all cars at first
 
-  const loadCars = async (loggedUser) => {
+  useEffect(() => {
+    if (user) {
+      applyFiltering(user);
+    }
+  }, [user]); // ✅ Apply filtering when user data is available
+
+  const loadCars = async () => {
     try {
       const result = await axios.get("http://localhost:8000/cars");
-      let filteredCars = result.data;
-
-      if (loggedUser?.rol === "TEAM_MANAGER" && loggedUser.teamName?.id) {
-        filteredCars = result.data.filter(
-          (car) => car.teamName.id === loggedUser.teamName.id
-        );
-      }
-
-      setCars(filteredCars);
+      setCars(result.data); // ✅ Load all cars without filtering first
     } catch (error) {
       alert("Error fetching cars: " + error.message);
+    }
+  };
+
+  const applyFiltering = (loggedUser) => {
+    if (loggedUser?.rol === "TEAM_MANAGER" && loggedUser.teamName?.id) {
+      setCars((prevCars) => prevCars.filter(
+        (car) => car.teamName?.id === loggedUser.teamName.id
+      ));
     }
   };
 
@@ -44,7 +48,7 @@ function CarList() {
         ) : (
           cars.map((car) => (
             <div key={car.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-              <CarCard car={car} />
+              <CarCard car={car} user={user} /> {/* ✅ Pass user to CarCard */}
             </div>
           ))
         )}

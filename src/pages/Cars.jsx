@@ -5,6 +5,7 @@ import FuelConsumptionTool from "../components/FuelConsumptionTool";
 import ErsCalculationTool from "../components/ErsCalculationTool";
 
 function Cars() {
+  
   const [user, setUser] = useState(null);
 
   useEffect(() => {

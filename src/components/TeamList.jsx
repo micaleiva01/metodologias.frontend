@@ -4,27 +4,30 @@ import axios from "axios";
 import TeamCard from "./TeamCard";
 import TeamDetailsModal from "./TeamDetailsModal";
 
+
 function TeamList() {
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [modalShow, setModalShow] = useState(false);
+
 
   const loadTeams = async () => {
     try {
       const result = await axios.get("http://localhost:8000/teams");
       setTeams(result.data);
     } catch (error) {
-      alert("Error fetching teams: " + error.message);
+      alert("Error al cargar equipos: " + error.message);
     }
   };
+
 
   const deleteTeam = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/teams/${id}`);
       setTeams(teams.filter((team) => team.id !== id));
     } catch (error) {
-      alert("Failed to delete the team. Please try again.");
-      console.error("Error deleting team:", error);
+      alert("Error al eliminar equipo");
+      console.error("Error al eliminar equipo: ", error);
     }
   };
 
