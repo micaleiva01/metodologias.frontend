@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import TeamList from "../components/TeamList";
 import axios from "axios";
 
+
 function Teams() {
   const [user, setUser] = useState(null);
   const [teamName, setTeamName] = useState(null);
   const [cars, setCars] = useState([]);
   const [pilots, setPilots] = useState([]);
   const [loading, setLoading] = useState(true);
-
 
 
   useEffect(() => {
@@ -132,7 +132,22 @@ function Teams() {
     );
   }
 
-  return <h2 className="text-center text-white">No tienes acceso a esta sección.</h2>;
+
+  if (user?.rol === "TEAM_MANAGER" && !teamName) {
+    return (
+      <div className="container my-4 text-white text-center">
+        <h2>Aún no tienes un equipo</h2>
+        <p>Puedes crear un equipo o solicitar unirte a uno existente.</p>
+        <Link to="/create-team" className="btn btn-primary btn-lg me-3">
+          Crear Equipo
+        </Link>
+        <Link to="/join-team" className="btn btn-outline-light btn-lg">
+          Unirse a un Equipo
+        </Link>
+      </div>
+    );
+  }  
+ 
 }
 
 export default Teams;

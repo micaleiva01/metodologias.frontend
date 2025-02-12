@@ -38,9 +38,9 @@ const Login = () => {
       }
   
       const user = await response.json();
-      console.log("User logged in:", user); // ✅ Debugging login
+      console.log("User logged in:", user);
   
-      // ✅ Skip validation check for demo user
+
       if (user.email !== "demo@gmail.com" && !user.validated) {
         throw new Error("Tu cuenta aún no ha sido aprobada por un administrador.");
       }
@@ -60,23 +60,22 @@ const Login = () => {
   
 
   /*const approveUser = async (user) => {
-    console.log("Approving User Email:", user.email); // ✅ Debugging Email
+    console.log("Approving User Email:", user.email);
   
     try {
-      // ✅ Skip approval for demo user
       if (user.email === "demo@gmail.com") {
         alert("El usuario demo no requiere aprobación.");
         return;
       }
   
-      const updatedUser = { ...user, validated: true }; // ✅ Change validated to true
+      const updatedUser = { ...user, validated: true }; 
   
-      const response = await fetch(`http://localhost:8000/users/${user.email}`, {  // ✅ Correct API URL
+      const response = await fetch(`http://localhost:8000/users/${user.email}`, { 
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedUser), // ✅ Send updated user data
+        body: JSON.stringify(updatedUser),
       });
   
       if (!response.ok) {
@@ -85,7 +84,6 @@ const Login = () => {
   
       alert(`Usuario ${user.name} aprobado con éxito.`);
       
-      // ✅ Update state so UI reflects the change
       setUsers((prevUsers) =>
         prevUsers.map((u) =>
           u.email === user.email ? { ...u, validated: true } : u
@@ -143,19 +141,26 @@ const Login = () => {
             </>
           )}
 
-          {user.rol === "TEAM_MANAGER" && (
-            <>
-              <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/teams")}>
-                Gestionar Equipo
+        {user.rol === "TEAM_MANAGER" && (
+          <>
+            <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/teams")}>
+              Gestionar Equipo
+            </button>
+            <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/pilots")}>
+              Gestionar Pilotos
+            </button>
+            <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/cars")}>
+              Gestionar Coches
+            </button>
+
+            {user.teamName && (
+              <button className="btn btn-warning mb-2" onClick={() => handleNavigation("/manage-join-requests")}>
+                Gestionar Solicitudes
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/pilots")}>
-                Gestionar Pilotos
-              </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/cars")}>
-                Gestionar Coches
-              </button>
-            </>
-          )}
+            )}
+          </>
+        )}
+
         </div>
         <button className="btn btn-danger mt-3" onClick={handleLogout}>
           Cerrar Sesión

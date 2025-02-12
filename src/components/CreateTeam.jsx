@@ -3,7 +3,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 function CreateTeam() {
+
     let navigate = useNavigate();
+
 
     const [team, setTeam] = useState({
         name: "",
@@ -11,34 +13,43 @@ function CreateTeam() {
         twitter: "",
     });
 
+
     const { name, logoUrl, twitter } = team;
+
 
     const onInputChange = (e) => {
         setTeam({ ...team, [e.target.name]: e.target.value });
     };
 
+
     const onSubmit = async (e) => {
         e.preventDefault();
-
+    
         const teamData = {
             name: team.name,
             logoUrl: team.logoUrl,
             twitter: team.twitter,
         };
-
+    
         try {
             await axios.post("http://localhost:8000/teams", teamData, {
                 headers: { "Content-Type": "application/json" },
             });
-            navigate("/teams");
+    
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+            const updatedUser = { ...storedUser, teamName: { name: team.name } };
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+    
+            navigate(`/teams/${encodeURIComponent(team.name)}`);
         } catch (error) {
             console.error("Error creating team:", error);
-
+    
             const errorMessage =
                 error.response?.data?.message || "Failed to create team. Please try again.";
             alert(errorMessage);
         }
     };
+    
 
     return (
         <div className="container">
