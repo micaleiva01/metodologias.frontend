@@ -95,14 +95,23 @@ const Login = () => {
   }; */
     
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     const confirmLogout = window.confirm("¿Estás seguro de que deseas cerrar sesión?");
     if (confirmLogout) {
-      localStorage.removeItem("user");
-      setUser(null);
-      navigate("/login", { replace: true });
+      try {
+        await fetch("http://localhost:8080/auth/logout", {
+          method: "POST",
+          credentials: "include",
+        });
+  
+        setUser(null);
+        navigate("/login", { replace: true });
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+      }
     }
   };
+  
 
   const handleNavigation = (path) => {
     setRedirecting(true);
