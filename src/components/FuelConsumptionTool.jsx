@@ -55,6 +55,16 @@ function FuelConsumptionTool() {
           ))}
         </select>
       </div>
+      
+      {/* Show selected car name to remove the ESLint warning */}
+      {selectedCar && (
+        <div className="mb-3">
+          <p>
+            <strong>Carro seleccionado:</strong> {selectedCar.name}
+          </p>
+        </div>
+      )}
+  
       <div className="mb-3">
         <label htmlFor="laps" className="form-label">Numero de vueltas:</label>
         <input
@@ -66,11 +76,12 @@ function FuelConsumptionTool() {
           onChange={(e) => setLaps(parseInt(e.target.value, 10))}
         />
       </div>
+      
       <div className="mb-3">
         <p>Combustible necesario: <strong>{calculateTotalFuel()} litros</strong></p>
       </div>
     </div>
-  );
+  );  
 }
 
 export default FuelConsumptionTool;

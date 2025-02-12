@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CreateUser = ({ onCancel }) => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,22 +19,44 @@ const CreateUser = ({ onCancel }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const formattedData = {
+      ...formData,
+      id: { id: null },
+      validated: false,
+      teamName: null,
+      unionDate: new Date().toISOString(),
+      rol: formData.role === "Administrador" ? "ADMIN" : "TEAM_MANAGER",
+    };
+  
     try {
-      const response = await fetch("/api/users", {
+      console.log("Submitting user:", formattedData);
+  
+      const response = await fetch("http://localhost:8000/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formattedData),
       });
-
-      if (!response.ok) {
-        throw new Error("Error al registrar el usuario");
+  
+      let result = null;
+      const text = await response.text();
+      if (text) {
+        result = JSON.parse(text);
+        console.log("Server Response:", result);
       }
-
+  
+      if (!response.ok) {
+        throw new Error(result?.message || "Error al registrar el usuario");
+      }
+  
       alert("Usuario registrado con éxito");
+
+      navigate("/login");
+
     } catch (error) {
+      console.error("Registration error:", error.message);
       alert(error.message);
     }
   };

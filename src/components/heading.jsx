@@ -134,11 +134,10 @@ const Heading = () => {
                     CIRCUITOS
                   </a>
                 </li>
-                {/* Dynamic login/home button */}
                 <li className="nav-item">
                   <a
                     className={`nav-link ${activeComponent === "Login" ? "active" : ""} me-1`}
-                    href="../pages/Login.jsx"
+                    href="../login"
                     onClick={() => setActiveComponent("Login")}
                   >
                     {user ? "INICIO" : "INICIAR SESIÓN"}

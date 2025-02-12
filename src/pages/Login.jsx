@@ -25,22 +25,29 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       const response = await fetch("http://localhost:8000/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
-
+  
       if (!response.ok) {
         throw new Error("Credenciales incorrectas");
       }
-
+  
       const user = await response.json();
+      console.log("User logged in:", user); // ✅ Debugging login
+  
+      // ✅ Skip validation check for demo user
+      if (user.email !== "demo@gmail.com" && !user.validated) {
+        throw new Error("Tu cuenta aún no ha sido aprobada por un administrador.");
+      }
+  
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
-
+  
       if (user.rol === "ADMIN") {
         navigate("/admin/dashboard", { replace: true });
       } else if (user.rol === "TEAM_MANAGER") {
@@ -50,6 +57,45 @@ const Login = () => {
       setError(err.message);
     }
   };
+  
+
+  /*const approveUser = async (user) => {
+    console.log("Approving User Email:", user.email); // ✅ Debugging Email
+  
+    try {
+      // ✅ Skip approval for demo user
+      if (user.email === "demo@gmail.com") {
+        alert("El usuario demo no requiere aprobación.");
+        return;
+      }
+  
+      const updatedUser = { ...user, validated: true }; // ✅ Change validated to true
+  
+      const response = await fetch(`http://localhost:8000/users/${user.email}`, {  // ✅ Correct API URL
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedUser), // ✅ Send updated user data
+      });
+  
+      if (!response.ok) {
+        throw new Error("Error al aprobar usuario");
+      }
+  
+      alert(`Usuario ${user.name} aprobado con éxito.`);
+      
+      // ✅ Update state so UI reflects the change
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
+          u.email === user.email ? { ...u, validated: true } : u
+        )
+      );
+    } catch (err) {
+      alert(err.message);
+    }
+  }; */
+    
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("¿Estás seguro de que deseas cerrar sesión?");
@@ -67,11 +113,9 @@ const Login = () => {
     }, 100);
   };
 
-
   if (redirecting) {
     return null;
   }
-
 
   if (user) {
     return (
@@ -93,7 +137,7 @@ const Login = () => {
               <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/circuits")}>
                 Gestionar Circuitos
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/admin/users")}>
+              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/users")}>
                 Gestionar Usuarios
               </button>
             </>

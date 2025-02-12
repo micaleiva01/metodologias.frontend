@@ -48,6 +48,7 @@ import EditCircuit from "./components/EditCircuit";
 // Login + Users
 import Login from "./pages/Login";
 import CreateUser from "./components/CreateUser";
+import UserList from "./components/UserList";
 
 import './App.css';
 
@@ -60,6 +61,7 @@ function App() {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
+    console.log("User from localStorage:", storedUser);  // ✅ Log user data to debug
     setUser(storedUser);
   }, []);
 
@@ -110,13 +112,14 @@ function App() {
             <Route path="/circuits/create" element={<CreateCircuits />} />
             <Route path="/circuits/edit/:city/:name" element={<EditCircuit />} />
 
-            {/* Login */}
+            {/* Login Route */}
             {!user ? (
               <Route path="/login" element={<Login />} />
             ) : (
               <Route path="/login" element={<Navigate to="/admin/dashboard" />} />
             )}
             <Route path="/create-user" element={<CreateUser />} />
+            <Route path="/users" element={<UserList />} />
           
             {/* Home */}
             <Route path="/" element={<News />} />
