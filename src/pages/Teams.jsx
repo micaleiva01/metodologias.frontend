@@ -126,7 +126,7 @@ function Teams() {
     console.log("Rendering Admin/User view");
     return (
       <div className="container my-4 text-white">
-        <h1 className="text-center">EQUIPOS</h1>
+        <h1 className="title text-center">EQUIPOS</h1>
         <TeamList />
       </div>
     );

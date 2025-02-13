@@ -42,7 +42,7 @@ function RacesList() {
                                     {race.id.city}
                                 </h6>
                                 <p className="card-text">
-                                    <strong>Date:</strong> {race.date}
+                                    <strong>Fecha:</strong> {race.date}
                                 </p>
                             </div>
                             {/* solo admins */}

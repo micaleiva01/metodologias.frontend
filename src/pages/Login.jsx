@@ -99,18 +99,22 @@ const Login = () => {
     const confirmLogout = window.confirm("¿Estás seguro de que deseas cerrar sesión?");
     if (confirmLogout) {
       try {
-        await fetch("http://localhost:8080/auth/logout", {
+        await fetch("http://localhost:8000/users/logout", {
           method: "POST",
           credentials: "include",
         });
   
+        localStorage.removeItem("user"); // Clears stored session
         setUser(null);
         navigate("/login", { replace: true });
+        window.location.reload(); // Ensures a full logout
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
       }
     }
   };
+    
+  
   
 
   const handleNavigation = (path) => {

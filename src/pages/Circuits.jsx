@@ -5,7 +5,7 @@ function Circuits() {
     return (
         <div>
             <header className="teams-header">
-                <h1 className="title text-center">CIRCUITS</h1>
+                <h1 className="title text-center">CIRCUITOS</h1>
             </header>
             <main>
                 <CircuitList />
