@@ -137,7 +137,7 @@ const Heading = () => {
                 <li className="nav-item">
                   <a
                     className={`nav-link ${activeComponent === "Login" ? "active" : ""} me-1`}
-                    href="../login"
+                    href="../pages/Login.jsx"
                     onClick={() => setActiveComponent("Login")}
                   >
                     {user ? "INICIO" : "INICIAR SESIÓN"}

@@ -104,10 +104,10 @@ const Login = () => {
           credentials: "include",
         });
   
-        localStorage.removeItem("user"); // Clears stored session
+        localStorage.removeItem("user");
         setUser(null);
-        navigate("/login", { replace: true });
-        window.location.reload(); // Ensures a full logout
+        navigate("../pages/Login.jsx", { replace: true });
+        //window.location.reload();
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
       }

@@ -122,7 +122,7 @@ function App() {
             <Route path="/circuits/edit/:city/:name" element={<ProtectedRoute element={<EditCircuit />} allowedRoles={["ADMIN"]} />} />
 
             {/* Login + Users */}
-            <Route path="/login" element={user ? <Navigate to={user.rol === "ADMIN" ? "/admin/dashboard" : "/team-manager/dashboard"} /> : <Login />} />
+            <Route path="/login" element={!user ? <Login /> : <Navigate to={user.rol === "ADMIN" ? "/admin/dashboard" : "/team-manager/dashboard"} replace />} />
             <Route path="/create-user" element={<CreateUser />} />
             <Route path="/users" element={<ProtectedRoute element={<UserList />} allowedRoles={["ADMIN"]} />} />
           
