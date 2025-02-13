@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, onClick } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -25,7 +25,11 @@ function NewsCard({ new: neww }) {
     }, []);
 
     return (
-        <div className="card h-100">
+        <div className="card h-100" 
+        style={{ cursor: "pointer", transition: "transform 0.2s" }}
+        onClick={onClick}
+        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
             <img
                 src={neww.image}
                 className="card-img-top"

@@ -14,9 +14,11 @@ function News() {
 
     return (
         <div>
+            <header className="pilots-header">
+                <h1 className="title text-center">NOTICIAS</h1>
+            </header>
             <main>
                 <NewsList />
-                
                 {/*solo admins*/}
                 {user?.rol === "ADMIN" && (
                     <Link to="/create-news" className="btn btn-outline-danger mb-4">
