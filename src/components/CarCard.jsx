@@ -28,12 +28,13 @@ function CarCard({ car, onDelete }) {
         style={{ height: "200px", objectFit: "cover" }}
       />
       <div className="card-body text-center">
-        <h5 className="card-title">
-          <Link to={`/car-details/${car.id}`} className="text-decoration-none">
+        <h5 className="card-title"> 
+          {car.name}
+          {/* <Link to={`/car-details/${car.id}`} className="text-decoration-none">
             {car.name}
-          </Link>
+          </Link> */}
         </h5>
-        <p className="card-text text-muted">Team: {car.teamName.name}</p>
+        <p className="card-text text-muted">Equipo: {car.teamName.name}</p>
 
         {canManageCar && (
           <div>

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CarCard from "./CarCard";
+import CarDetailsModal from "./CarDetailsModal";
 
 function CarList() {
   const [cars, setCars] = useState([]);
   const [user, setUser] = useState(null);
+  const [selectedCar, setSelectedCar] = useState(null);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -15,18 +17,18 @@ function CarList() {
 
   useEffect(() => {
     loadCars();
-  }, []); // ✅ Load all cars at first
+  }, []);
 
   useEffect(() => {
     if (user) {
       applyFiltering(user);
     }
-  }, [user]); // ✅ Apply filtering when user data is available
+  }, [user]);
 
   const loadCars = async () => {
     try {
       const result = await axios.get("http://localhost:8000/cars");
-      setCars(result.data); // ✅ Load all cars without filtering first
+      setCars(result.data);
     } catch (error) {
       alert("Error fetching cars: " + error.message);
     }
@@ -40,6 +42,14 @@ function CarList() {
     }
   };
 
+  const handleCardClick = (car) => {
+    setSelectedCar(car);
+  };
+
+  const closeModal = () => {
+    setSelectedCar(null);
+  };
+
   return (
     <div className="container my-4">
       <div className="row">
@@ -47,12 +57,14 @@ function CarList() {
           <p className="text-white text-center">No hay coches disponibles.</p>
         ) : (
           cars.map((car) => (
-            <div key={car.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-              <CarCard car={car} user={user} /> {/* ✅ Pass user to CarCard */}
+            <div key={car.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
+            onClick={() => handleCardClick(car)} >
+              <CarCard car={car} user={user} />
             </div>
           ))
         )}
       </div>
+      {selectedCar && <CarDetailsModal car={selectedCar} onClose={closeModal} />}
     </div>
   );
 }

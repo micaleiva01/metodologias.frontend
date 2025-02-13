@@ -29,7 +29,7 @@ import ManageJoinRequests from "./components/ManageJoinRequests";
 // Cars
 import Cars from "./pages/Cars";
 import CreateCar from "./components/CreateCar";
-import CarDetails from "./components/CarDetails";
+import CarDetailsModal from "./components/CarDetailsModal";
 import EditCar from "./components/EditCar";
 
 // News
@@ -109,7 +109,7 @@ function App() {
             <Route path="/cars" element={<Cars />} />
             <Route path="/create-car" element={<ProtectedRoute element={<CreateCar />} allowedRoles={["TEAM_MANAGER"]} />} />
             <Route path="/edit-car/:id" element={<ProtectedRoute element={<EditCar />} allowedRoles={["TEAM_MANAGER"]} />} />
-            <Route path="/car-details/:id" element={<CarDetails />} />
+            <Route path="/car-details/:id" element={<CarDetailsModal />} />
 
             {/* Races */}
             <Route path="/races" element={<RacesList />} />

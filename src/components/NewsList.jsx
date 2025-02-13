@@ -52,9 +52,10 @@ function NewsList() {
                 <div className="col-12 col-md-6 d-flex flex-wrap" style={{ maxHeight: "100vh" }}>
                     {scrollableItems.map((neww) => (
                         <div key={neww.permalink} className="col-6 p-2 d-flex flex-column">
-                            <div className="card flex-grow-1" onClick={() => handleNewsClick(stickyItem)} style={{ cursor: "pointer" }} 
-                            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
-                            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+                            <div className="card flex-grow-1" onClick={() => handleNewsClick(stickyItem)} 
+                                    style={{ cursor: "pointer" }} 
+                                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+                                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
                                 <img
                                     src={neww.image}
                                     className="card-img-top"

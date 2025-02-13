@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link } from 'react-router-dom';
 import instagramLogo from '../images/instagram.webp';
 import twitterLogo from '../images/twitter.png';
 import youtubeLogo from '../images/youtube.png';
@@ -8,9 +8,8 @@ function Footer() {
   return (
     <footer className="footer py-4">
       <div className="container">
-        <div className="row text-center text-md-start d-flex text-white">
+        <div className="row text-center text-md-start d-flex text-white mt-auto">
 
-          {/* Quick Links */}
           <div className="col-md-4 mb-3">
             <h5>LINKS</h5>
             <ul className="list-unstyled">
@@ -37,7 +36,6 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Social Media Links */}
           <div className="col-md-4 mb-3">
             <h5>NUESTRAS REDES</h5>
             <div className="d-flex gap-3 footer-logos">
@@ -69,7 +67,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Copyright */}
           <div className="col-md-4">
             <h5>INFO</h5>
             <p className="small">
