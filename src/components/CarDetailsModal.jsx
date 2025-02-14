@@ -1,7 +1,11 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
-function CarDetailsModal({ car, onClose }) {
+function CarDetailsModal({ car, onClose, user }) {
+  if (!car) return null;
+
+  const canManageCar = user?.rol === "TEAM_MANAGER" || user?.rol === "ADMIN";
+
   return (
     <Modal show={!!car} onHide={onClose} centered>
       <Modal.Header closeButton>
@@ -15,16 +19,24 @@ function CarDetailsModal({ car, onClose }) {
         />
         <ul className="list-group">
           <li className="list-group-item">Equipo: {car.teamName.name}</li>
-          <li className="list-group-item">ERS Slow: {car.ersSlow}</li>
-          <li className="list-group-item">ERS Mid: {car.ersMid}</li>
-          <li className="list-group-item">ERS Fast: {car.ersFast}</li>
-          <li className="list-group-item">Consumo: {car.consumption}</li>
-          <li className="list-group-item">Capacidad de la Bateria: {car.batteryCapacity}</li>
+
+          {/* ✅ Display these details only for TEAM_MANAGER and ADMIN */}
+          {canManageCar ? (
+            <>
+              <li className="list-group-item">ERS Slow: {car.ersSlow}</li>
+              <li className="list-group-item">ERS Mid: {car.ersMid}</li>
+              <li className="list-group-item">ERS Fast: {car.ersFast}</li>
+              <li className="list-group-item">Consumo: {car.consumption}</li>
+              <li className="list-group-item">Capacidad de la Batería: {car.batteryCapacity}</li>
+            </>
+          ) : (
+            <li className="list-group-item text-muted">Detalles técnicos no disponibles.</li>
+          )}
         </ul>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
-          Close
+          Cerrar
         </Button>
       </Modal.Footer>
     </Modal>

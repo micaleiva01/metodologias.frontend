@@ -23,7 +23,6 @@ function CarList() {
 
       console.log("Fetched Cars:", carList);
 
-      // ✅ Apply filtering if the user is a TEAM_MANAGER
       if (user?.rol === "TEAM_MANAGER" && user.teamName) {
         console.log("Filtering Cars for Team:", user.teamName.name);
         carList = carList.filter((car) => car.teamName?.name === user.teamName.name);
@@ -34,13 +33,11 @@ function CarList() {
     } catch (error) {
       alert("Error fetching cars: " + error.message);
     }
-  }, [user]); // ✅ Include 'user' as a dependency
+  }, [user]);
 
   useEffect(() => {
-    if (user) {
-      loadCars();
-    }
-  }, [user, loadCars]); // ✅ Now 'loadCars' is safely included as a dependency
+    loadCars();
+  }, [user, loadCars]);
 
   const handleCardClick = (car) => {
     setSelectedCar(car);
@@ -64,7 +61,7 @@ function CarList() {
           ))
         )}
       </div>
-      {selectedCar && <CarDetailsModal car={selectedCar} onClose={closeModal} />}
+      {selectedCar && <CarDetailsModal car={selectedCar} onClose={closeModal} user={user}/>}
     </div>
   );
 }
