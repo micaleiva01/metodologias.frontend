@@ -9,7 +9,6 @@ const CreateUser = ({ onCancel }) => {
     email: "",
     password: "",
     username: "",
-    role: "Administrador",
   });
 
   const onInputChange = (e) => {
@@ -26,7 +25,7 @@ const CreateUser = ({ onCancel }) => {
       validated: false,
       teamName: null,
       unionDate: new Date().toISOString(),
-      rol: formData.role === "Administrador" ? "ADMIN" : "TEAM_MANAGER",
+      rol: "PENDING",
     };
   
     try {
@@ -122,23 +121,6 @@ const CreateUser = ({ onCancel }) => {
                 onChange={onInputChange}
                 required
               />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="role" className="form-label">
-                Rol:
-              </label>
-              <select
-                className="form-control"
-                name="role"
-                value={formData.role}
-                onChange={onInputChange}
-                required
-              >
-                <option value="Administrador">Administrador</option>
-                <option value="Responsable de equipo">
-                  Responsable de equipo
-                </option>
-              </select>
             </div>
             <button type="submit" className="btn btn-outline-danger">
               Registrar

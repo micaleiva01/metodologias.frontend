@@ -4,8 +4,9 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingUserEmail, setEditingUserEmail] = useState(null); // ✅ Changed from ID to Email
+  const [editingUserEmail, setEditingUserEmail] = useState(null);
   const [editedUser, setEditedUser] = useState({ name: "", email: "" });
+  const [roleSelections, setRoleSelections] = useState({});
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,7 +35,7 @@ const UserList = () => {
 
   const handleEdit = (user) => {
     console.log("Editing User:", user);
-    setEditingUserEmail(user.email); // ✅ Use email instead of ID for editing
+    setEditingUserEmail(user.email);
     setEditedUser({ name: user.name, email: user.email });
   };
 
@@ -44,18 +45,16 @@ const UserList = () => {
       return;
     }
   
-    // Find the user in state to get the full object
     const userToUpdate = users.find((user) => user.email === editingUserEmail);
     if (!userToUpdate) {
       alert("Error: User not found in state");
       return;
     }
   
-    // Ensure the backend receives the full required object
     const updatedUser = {
-      ...userToUpdate, // ✅ Keep all existing fields
-      name: editedUser.name, // ✅ Apply new changes
-      email: editingUserEmail, // ✅ Ensure email stays correct
+      ...userToUpdate,
+      name: editedUser.name,
+      email: editingUserEmail,
     };
   
     try {
@@ -66,7 +65,7 @@ const UserList = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedUser), // ✅ Sending the full user object
+        body: JSON.stringify(updatedUser),
       });
   
       const result = await response.text();
@@ -76,7 +75,6 @@ const UserList = () => {
         throw new Error(result || "Error al editar usuario");
       }
   
-      // Update the UI
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user.email === editingUserEmail ? { ...user, ...updatedUser } : user
@@ -111,8 +109,18 @@ const UserList = () => {
   const approveUser = async (user) => {
     console.log("Approving User Email:", user.email);
 
+    const selectedRole = roleSelections[user.email];
+    if (!selectedRole) {
+      alert("Por favor, selecciona un rol antes de aprobar.");
+      return;
+    }
+
     try {
-      const updatedUser = { ...user, validated: true };
+      const updatedUser = { 
+        ...user, 
+        validated: true, 
+        rol: selectedRole
+      };
 
       const response = await fetch(`http://localhost:8000/users/${user.email}`, {
         method: "PUT",
@@ -126,11 +134,11 @@ const UserList = () => {
         throw new Error("Error al aprobar usuario");
       }
 
-      alert(`Usuario ${user.name} aprobado con éxito.`);
+      alert(`Usuario ${user.name} aprobado como ${selectedRole} con éxito.`);
       
       setUsers((prevUsers) =>
         prevUsers.map((u) =>
-          u.email === user.email ? { ...u, validated: true } : u
+          u.email === user.email ? { ...u, validated: true, rol: selectedRole } : u
         )
       );
     } catch (err) {
@@ -154,7 +162,7 @@ const UserList = () => {
 
               return (
                 <li key={user.email} className="mb-3 p-3 rounded">
-                  {editingUserEmail === user.email ? ( // ✅ Checks by email now
+                  {editingUserEmail === user.email ? (
                     <div>
                       <input
                         type="text"
@@ -190,9 +198,24 @@ const UserList = () => {
                       <p className="mb-2"><strong>Correo Electrónico:</strong> {user.email}</p>
 
                       {!user.validated && (
+                        <div className="d-flex align-items-center justify-content-center">
+                        {/* ✅ Role Dropdown */}
+                        <select 
+                          className="form-select w-auto me-2" 
+                          value={roleSelections[user.email] || ""}
+                          onChange={(e) => 
+                            setRoleSelections((prev) => ({ ...prev, [user.email]: e.target.value }))
+                          }
+                        >
+                          <option value="" disabled>Seleccionar rol</option>
+                          <option value="ADMIN">Administrador</option>
+                          <option value="TEAM_MANAGER">Responsable de equipo</option>
+                        </select>
+
                         <button onClick={() => approveUser(user)} className="btn btn-success m-1">
                           Aprobar
                         </button>
+                        </div>
                       )}
 
                       <button onClick={() => handleEdit(user)} className="btn btn-warning m-1">
