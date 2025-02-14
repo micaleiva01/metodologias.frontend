@@ -2,95 +2,138 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function ErsCalculationTool() {
-  const [cars, setCars] = useState([]); 
-  const [selectedCar, setSelectedCar] = useState(null); 
-  const [drivingMode, setDrivingMode] = useState("normal"); 
-  const [energyPerLap, setEnergyPerLap] = useState(0); 
-  const [lapsNeeded, setLapsNeeded] = useState(0); 
-  const energyCap = 4; // Max ERS capacity
+  const [cars, setCars] = useState([]);
+  const [circuits, setCircuits] = useState([]);
+  const [selectedCar, setSelectedCar] = useState(null);
+  const [selectedCircuit, setSelectedCircuit] = useState(null);
+  const [drivingMode, setDrivingMode] = useState("normal");
+  const [energyPerLap, setEnergyPerLap] = useState(0);
+  const [lapsNeeded, setLapsNeeded] = useState(0);
 
-  const modeFactors = {
-    saver: 1.05, // 5% more recovery
-    normal: 0.75, // 25% less recovery
-    sport: 0.40, // 60% less recovery
-  };
+  const maxEnergyPerLap = 0.6; // Max ERS recovery per lap (kWh)
+
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/cars");
-        setCars(response.data);
+        const carResponse = await axios.get("http://localhost:8000/cars");
+        setCars(carResponse.data);
+
+        const circuitResponse = await axios.get("http://localhost:8000/circuits");
+        setCircuits(circuitResponse.data);
       } catch (error) {
         console.error("Error:", error);
-        alert("Error al cargar coches.");
+        alert("Error al cargar coches y circuitos.");
       }
     };
-    fetchCars();
+    fetchData();
   }, []);
+
+
+
+  useEffect(() => {
+    if (!selectedCar || !selectedCircuit) return;
+  
+    console.log("🚀 useEffect triggered! Current Mode:", drivingMode); 
+  
+    const modeFactors = {
+      saver: 1.05,  // +5% more ERS recovery
+      normal: 1,    // No change (100%)
+      sport: 0.40,  // -60% ERS recovery
+    };
+  
+    const factor = modeFactors[drivingMode] || 1;
+  
+    const { ersSlow, ersMid, ersFast, batteryCapacity } = selectedCar;
+    const { slowCorners, midCorners, fastCorners } = selectedCircuit;
+  
+    if (slowCorners + midCorners + fastCorners === 0) return;
+  
+    // Convert battery capacity from MJ to kWh
+    const batteryCapacityKWh = batteryCapacity / 3.6;
+  
+    // Calculate scaled energy recovery per lap
+    let rawRecoveredEnergy =
+      (slowCorners * (ersSlow / 100) * 0.01) +
+      (midCorners * (ersMid / 100) * 0.01) +
+      (fastCorners * (ersFast / 100) * 0.01);
+  
+    console.log("🔍 Raw Recovered Energy (before factor):", rawRecoveredEnergy);
+  
+    // Apply mode factor before capping the energy recovery
+    let adjustedRecoveredEnergy = rawRecoveredEnergy * factor;
+  
+    console.log("⚡ Adjusted Energy (before cap):", adjustedRecoveredEnergy);
+  
+    // Cap recovery per lap at max regulation (0.6 kWh)
+    adjustedRecoveredEnergy = Math.min(adjustedRecoveredEnergy, maxEnergyPerLap);
+  
+    console.log("⚡ Final Adjusted Recovered Energy (after cap):", adjustedRecoveredEnergy);
+  
+    // Calculate how many laps are needed to fully charge the battery
+    const requiredLaps = adjustedRecoveredEnergy > 0 ? Math.ceil(batteryCapacityKWh / adjustedRecoveredEnergy) : 0;
+  
+    console.log("🏎️ Laps Needed:", requiredLaps);
+  
+    setEnergyPerLap(adjustedRecoveredEnergy);
+    setLapsNeeded(requiredLaps);
+  }, [selectedCar, selectedCircuit, drivingMode]);
+  
+
+  
 
   const handleCarChange = (e) => {
     const carId = parseInt(e.target.value, 10);
     const car = cars.find((c) => c.id === carId);
-    if (!car) return;
+    if (car) setSelectedCar(car);
+  };
 
-    setSelectedCar(car);
-    calculateErs(car, drivingMode);
+  const handleCircuitChange = (e) => {
+    const circuitName = e.target.value;
+    const circuit = circuits.find((c) => c.name === circuitName);
+    if (circuit) setSelectedCircuit(circuit);
   };
 
   const handleModeChange = (e) => {
-    const mode = e.target.value;
-    setDrivingMode(mode);
-    if (selectedCar) {
-      calculateErs(selectedCar, mode);
-    }
-  };
+    console.log("Mode changed to:", e.target.value); // Debugging log
+    setDrivingMode(e.target.value);
+};
 
-  // Calculate ERS energy per lap & laps needed
-  const calculateErs = (car, mode) => {
-    const baseEnergy = car.ersSlow || 0; // Default to 0 if no ERS data
-    const factor = modeFactors[mode] || 1;
-    const calculatedEnergyPerLap = baseEnergy * factor;
-    const calculatedLapsNeeded = calculatedEnergyPerLap > 0 ? Math.ceil(energyCap / calculatedEnergyPerLap) : 0;
-
-    setEnergyPerLap(calculatedEnergyPerLap);
-    setLapsNeeded(calculatedLapsNeeded);
-  };
 
   return (
     <div className="container mt-4">
-      <h2 className="text-left">CALCULA EL ERS DE TU COCHE</h2>
+      <h2 className="text-left">CÁLCULO DEL ERS</h2>
 
       {/* Car Selection */}
       <div className="mb-3">
         <label htmlFor="carSelect" className="form-label">Seleccione un coche:</label>
-        <select
-          id="carSelect"
-          className="form-select"
-          onChange={handleCarChange}
-          defaultValue=""
-        >
+        <select id="carSelect" className="form-select" onChange={handleCarChange} defaultValue="">
           <option value="" disabled>Seleccione un coche</option>
-          {cars.length > 0 ? (
-            cars.map((car) => (
-              <option key={car.id} value={car.id}>
-                {car.name}
-              </option>
-            ))
-          ) : (
-            <option disabled>Cargando coches...</option>
-          )}
+          {cars.map((car) => (
+            <option key={car.id} value={car.id}>
+              {car.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Circuit Selection */}
+      <div className="mb-3">
+        <label htmlFor="circuitSelect" className="form-label">Seleccione un circuito:</label>
+        <select id="circuitSelect" className="form-select" onChange={handleCircuitChange} defaultValue="">
+          <option value="" disabled>Seleccione un circuito</option>
+          {circuits.map((circuit) => (
+            <option key={circuit.name} value={circuit.name}>
+              {circuit.name} ({circuit.city})
+            </option>
+          ))}
         </select>
       </div>
 
       {/* Driving Mode Selection */}
       <div className="mb-3">
         <label htmlFor="modeSelect" className="form-label">Modo de conducción:</label>
-        <select
-          id="modeSelect"
-          className="form-select"
-          value={drivingMode}
-          onChange={handleModeChange}
-        >
+        <select id="modeSelect" className="form-select" value={drivingMode} onChange={handleModeChange}>
           <option value="normal">Normal</option>
           <option value="saver">Ahorro</option>
           <option value="sport">Sport</option>
@@ -98,8 +141,9 @@ function ErsCalculationTool() {
       </div>
 
       {/* ERS Calculation Results */}
-      {selectedCar && (
+      {selectedCar && selectedCircuit && (
         <div className="mb-3">
+          <p>Capacidad de la batería: <strong>{(selectedCar.batteryCapacity / 3.6).toFixed(2)} kWh</strong></p>
           <p>Energia recuperada por vuelta: <strong>{energyPerLap.toFixed(2)} kWh</strong></p>
           <p>Vueltas necesarias para cargar la batería completamente: <strong>{lapsNeeded}</strong></p>
         </div>

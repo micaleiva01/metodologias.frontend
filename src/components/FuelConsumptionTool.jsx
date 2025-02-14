@@ -3,50 +3,73 @@ import axios from "axios";
 
 function FuelConsumptionTool() {
   const [cars, setCars] = useState([]);
-  const [selectedCar, setSelectedCar] = useState(null); 
-  const [laps, setLaps] = useState(1);
-  const [fuelConsumption, setFuelConsumption] = useState(0);
-
+  const [circuits, setCircuits] = useState([]);
+  const [selectedCar, setSelectedCar] = useState(null);
+  const [selectedCircuit, setSelectedCircuit] = useState(null);
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/cars");
-        setCars(response.data);
+        const carResponse = await axios.get("http://localhost:8000/cars");
+        setCars(carResponse.data);
+
+        const circuitResponse = await axios.get("http://localhost:8000/circuits");
+        setCircuits(circuitResponse.data);
       } catch (error) {
-        console.error("Error fetching cars:", error);
-        alert("Failed to load cars. Please check the console for details.");
+        console.error("Error fetching data:", error);
+        alert("Failed to load data. Please check the console for details.");
       }
     };
-    fetchCars();
+    fetchData();
   }, []);
-  
 
   const handleCarChange = (e) => {
-    const carId = e.target.value;
-    const car = cars.find((c) => c.id === parseInt(carId, 10));
-
+    const carId = parseInt(e.target.value, 10);
+    const car = cars.find((c) => c.id === carId);
     if (car) {
-      setSelectedCar(car); 
-      setFuelConsumption(car.consumption);
+      setSelectedCar(car);
     }
   };
 
+  const handleCircuitChange = (e) => {
+    const circuitName = e.target.value;
+    const circuit = circuits.find((c) => c.name === circuitName);
+    if (circuit) {
+      setSelectedCircuit(circuit);
+    }
+  };
+
+  const calculateFuelPerLap = () => {
+    if (!selectedCar || !selectedCircuit) return 0;
+
+    const { length, slowCorners, midCorners, fastCorners } = selectedCircuit;
+    const { consumption, ersSlow, ersMid, ersFast } = selectedCar;
+
+    const totalCorners = slowCorners + midCorners + fastCorners;
+    if (totalCorners === 0) return 0; // Avoid division by zero
+
+    // Weighted ERS impact on fuel consumption
+    const ersFactor =
+      (slowCorners * ersSlow + midCorners * ersMid + fastCorners * ersFast) / totalCorners;
+
+    // Base fuel consumption adjusted by ERS efficiency
+    const baseFuelConsumption = (consumption * length) / 100000;
+
+    return (baseFuelConsumption * (100 / ersFactor)).toFixed(2);
+  };
+
   const calculateTotalFuel = () => {
-    return fuelConsumption * laps; 
+    if (!selectedCar || !selectedCircuit) return 0;
+    return (calculateFuelPerLap() * selectedCircuit.nLaps).toFixed(2);
   };
 
   return (
     <div className="container mt-4">
       <h2 className="text-left">CALCULA EL CONSUMO DE COMBUSTIBLE</h2>
+
       <div className="mb-3">
         <label htmlFor="carSelect" className="form-label">Seleccione un coche:</label>
-        <select
-          id="carSelect"
-          className="form-select"
-          onChange={handleCarChange}
-          defaultValue=""
-        >
+        <select id="carSelect" className="form-select" onChange={handleCarChange} defaultValue="">
           <option value="" disabled>Seleccione coche</option>
           {cars.map((car) => (
             <option key={car.id} value={car.id}>
@@ -55,8 +78,7 @@ function FuelConsumptionTool() {
           ))}
         </select>
       </div>
-      
-      {/* Show selected car name to remove the ESLint warning */}
+
       {selectedCar && (
         <div className="mb-3">
           <p>
@@ -64,24 +86,36 @@ function FuelConsumptionTool() {
           </p>
         </div>
       )}
-  
+
       <div className="mb-3">
-        <label htmlFor="laps" className="form-label">Numero de vueltas:</label>
-        <input
-          type="number"
-          id="laps"
-          className="form-control"
-          value={laps}
-          min="1"
-          onChange={(e) => setLaps(parseInt(e.target.value, 10))}
-        />
+        <label htmlFor="circuitSelect" className="form-label">Seleccione un circuito:</label>
+        <select id="circuitSelect" className="form-select" onChange={handleCircuitChange} defaultValue="">
+          <option value="" disabled>Seleccione circuito</option>
+          {circuits.map((circuit) => (
+            <option key={circuit.name} value={circuit.name}>
+              {circuit.name} ({circuit.city})
+            </option>
+          ))}
+        </select>
       </div>
-      
+
+      {selectedCircuit && (
+        <div className="mb-3">
+          <p>
+            <strong>Circuito seleccionado:</strong> {selectedCircuit.name}
+          </p>
+        </div>
+      )}
+
       <div className="mb-3">
-        <p>Combustible necesario: <strong>{calculateTotalFuel()} litros</strong></p>
+        <p>Consumo por vuelta: <strong>{calculateFuelPerLap()} litros</strong></p>
+      </div>
+
+      <div className="mb-3">
+        <p>Combustible total necesario: <strong>{calculateTotalFuel()} litros</strong></p>
       </div>
     </div>
-  );  
+  );
 }
 
 export default FuelConsumptionTool;
