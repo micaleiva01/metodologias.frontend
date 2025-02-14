@@ -114,8 +114,6 @@ const Login = () => {
     }
   };
     
-  
-  
 
   const handleNavigation = (path) => {
     setRedirecting(true);
@@ -154,6 +152,7 @@ const Login = () => {
             </>
           )}
 
+
         {user.rol === "TEAM_MANAGER" && (
           <>
             <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/teams")}>
@@ -166,13 +165,22 @@ const Login = () => {
               Gestionar Coches
             </button>
 
+
             {user.teamName && (
-              <button className="btn btn-warning mb-2" onClick={() => handleNavigation("/manage-join-requests")}>
-                Gestionar Solicitudes
-              </button>
+              <>
+              {/*
+                <button className="btn btn-warning mb-2" onClick={() => handleNavigation("/manage-join-requests")}>
+                  Gestionar Solicitudes
+                </button>
+                */}
+                <button className="btn btn-danger mb-2" onClick={() => handleNavigation("/manage-team-users")}>
+                  Gestionar Usuarios
+                </button>
+              </>
             )}
           </>
         )}
+
 
         </div>
         <button className="btn btn-danger mt-3" onClick={handleLogout}>

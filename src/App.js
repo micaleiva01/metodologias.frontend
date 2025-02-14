@@ -51,6 +51,7 @@ import EditCircuit from "./components/EditCircuit";
 import Login from "./pages/Login";
 import CreateUser from "./components/CreateUser";
 import UserList from "./components/UserList";
+import ManageTeamUsers from "./components/ManageTeamUses";
 
 import './App.css';
 
@@ -125,6 +126,7 @@ function App() {
             <Route path="/login" element={!user ? <Login /> : <Navigate to={user.rol === "ADMIN" ? "/admin/dashboard" : "/team-manager/dashboard"} replace />} />
             <Route path="/create-user" element={<CreateUser />} />
             <Route path="/users" element={<ProtectedRoute element={<UserList />} allowedRoles={["ADMIN"]} />} />
+            <Route path="/manage-team-users" element={<ManageTeamUsers />} />
           
             {/* Home */}
             <Route path="/" element={<News />} />
