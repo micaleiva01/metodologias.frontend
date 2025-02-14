@@ -6,22 +6,40 @@ function FuelConsumptionTool() {
   const [circuits, setCircuits] = useState([]);
   const [selectedCar, setSelectedCar] = useState(null);
   const [selectedCircuit, setSelectedCircuit] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const carResponse = await axios.get("http://localhost:8000/cars");
-        setCars(carResponse.data);
-
         const circuitResponse = await axios.get("http://localhost:8000/circuits");
+
+        let filteredCars = carResponse.data;
+        
+        // ✅ Filter cars based on the logged-in user’s team
+        if (user?.rol === "TEAM_MANAGER" && user.teamName) {
+          filteredCars = filteredCars.filter(car => car.teamName?.name === user.teamName.name);
+        }
+
+        setCars(filteredCars);
         setCircuits(circuitResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         alert("Failed to load data. Please check the console for details.");
       }
     };
-    fetchData();
-  }, []);
+    
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
   const handleCarChange = (e) => {
     const carId = parseInt(e.target.value, 10);

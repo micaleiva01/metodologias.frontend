@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function ErsCalculationTool() {
-
+  
   const [cars, setCars] = useState([]);
   const [circuits, setCircuits] = useState([]);
   const [selectedCar, setSelectedCar] = useState(null);
@@ -10,73 +10,74 @@ function ErsCalculationTool() {
   const [drivingMode, setDrivingMode] = useState("normal");
   const [energyPerLap, setEnergyPerLap] = useState(0);
   const [lapsNeeded, setLapsNeeded] = useState(0);
+  const [user, setUser] = useState(null);
 
   const maxEnergyPerLap = 0.6;
 
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const carResponse = await axios.get("http://localhost:8000/cars");
-        setCars(carResponse.data);
-
         const circuitResponse = await axios.get("http://localhost:8000/circuits");
+
+        let filteredCars = carResponse.data;
+
+        if (user?.rol === "TEAM_MANAGER" && user.teamName) {
+          filteredCars = filteredCars.filter(car => car.teamName?.name === user.teamName.name);
+        }
+
+        setCars(filteredCars);
         setCircuits(circuitResponse.data);
       } catch (error) {
         console.error("Error:", error);
         alert("Error al cargar coches y circuitos.");
       }
     };
-    fetchData();
-  }, []);
 
-
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!selectedCar || !selectedCircuit) return;
-  
-    console.log("🚀 useEffect triggered! Current Mode:", drivingMode); 
-  
-    const modeFactors = {
+
+    const factoresModo = {
       saver: 1.05,
       normal: 1,
       sport: 0.40,
     };
-  
-    const factor = modeFactors[drivingMode] || 1;
-  
+
+    const factor = factoresModo[drivingMode] || 1;
+
     const { ersSlow, ersMid, ersFast, batteryCapacity } = selectedCar;
     const { slowCorners, midCorners, fastCorners } = selectedCircuit;
-  
+
     if (slowCorners + midCorners + fastCorners === 0) return;
-  
-    const batteryCapacityKWh = batteryCapacity / 3.6;
-  
-    let rawRecoveredEnergy =
+
+    const capacidadBateriaKWh = batteryCapacity / 3.6;
+
+    let energiaRecuperada =
       (slowCorners * (ersSlow / 100) * 0.01) +
       (midCorners * (ersMid / 100) * 0.01) +
       (fastCorners * (ersFast / 100) * 0.01);
-  
-    console.log("🔍 Raw Recovered Energy (before factor):", rawRecoveredEnergy);
-  
-    let adjustedRecoveredEnergy = rawRecoveredEnergy * factor;
-  
-    console.log("⚡ Adjusted Energy (before cap):", adjustedRecoveredEnergy);
-  
-    adjustedRecoveredEnergy = Math.min(adjustedRecoveredEnergy, maxEnergyPerLap);
-  
-    console.log("⚡ Final Adjusted Recovered Energy (after cap):", adjustedRecoveredEnergy);
-  
-    const requiredLaps = adjustedRecoveredEnergy > 0 ? Math.ceil(batteryCapacityKWh / adjustedRecoveredEnergy) : 0;
-  
-    console.log("🏎️ Laps Needed:", requiredLaps);
-  
-    setEnergyPerLap(adjustedRecoveredEnergy);
-    setLapsNeeded(requiredLaps);
-  }, [selectedCar, selectedCircuit, drivingMode]);
-  
 
-  
+    let energiaAjustada = energiaRecuperada * factor;
+
+    energiaAjustada = Math.min(energiaAjustada, maxEnergyPerLap);
+
+    const vueltasRequeridas = energiaAjustada > 0 ? Math.ceil(capacidadBateriaKWh / energiaAjustada) : 0;
+
+    setEnergyPerLap(energiaAjustada);
+    setLapsNeeded(vueltasRequeridas);
+  }, [selectedCar, selectedCircuit, drivingMode]);
 
   const handleCarChange = (e) => {
     const carId = parseInt(e.target.value, 10);
@@ -91,15 +92,12 @@ function ErsCalculationTool() {
   };
 
   const handleModeChange = (e) => {
-    console.log("Mode changed to:", e.target.value);
     setDrivingMode(e.target.value);
-};
-
+  };
 
   return (
     <div className="container mt-4">
       <h2 className="text-left">CÁLCULO DEL ERS</h2>
-
 
       <div className="mb-3">
         <label htmlFor="carSelect" className="form-label">Seleccione un coche:</label>
@@ -113,7 +111,6 @@ function ErsCalculationTool() {
         </select>
       </div>
 
-
       <div className="mb-3">
         <label htmlFor="circuitSelect" className="form-label">Seleccione un circuito:</label>
         <select id="circuitSelect" className="form-select" onChange={handleCircuitChange} defaultValue="">
@@ -126,7 +123,6 @@ function ErsCalculationTool() {
         </select>
       </div>
 
-
       <div className="mb-3">
         <label htmlFor="modeSelect" className="form-label">Modo de conducción:</label>
         <select id="modeSelect" className="form-select" value={drivingMode} onChange={handleModeChange}>
@@ -135,7 +131,6 @@ function ErsCalculationTool() {
           <option value="sport">Sport</option>
         </select>
       </div>
-
 
       {selectedCar && selectedCircuit && (
         <div className="mb-3">

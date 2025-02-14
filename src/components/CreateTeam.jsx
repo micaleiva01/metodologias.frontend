@@ -3,9 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 function CreateTeam() {
-
     let navigate = useNavigate();
-
 
     const [team, setTeam] = useState({
         name: "",
@@ -13,14 +11,11 @@ function CreateTeam() {
         twitter: "",
     });
 
-
     const { name, logoUrl, twitter } = team;
-
 
     const onInputChange = (e) => {
         setTeam({ ...team, [e.target.name]: e.target.value });
     };
-
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -39,8 +34,9 @@ function CreateTeam() {
             const storedUser = JSON.parse(localStorage.getItem("user"));
             const updatedUser = { ...storedUser, teamName: { name: team.name } };
             localStorage.setItem("user", JSON.stringify(updatedUser));
-    
-            navigate(`/teams/${encodeURIComponent(team.name)}`);
+
+            // ✅ Redirect to TeamDetails page after successful team creation
+            navigate(`/team-details/${encodeURIComponent(team.name)}`);
         } catch (error) {
             console.error("Error creating team:", error);
     
@@ -49,7 +45,6 @@ function CreateTeam() {
             alert(errorMessage);
         }
     };
-    
 
     return (
         <div className="container">

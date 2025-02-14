@@ -134,19 +134,19 @@ const Login = () => {
         <div className="d-flex flex-column align-items-center">
           {user.rol === "ADMIN" && (
             <>
-              <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/news")}>
+              <button className="btn btn-outline-light mt-4 mb-2" onClick={() => handleNavigation("/news")}>
                 Gestionar Noticias
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/votings")}>
+              <button className="btn btn-outline-light mb-2" onClick={() => handleNavigation("/votings")}>
                 Gestionar Votaciones
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/races")}>
+              <button className="btn btn-outline-light mb-2" onClick={() => handleNavigation("/races")}>
                 Gestionar Carreras
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/circuits")}>
+              <button className="btn btn-outline-light mb-2" onClick={() => handleNavigation("/circuits")}>
                 Gestionar Circuitos
               </button>
-              <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/users")}>
+              <button className="btn btn-outline-light mb-2" onClick={() => handleNavigation("/users")}>
                 Gestionar Usuarios
               </button>
             </>
@@ -155,13 +155,13 @@ const Login = () => {
 
         {user.rol === "TEAM_MANAGER" && (
           <>
-            <button className="btn btn-primary mt-4 mb-2" onClick={() => handleNavigation("/teams")}>
+            <button className="btn btn-outline-light mt-4 mb-2" onClick={() => handleNavigation("/teams")}>
               Gestionar Equipo
             </button>
-            <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/pilots")}>
+            <button className="btn btn-outline-light mb-2" onClick={() => handleNavigation("/pilots")}>
               Gestionar Pilotos
             </button>
-            <button className="btn btn-primary mb-2" onClick={() => handleNavigation("/cars")}>
+            <button className="btn btn-outline-light mb-2" onClick={() => handleNavigation("/cars")}>
               Gestionar Coches
             </button>
 
@@ -173,7 +173,7 @@ const Login = () => {
                   Gestionar Solicitudes
                 </button>
                 */}
-                <button className="btn btn-danger mb-2" onClick={() => handleNavigation("/manage-team-users")}>
+                <button className="btn btn-outline-light mb-2" onClick={() => handleNavigation("/manage-team-users")}>
                   Gestionar Usuarios
                 </button>
               </>

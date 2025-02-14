@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import CarCard from "./CarCard";
 import CarDetailsModal from "./CarDetailsModal";
@@ -11,36 +11,36 @@ function CarList() {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
+      console.log("Loaded User from LocalStorage:", storedUser);
       setUser(storedUser);
     }
   }, []);
 
-  useEffect(() => {
-    loadCars();
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      applyFiltering(user);
-    }
-  }, [user]);
-
-  const loadCars = async () => {
+  const loadCars = useCallback(async () => {
     try {
       const result = await axios.get("http://localhost:8000/cars");
-      setCars(result.data);
+      let carList = result.data;
+
+      console.log("Fetched Cars:", carList);
+
+      // ✅ Apply filtering if the user is a TEAM_MANAGER
+      if (user?.rol === "TEAM_MANAGER" && user.teamName) {
+        console.log("Filtering Cars for Team:", user.teamName.name);
+        carList = carList.filter((car) => car.teamName?.name === user.teamName.name);
+      }
+
+      console.log("Filtered Cars:", carList);
+      setCars(carList);
     } catch (error) {
       alert("Error fetching cars: " + error.message);
     }
-  };
+  }, [user]); // ✅ Include 'user' as a dependency
 
-  const applyFiltering = (loggedUser) => {
-    if (loggedUser?.rol === "TEAM_MANAGER" && loggedUser.teamName?.id) {
-      setCars((prevCars) => prevCars.filter(
-        (car) => car.teamName?.id === loggedUser.teamName.id
-      ));
+  useEffect(() => {
+    if (user) {
+      loadCars();
     }
-  };
+  }, [user, loadCars]); // ✅ Now 'loadCars' is safely included as a dependency
 
   const handleCardClick = (car) => {
     setSelectedCar(car);

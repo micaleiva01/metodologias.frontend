@@ -17,10 +17,10 @@ function TeamCard({ team, isAdmin, onClick }) {
         <h5 className="card-title">{team.name}</h5>
         <p className="card-text text-muted">Twitter: {team.twitter}</p>
 
-        {/* ✅ Admins cannot edit or delete teams */}
+
         {isAdmin && (
           <div>
-            <p className="text-white-50">Solo lectura</p>
+            <p className="text-white-50">Solo listado</p>
           </div>
         )}
       </div>

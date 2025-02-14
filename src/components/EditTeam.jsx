@@ -120,8 +120,10 @@ function EditTeam() {
                 onChange={onInputChange}
               />
             </div>
-
             <button type="submit" className="btn btn-outline-danger">Guardar Cambios</button>
+            <button type="button" className="btn btn-outline-secondary ms-2" onClick={() => navigate(`/teams/${encodeURIComponent(name)}`)}>
+              Cancelar
+            </button>
           </form>
         </div>
       </div>
