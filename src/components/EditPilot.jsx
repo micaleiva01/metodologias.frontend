@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 function EditPilot() {
     let navigate = useNavigate();
     const { id } = useParams();
-    const pilotId = Number(id); // Ensure it's a number
+    const pilotId = Number(id);
 
     const [pilot, setPilot] = useState({
         id: "",
@@ -15,43 +15,41 @@ function EditPilot() {
         imageUrl: "",
         country: "",
         twitter: "",
-        team: { name: "" }, // Ensure team is an object
+        team: { name: "" },
     });
 
-    const [teams, setTeams] = useState([]); // Store team options
+    const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Load the existing pilot data
     const loadPilot = useCallback(async () => {
         try {
-            console.log(`Fetching pilot with ID: ${pilotId}`);
+            console.log(`Cargando piloto con el siguiente ID: ${pilotId}`);
             const result = await axios.get(`http://localhost:8000/pilots/${pilotId}`);
-            console.log("Pilot data fetched:", result.data);
+            console.log("Piloto encontrado:", result.data);
 
             setPilot({
                 ...result.data,
-                team: result.data.team || { name: "" }, // Handle missing team data
+                team: result.data.team || { name: "" },
             });
 
             setLoading(false);
         } catch (error) {
-            console.error("Error loading pilot:", error);
+            console.error("Error:", error);
             setError("Piloto no encontrado.");
             setLoading(false);
         }
     }, [pilotId]);
 
-    // Fetch all teams for the dropdown
     const loadTeams = useCallback(async () => {
         try {
-            console.log("Fetching teams for dropdown...");
+            console.log("Buscando equipos...");
             const result = await axios.get("http://localhost:8000/teams");
-            console.log("Teams fetched:", result.data);
+            console.log("Equipo encontrado:", result.data);
 
             setTeams(result.data);
         } catch (error) {
-            console.error("Error fetching teams:", error);
+            console.error("Error:", error);
         }
     }, []);
 
@@ -60,17 +58,15 @@ function EditPilot() {
         loadTeams();
     }, [loadPilot, loadTeams]);
 
-    // Handle form changes
     const onInputChange = (e) => {
         const { name, value } = e.target;
 
         setPilot((prevPilot) => ({
             ...prevPilot,
-            [name]: name === "team" ? { name: value } : value, // Handle team selection correctly
+            [name]: name === "team" ? { name: value } : value,
         }));
     };
 
-    // Handle form submission
     const onSubmit = async (e) => {
         e.preventDefault();
     
@@ -79,19 +75,19 @@ function EditPilot() {
             return;
         }
     
-        console.log("Updating pilot:", pilot);
+        console.log("Actualizando piloto:", pilot);
     
         try {
             const response = await axios.put(
-                `http://localhost:8000/pilots`, // Correct URL
-                pilot, // Send the pilot object in the request body
-                { params: { team: pilot.team.name.trim() } } // Ensure team name is trimmed and formatted correctly
+                `http://localhost:8000/pilots`,
+                pilot,
+                { params: { team: pilot.team.name.trim() } }
             );
     
-            console.log("Pilot updated successfully:", response.data);
+            console.log("Pilot actualizado con éxito:", response.data);
             navigate("/pilots");
         } catch (error) {
-            console.error("Error updating pilot:", error);
+            console.error("Error:", error);
     
             if (error.response?.status === 404) {
                 alert("El piloto o el equipo no existen en la base de datos.");
@@ -121,7 +117,7 @@ function EditPilot() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center m-4">EDITAR PILOTO</h2>
+                    <h2 className="title text-center m-4">EDITAR PILOTO</h2>
 
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">

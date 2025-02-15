@@ -65,7 +65,7 @@ function CircuitList() {
                                     {/* solo admins */}
                                     {user && user.rol === "ADMIN" && (
                                         <div className="mt-3">
-                                            <Link to={`/circuits/edit/${circuit.id.city}/${circuit.id.name}`} className="btn btn-outline-primary">
+                                            <Link to={`/edit-circuit/${circuit.id.city}/${circuit.id.name}`} className="btn btn-outline-primary">
                                                 Editar
                                             </Link>
                                             <button className="btn btn-danger ms-2" onClick={() => deleteCircuit(circuit)}>

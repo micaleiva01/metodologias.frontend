@@ -119,8 +119,8 @@ function App() {
 
             {/* Circuits */}
             <Route path="/circuits" element={<CircuitList />} />
-            <Route path="/circuits/create" element={<ProtectedRoute element={<CreateCircuits />} allowedRoles={["ADMIN"]} />} />
-            <Route path="/circuits/edit/:city/:name" element={<ProtectedRoute element={<EditCircuit />} allowedRoles={["ADMIN"]} />} />
+            <Route path="/create-circuit" element={<ProtectedRoute element={<CreateCircuits />} allowedRoles={["ADMIN"]} />} />
+            <Route path="/edit-circuit/:city/:name" element={<ProtectedRoute element={<EditCircuit />} allowedRoles={["ADMIN"]} />} />
 
             {/* Login + Users */}
             <Route path="/login" element={!user ? <Login /> : <Navigate to={user.rol === "ADMIN" ? "/admin/dashboard" : "/team-manager/dashboard"} replace />} />

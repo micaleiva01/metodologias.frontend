@@ -64,7 +64,7 @@ const CreateUser = ({ onCancel }) => {
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-          <h2 className="text-center m-4">Registrar Usuario</h2>
+          <h2 className="title text-center m-4">Registrar Usuario</h2>
           <form onSubmit={onSubmit}>
             <div className="mb-3">
               <label htmlFor="name" className="form-label">

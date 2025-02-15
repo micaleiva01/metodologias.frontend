@@ -66,13 +66,12 @@ function Teams() {
   if (user?.rol === "TEAM_MANAGER" && teamName) {
     console.log("Rendering Team Manager view");
   
-    // ✅ Filter cars belonging to the logged-in Team Manager's team
     const filteredCars = cars.filter((car) => car.teamName?.name === teamName.name);
     
     return (
       <div className="container my-4 text-white">
         <div className="text-center">
-          <h1>{teamName.name}</h1>
+          <h1 className="title">Escudería {teamName.name}</h1>
           {teamName.logoUrl && (
             <img src={teamName.logoUrl} alt={`${teamName.name} Logo`} className="img-fluid mb-4" style={{ maxHeight: "200px" }} />
           )}

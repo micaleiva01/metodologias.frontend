@@ -6,9 +6,9 @@ function CreateCircuit() {
     let navigate = useNavigate();
 
     const [circuit, setCircuit] = useState({
-        id: { name: "", city: "" },  // ✅ Ensure ID is included
+        id: { name: "", city: "" },
         country: "",
-        track: "",  // ✅ Added missing field
+        track: "", 
         nLaps: "",
         length: "",
         slowCorners: "",
@@ -21,7 +21,7 @@ function CreateCircuit() {
     const onInputChange = (e) => {
         const { name, value } = e.target;
         if (name === "name" || name === "city") {
-            setCircuit({ ...circuit, id: { ...circuit.id, [name]: value } }); // ✅ Update composite key
+            setCircuit({ ...circuit, id: { ...circuit.id, [name]: value } });
         } else {
             setCircuit({ ...circuit, [name]: value });
         }
@@ -59,13 +59,13 @@ function CreateCircuit() {
         e.preventDefault();
         if (!validateCircuit()) return;
 
-        console.log("Sending data:", circuit); // ✅ Debugging
+        console.log("Enviando:", circuit);
 
         try {
             await axios.post("http://localhost:8000/circuits", circuit);
             navigate("/circuits");
         } catch (error) {
-            console.error("Error creating circuit:", error.response?.data || error.message);
+            console.error("Error:", error.response?.data || error.message);
             alert(error.response?.data?.message || "Error al crear el circuito.");
         }
     };
@@ -74,7 +74,7 @@ function CreateCircuit() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center">Crear Nuevo Circuito</h2>
+                    <h2 className="title text-center">Crear Nuevo Circuito</h2>
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Nombre</label>

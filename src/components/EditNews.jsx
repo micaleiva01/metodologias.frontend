@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 function EditNews() {
     let navigate = useNavigate();
     const { permalink } = useParams();
-    console.log("Permalink recibido en la URL:", permalink); // 🔍 Verificación
+    console.log("Permalink recibido en la URL:", permalink);
 
     const [news, setNews] = useState({
         permalink: "",
@@ -50,21 +50,21 @@ function EditNews() {
     useEffect(() => {
         const loadNews = async () => {
             try {
-                console.log("🔎 Fetching all news to find the correct one...");
+                console.log("Cargando noticias...");
                 const result = await axios.get("http://localhost:8000/new");
-                console.log("✅ All news fetched:", result.data);
+                console.log("Listado:", result.data);
     
                 const foundNews = result.data.find((item) => item.permalink === permalink);
     
                 if (foundNews) {
-                    console.log("News found:", foundNews);
+                    console.log("Noticia encontrada:", foundNews);
                     setNews(foundNews);
                 } else {
-                    console.warn("News not found for permalink:", permalink);
+                    console.warn("Noticia con permalink no encontrada:", permalink);
                     setNews(null);
                 }
             } catch (error) {
-                console.error("❌ Error loading news:", error);
+                console.error("Error:", error);
                 setNews(null);
             } finally {
                 setLoading(false);
@@ -109,7 +109,7 @@ function EditNews() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center m-4">EDITAR NOTICIA</h2>
+                    <h2 className="title text-center m-4">EDITAR NOTICIA</h2>
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
                             <label htmlFor="title" className="form-label">Título:</label>

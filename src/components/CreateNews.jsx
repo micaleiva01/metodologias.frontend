@@ -54,19 +54,19 @@ function CreateNews() {
             title: news.title,
             image: news.image,
             text: news.text,
-            creator_id: parseInt(news.creator_id, 10), // Ensure it's an integer
+            creator_id: parseInt(news.creator_id, 10),
             date: news.date,
         };
     
-        console.log("🚀 Sending News Data:", JSON.stringify(newsData, null, 2)); // ✅ Log JSON data before sending request
+        console.log("Enviando:", JSON.stringify(newsData, null, 2));
     
         try {
             const response = await axios.post("http://localhost:8000/new", newsData);
-            console.log("✅ News created successfully:", response.data);
+            console.log("Noticia creada con éxito:", response.data);
             navigate("/news");
         } catch (error) {
-            console.error("❌ Error creating news:", error.response?.data || error.message);
-            alert(error.response?.data || "Failed to create news. Please try again.");
+            console.error("Error:", error.response?.data || error.message);
+            alert(error.response?.data || "Error al crear noticia");
         }
     };
     
@@ -76,7 +76,7 @@ function CreateNews() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center m-4">CREAR NOTICIA</h2>
+                    <h2 className="title text-center m-4">CREAR NOTICIA</h2>
                     <form onSubmit={(e) => onSubmit(e)}>
                         <div className="mb-3">
                             <label htmlFor="title" className="form-label">

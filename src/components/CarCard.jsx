@@ -21,12 +21,6 @@ function CarCard({ car, onDelete }) {
       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
     >
-      <img
-        src={car.imageUrl}
-        className="card-img-top"
-        alt={car.name}
-        style={{ height: "200px", objectFit: "cover" }}
-      />
       <div className="card-body text-center">
         <h5 className="card-title"> 
           {car.name}

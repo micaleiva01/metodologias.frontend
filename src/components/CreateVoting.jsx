@@ -23,7 +23,7 @@ function CreateVoting() {
                 const res = await axios.get("http://localhost:8000/pilots");
                 setAvailablePilots(res.data);
             } catch (error) {
-                console.error("Error fetching pilots:", error);
+                console.error("Error:", error);
             }
         };
 
@@ -52,7 +52,7 @@ function CreateVoting() {
                 const selectedPilot = availablePilots.find(pilot => pilot.id === selectedPilotId);
                 setVoting({ ...voting, pilots: [...pilots, selectedPilot] });
             } else {
-                alert("You can only select up to 5 pilots.");
+                alert("Solo puedes seleccionar hasta cinco pilotos.");
             }
         }
     };
@@ -66,7 +66,7 @@ function CreateVoting() {
         e.preventDefault();
     
         if (pilots.length < 5) {
-            alert("You must select at least 5 pilots for the voting.");
+            alert("Debes seleccionar como minimo cinco pilotos.");
             return;
         }
     
@@ -80,13 +80,13 @@ function CreateVoting() {
             pilots: pilots.map(pilot => pilot.id)
         };
     
-        console.log("Submitting voting:", JSON.stringify(votingData, null, 2));
+        console.log("Enviando:", JSON.stringify(votingData, null, 2));
     
         try {
             await axios.post("http://localhost:8000/voting", votingData);
             navigate("/votings");
         } catch (error) {
-            console.error("Error creating voting:", error.response ? error.response.data : error);
+            console.error("Error:", error.response ? error.response.data : error);
             alert("Error: " + (error.response ? JSON.stringify(error.response.data) : "Unknown error"));
         }
     };
@@ -97,7 +97,7 @@ function CreateVoting() {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-                    <h2 className="text-center">Crear Nueva Votación</h2>
+                    <h2 className="title text-center">Crear Nueva Votación</h2>
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
                             <label htmlFor="title" className="form-label">Título</label>
@@ -146,7 +146,7 @@ function CreateVoting() {
                         <div className="mb-3">
                             <label className="form-label">Seleccionar Pilotos (mínimo 5)</label>
                             <select className="form-control" onChange={handlePilotSelection}>
-                                <option value="">-- Select a Pilot --</option>
+                                <option value="">-- Selecciona un Piloto --</option>
                                 {availablePilots.map((pilot) => (
                                     <option key={pilot.id} value={pilot.id}>
                                         {pilot.name} {pilot.surname} - {pilot.team.name}
@@ -173,7 +173,7 @@ function CreateVoting() {
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="text-muted">No pilots selected.</p>
+                                <p className="text-muted">Ningún piloto seleccionado.</p>
                             )}
                         </div>
 

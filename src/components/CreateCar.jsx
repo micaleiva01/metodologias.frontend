@@ -28,8 +28,8 @@ function CreateCar() {
       const response = await axios.get("http://localhost:8000/teams");
       setTeams(response.data);
     } catch (error) {
-      console.error("Error fetching teams:", error);
-      alert("Failed to load teams. Please check the console for details.");
+      console.error("Error:", error);
+      alert("Error al cargar equipos.");
     }
   };
 
@@ -41,7 +41,6 @@ function CreateCar() {
     e.preventDefault();
 
     try {
-      // Include the teamName as a query parameter in the URL.
       await axios.post(
         `http://localhost:8000/cars?teamName=${encodeURIComponent(teamName)}`,
         car,
@@ -51,9 +50,9 @@ function CreateCar() {
       );
       navigate("/cars");
     } catch (error) {
-      console.error("Error creating car:", error);
+      console.error("Error:", error);
       const errorMessage =
-        error.response?.data?.message || "Failed to create car. Please try again.";
+        error.response?.data?.message || "Error al crear coche.";
       alert(errorMessage);
     }
   };
@@ -62,16 +61,15 @@ function CreateCar() {
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 mb-4 shadow text-white">
-          <h2 className="text-center m-4">CREATE CAR</h2>
+          <h2 className="title text-center m-4">CREAR COCHE</h2>
           <form onSubmit={onSubmit}>
             <div className="mb-3">
               <label htmlFor="name" className="form-label">
-                Car Name:
+                Nombre:
               </label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Enter car name"
                 name="name"
                 value={name}
                 onChange={onInputChange}
@@ -81,13 +79,12 @@ function CreateCar() {
 
             <div className="mb-3">
               <label htmlFor="ersSlow" className="form-label">
-                ERS Slow (Float):
+                ERS Bajo:
               </label>
               <input
                 type="number"
                 step="0.01"
                 className="form-control"
-                placeholder="Enter ERS Slow value"
                 name="ersSlow"
                 value={ersSlow}
                 onChange={onInputChange}
@@ -97,13 +94,12 @@ function CreateCar() {
 
             <div className="mb-3">
               <label htmlFor="ersMid" className="form-label">
-                ERS Mid (Float):
+                ERS Medio:
               </label>
               <input
                 type="number"
                 step="0.01"
                 className="form-control"
-                placeholder="Enter ERS Mid value"
                 name="ersMid"
                 value={ersMid}
                 onChange={onInputChange}
@@ -113,13 +109,12 @@ function CreateCar() {
 
             <div className="mb-3">
               <label htmlFor="ersFast" className="form-label">
-                ERS Fast (Float):
+                ERS Rapido:
               </label>
               <input
                 type="number"
                 step="0.01"
                 className="form-control"
-                placeholder="Enter ERS Fast value"
                 name="ersFast"
                 value={ersFast}
                 onChange={onInputChange}
@@ -129,12 +124,11 @@ function CreateCar() {
 
             <div className="mb-3">
               <label htmlFor="consumption" className="form-label">
-                Consumption (Integer):
+                Consumo de Gasolina:
               </label>
               <input
                 type="number"
                 className="form-control"
-                placeholder="Enter consumption"
                 name="consumption"
                 value={consumption}
                 onChange={onInputChange}
@@ -144,13 +138,12 @@ function CreateCar() {
 
             <div className="mb-3">
               <label htmlFor="batteryCapacity" className="form-label">
-                Battery Capacity (Float):
+                Capacidad de la Bateria:
               </label>
               <input
                 type="number"
                 step="0.01"
                 className="form-control"
-                placeholder="Enter battery capacity"
                 name="batteryCapacity"
                 value={batteryCapacity}
                 onChange={onInputChange}
@@ -160,7 +153,7 @@ function CreateCar() {
 
             <div className="mb-3">
               <label htmlFor="teamName" className="form-label">
-                Team:
+                Equipo:
               </label>
               <select
                 className="form-select"
@@ -169,7 +162,7 @@ function CreateCar() {
                 onChange={onInputChange}
                 required
               >
-                <option value="">Select a team</option>
+                <option value="">Seleccione Equipo:</option>
                 {teams.map((team) => (
                   <option key={team.id} value={team.name}>
                     {team.name}
@@ -179,10 +172,10 @@ function CreateCar() {
             </div>
 
             <button type="submit" className="btn btn-outline-danger">
-              Add Car
+              Crear Coche
             </button>
             <Link className="btn btn-outline-secondary ms-2" to="/cars">
-              Cancel
+              Cancelar
             </Link>
           </form>
         </div>

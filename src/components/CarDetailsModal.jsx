@@ -20,7 +20,6 @@ function CarDetailsModal({ car, onClose, user }) {
         <ul className="list-group">
           <li className="list-group-item">Equipo: {car.teamName.name}</li>
 
-          {/* ✅ Display these details only for TEAM_MANAGER and ADMIN */}
           {canManageCar ? (
             <>
               <li className="list-group-item">ERS Slow: {car.ersSlow}</li>

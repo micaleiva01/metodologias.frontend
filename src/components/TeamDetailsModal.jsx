@@ -47,7 +47,7 @@ function TeamDetailsModal({ show, onHide, team }) {
           <div className="modal-content">
 
             <div className="modal-header">
-              <h5 className="modal-title">Escudería {team.name}</h5>
+              <h5 className="title modal-title">Escudería {team.name}</h5>
               <button
                 type="button"
                 className="close"

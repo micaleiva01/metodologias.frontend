@@ -49,10 +49,10 @@ function RacesList() {
                             {user && user.rol === "ADMIN" && (
                                 <div className="card-footer d-flex justify-content-center">
                                     <Link to={`/edit-race/${race.id.date}/${race.id.city}/${race.id.name}`} className="btn btn-outline-primary btn-sm m-1">
-                                        Edit
+                                        Editar
                                     </Link>
                                     <button className="btn btn-outline-danger btn-sm m-1">
-                                        Delete
+                                        Eliminar
                                     </button>
                                 </div>
                             )}
