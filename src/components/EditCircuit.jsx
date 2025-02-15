@@ -23,7 +23,7 @@ function EditCircuit() {
                 const encodedCity = encodeURIComponent(city);
                 const encodedName = encodeURIComponent(name);
 
-                console.log(`Cargando circuitos: /circuits/${encodedCity}/${encodedName}`);
+                console.log(`Cargando circuito: /circuits/${encodedCity}/${encodedName}`);
 
                 const response = await axios.get(`http://localhost:8000/circuits/${encodedCity}/${encodedName}`);
                 console.log("Circuito encontrado:", response.data);
@@ -39,7 +39,7 @@ function EditCircuit() {
 
     const onInputChange = (e) => {
         const { name, value } = e.target;
-        setCircuit({ ...circuit, [name]: value });
+        setCircuit((prev) => ({ ...prev, [name]: value }));
     };
 
     const onSubmit = async (e) => {
@@ -51,13 +51,14 @@ function EditCircuit() {
         console.log(`Actualizando circuito: /circuits/${encodedCity}/${encodedName}`);
 
         const updatedCircuit = {
+            id: { city: circuit.id.city, name: circuit.id.name },
             country: circuit.country,
             track: circuit.track,
             nLaps: circuit.nLaps,
             length: circuit.length,
             slowCorners: circuit.slowCorners,
             midCorners: circuit.midCorners,
-            fastCorners: circuit.fastCorners
+            fastCorners: circuit.fastCorners,
         };
 
         try {
@@ -77,111 +78,41 @@ function EditCircuit() {
                     <h2 className="title text-center">Editar Circuito</h2>
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
-                            <label htmlFor="name" className="form-label">Nombre</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="name"
-                                value={circuit.id.name}
-                                readOnly
-                            />
+                            <label className="form-label">Nombre</label>
+                            <input type="text" className="form-control" name="name" value={circuit.id.name} readOnly />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="city" className="form-label">Ciudad</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="city"
-                                value={circuit.id.city}
-                                readOnly
-                            />
+                            <label className="form-label">Ciudad</label>
+                            <input type="text" className="form-control" name="city" value={circuit.id.city} readOnly />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="country" className="form-label">País</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="country"
-                                value={circuit.country}
-                                onChange={onInputChange}
-                                required
-                            />
+                            <label className="form-label">País</label>
+                            <input type="text" className="form-control" name="country" value={circuit.country} onChange={onInputChange} required />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="track" className="form-label">Pista</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="track"
-                                value={circuit.track}
-                                onChange={onInputChange}
-                                required
-                            />
+                            <label className="form-label">Pista</label>
+                            <input type="text" className="form-control" name="track" value={circuit.track} onChange={onInputChange} required />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="nLaps" className="form-label">Número de Vueltas</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="nLaps"
-                                value={circuit.nLaps}
-                                onChange={onInputChange}
-                                required
-                            />
+                            <label className="form-label">Número de Vueltas</label>
+                            <input type="number" className="form-control" name="nLaps" value={circuit.nLaps} onChange={onInputChange} required />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="length" className="form-label">Longitud (en km)</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="length"
-                                value={circuit.length}
-                                onChange={onInputChange}
-                                required
-                            />
+                            <label className="form-label">Longitud (en km)</label>
+                            <input type="number" className="form-control" name="length" value={circuit.length} onChange={onInputChange} required />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="slowCorners" className="form-label">Curvas Lentas</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="slowCorners"
-                                value={circuit.slowCorners}
-                                onChange={onInputChange}
-                                required
-                            />
+                            <label className="form-label">Curvas Lentas</label>
+                            <input type="number" className="form-control" name="slowCorners" value={circuit.slowCorners} onChange={onInputChange} required />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="midCorners" className="form-label">Curvas Medias</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="midCorners"
-                                value={circuit.midCorners}
-                                onChange={onInputChange}
-                                required
-                            />
+                            <label className="form-label">Curvas Medias</label>
+                            <input type="number" className="form-control" name="midCorners" value={circuit.midCorners} onChange={onInputChange} required />
                         </div>
-
                         <div className="mb-3">
-                            <label htmlFor="fastCorners" className="form-label">Curvas Rápidas</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="fastCorners"
-                                value={circuit.fastCorners}
-                                onChange={onInputChange}
-                                required
-                            />
+                            <label className="form-label">Curvas Rápidas</label>
+                            <input type="number" className="form-control" name="fastCorners" value={circuit.fastCorners} onChange={onInputChange} required />
                         </div>
-
                         <button type="submit" className="btn btn-outline-primary">Guardar Cambios</button>
                         <Link to="/circuits" className="btn btn-outline-secondary ms-2">Cancelar</Link>
                     </form>
