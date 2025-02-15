@@ -75,21 +75,21 @@ function App() {
 
   return (
     <Router>
-      <div>
+      <div className="app-container d-flex flex-column min-vh-100">
         <Heading />
-        <div className="main-content">
+        <div className="main-content flex-grow-1">
           <Routes>
             {/* News */}
             <Route path="/news" element={<News />} />
             <Route path="/create-news" element={<ProtectedRoute element={<CreateNews />} allowedRoles={["ADMIN"]} />} />
             <Route path="/edit-news/:permalink" element={<ProtectedRoute element={<EditNews />} allowedRoles={["ADMIN"]} />} />
 
-            {/* Votings */}
+            {/* Voting */}
             <Route path="/votings" element={<Votings />} />
             <Route path="/create-voting" element={<ProtectedRoute element={<CreateVoting />} allowedRoles={["ADMIN"]} />} />
-            <Route path="/edit-voting" element={<ProtectedRoute element={<EditVoting />} allowedRoles={["ADMIN"]} />} />
-            <Route path="/votings/:permalink" element={<VotingSpecific />} />
-            <Route path="/votings/:permalink/results" element={<VotingResults />} />
+            <Route path="/edit-voting/:permalink" element={<ProtectedRoute element={<EditVoting />} allowedRoles={["ADMIN"]} />} />
+            <Route path="/voting/:permalink" element={<VotingSpecific />} />
+            <Route path="/voting/:permalink/results" element={<VotingResults />} />
 
             {/* Pilots */}
             <Route path="/pilots/*" element={<PilotsWrapper />}>

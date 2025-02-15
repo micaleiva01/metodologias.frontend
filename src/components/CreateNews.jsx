@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,9 +10,17 @@ function CreateNews() {
         title: "",
         image: "",
         text: "",
-        creator_id: "",
+        creator_id: "", // Initially empty
         date: "",
     });
+
+    useEffect(() => {
+        const storedUserId = localStorage.getItem("userId");
+        console.log("Fetched userId from localStorage:", storedUserId); // Debugging
+        if (storedUserId) {
+            setNews((prevNews) => ({ ...prevNews, creator_id: storedUserId }));
+        }
+    }, []);
 
     const { permalink, title, image, text, creator_id, date } = news;
 
@@ -48,7 +56,7 @@ function CreateNews() {
     const onSubmit = async (e) => {
         e.preventDefault();
         if (!validateNews()) return;
-    
+
         const newsData = {
             permalink: news.permalink,
             title: news.title,
@@ -57,9 +65,9 @@ function CreateNews() {
             creator_id: parseInt(news.creator_id, 10),
             date: news.date,
         };
-    
+
         console.log("Enviando:", JSON.stringify(newsData, null, 2));
-    
+
         try {
             const response = await axios.post("http://localhost:8000/new", newsData);
             console.log("Noticia creada con éxito:", response.data);
@@ -69,8 +77,6 @@ function CreateNews() {
             alert(error.response?.data || "Error al crear noticia");
         }
     };
-    
-    
 
     return (
         <div className="container">
@@ -140,10 +146,9 @@ function CreateNews() {
                             <input
                                 type="number"
                                 className="form-control"
-                                placeholder="Insertar ID del creador"
                                 name="creator_id"
                                 value={creator_id}
-                                onChange={(e) => onInputChange(e)}
+                                readOnly
                             />
                         </div>
 

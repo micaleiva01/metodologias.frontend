@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -17,44 +17,39 @@ function EditCircuit() {
         fastCorners: "",
     });
 
-
-    const fetchCircuit = useCallback(async () => {
-
-        const encodedCity = encodeURIComponent(city.trim());
-        const encodedName = encodeURIComponent(name.trim());
-    
-        console.log(`Cargando circuitos: /circuits/${encodedCity}/${encodedName}`); 
-    
-        try {
-            const result = await axios.get(`http://localhost:8000/circuits/${encodedCity}/${encodedName}`);
-            console.log("Circuit data received:", result.data);
-            setCircuit(result.data);
-        } catch (error) {
-            console.error("Error loading circuit: ", error.response?.data || error.message);
-            alert("Error al cargar el circuito. Inténtalo de nuevo.");
-        }
-    }, [city, name]);
-    
-
     useEffect(() => {
-        fetchCircuit();
-    }, [fetchCircuit]);
+        const fetchCircuit = async () => {
+            try {
+                const encodedCity = encodeURIComponent(city);
+                const encodedName = encodeURIComponent(name);
 
+                console.log(`Cargando circuitos: /circuits/${encodedCity}/${encodedName}`);
+
+                const response = await axios.get(`http://localhost:8000/circuits/${encodedCity}/${encodedName}`);
+                console.log("Circuito encontrado:", response.data);
+                setCircuit(response.data);
+            } catch (error) {
+                console.error("Error:", error.response?.data || error.message);
+                alert("Circuito no encontrado");
+            }
+        };
+
+        fetchCircuit();
+    }, [city, name]);
 
     const onInputChange = (e) => {
         const { name, value } = e.target;
         setCircuit({ ...circuit, [name]: value });
     };
 
-
     const onSubmit = async (e) => {
         e.preventDefault();
-    
+
         const encodedCity = encodeURIComponent(city.trim());
         const encodedName = encodeURIComponent(name.trim());
-    
-        console.log(`Updating circuit: /circuits/${encodedCity}/${encodedName}`);
-    
+
+        console.log(`Actualizando circuito: /circuits/${encodedCity}/${encodedName}`);
+
         const updatedCircuit = {
             country: circuit.country,
             track: circuit.track,
@@ -64,7 +59,7 @@ function EditCircuit() {
             midCorners: circuit.midCorners,
             fastCorners: circuit.fastCorners
         };
-    
+
         try {
             await axios.put(`http://localhost:8000/circuits/${encodedCity}/${encodedName}`, updatedCircuit);
             alert("Circuito actualizado correctamente.");
@@ -74,8 +69,6 @@ function EditCircuit() {
             alert("Error al actualizar el circuito. Inténtalo de nuevo.");
         }
     };
-        
-    
 
     return (
         <div className="container">

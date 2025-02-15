@@ -25,38 +25,42 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
-  
-    try {
-      const response = await fetch("http://localhost:8000/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Credenciales incorrectas");
-      }
-  
-      const user = await response.json();
-      console.log("User logged in:", user);
-  
 
-      if (user.email !== "demo@gmail.com" && !user.validated) {
-        throw new Error("Tu cuenta aún no ha sido aprobada por un administrador.");
-      }
-  
-      localStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
-  
-      if (user.rol === "ADMIN") {
-        navigate("/admin/dashboard", { replace: true });
-      } else if (user.rol === "TEAM_MANAGER") {
-        navigate("/team-manager/dashboard", { replace: true });
-      }
+    try {
+        const response = await fetch("http://localhost:8000/users/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Credenciales incorrectas");
+        }
+
+        const user = await response.json();
+        console.log("Usuario:", user);
+
+        if (user.email !== "demo@gmail.com" && !user.validated) {
+            throw new Error("Tu cuenta aún no ha sido aprobada por un administrador.");
+        }
+
+        const userId = user.id.id;
+        localStorage.setItem("userId", userId.toString());
+        console.log("User ID guardado:", userId);
+
+        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+
+        if (user.rol === "ADMIN") {
+            navigate("/admin/dashboard", { replace: true });
+        } else if (user.rol === "TEAM_MANAGER") {
+            navigate("/team-manager/dashboard", { replace: true });
+        }
     } catch (err) {
-      setError(err.message);
+        setError(err.message);
     }
-  };
+};
+
   
 
   /*const approveUser = async (user) => {
@@ -105,7 +109,9 @@ const Login = () => {
         });
   
         localStorage.removeItem("user");
+        localStorage.removeItem("userId");
         setUser(null);
+        
         navigate("../pages/Login.jsx", { replace: true });
         //window.location.reload();
       } catch (error) {

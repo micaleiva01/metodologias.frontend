@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function VotingCard({ voting, user, onVote, onDelete }) {
     const isAdmin = user && user.rol === "ADMIN";
@@ -18,6 +19,13 @@ function VotingCard({ voting, user, onVote, onDelete }) {
                 {/* solo admins */}
                 {isAdmin && (
                     <div className="m-2">
+                        <Link 
+                            className="btn btn-outline-primary mt-2"
+                            to={`/edit-voting/${voting.permalink}`}
+                            onClick={() => console.log("Editing voting with permalink:", voting.permalink)}
+                        >
+                            Editar
+                        </Link>
                         <button 
                             className="btn btn-danger mx-2 mt-1"
                             onClick={() => onDelete(voting.permalink)}

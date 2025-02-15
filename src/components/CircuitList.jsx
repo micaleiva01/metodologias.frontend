@@ -6,6 +6,17 @@ function CircuitList() {
     const [circuits, setCircuits] = useState([]);
     const [user, setUser] = useState(null);
 
+    const loadCircuits = async () => {
+        try {
+            const result = await axios.get("http://localhost:8000/circuits");
+            setCircuits(result.data);
+            console.log("Circuitos encontrados:", result.data);
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error al cargar los circuitos.");
+        }
+    };
+
     useEffect(() => {
         loadCircuits();
         const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -14,20 +25,9 @@ function CircuitList() {
         }
     }, []);
 
-    const loadCircuits = async () => {
-        try {
-            const result = await axios.get("http://localhost:8000/circuits");
-            console.log("Fetched circuits:", result.data);
-            setCircuits(result.data);
-        } catch (error) {
-            console.error("Error fetching circuits:", error);
-            alert("Error al cargar los circuitos.");
-        }
-    };
-
     const deleteCircuit = async (circuit) => {
         if (!circuit.id || !circuit.id.name || !circuit.id.city) {
-            alert("Error: Circuit ID is missing.");
+            alert("Error: ID de circuito no encontrado.");
             return;
         }
 
@@ -41,7 +41,7 @@ function CircuitList() {
             setCircuits(circuits.filter((c) => c.id.name !== circuit.id.name || c.id.city !== circuit.id.city));
             alert("Circuito eliminado correctamente.");
         } catch (error) {
-            console.error("Error deleting circuit:", error.response?.data || error.message);
+            console.error("Error:", error.response?.data || error.message);
             alert("Error al eliminar el circuito. Inténtalo de nuevo.");
         }
     };
@@ -50,42 +50,27 @@ function CircuitList() {
         <div className="container my-4">
             <div className="row">
                 {circuits.map((circuit) => (
-                    circuit.id && (
-                        <div key={`${circuit.id.name}-${circuit.id.city}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                            <div className="card h-100 bg-transparent text-white border-white" style={{ transition: "transform 0.2s" }}
-                                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
-                                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
-                                <div className="card-body">
-                                    <h5 className="card-title">{circuit.id.name}</h5>
-                                    <p className="card-text">Ciudad: {circuit.id.city}</p>
-                                    <p className="card-text">País: {circuit.country}</p>
-                                    <p className="card-text">Vueltas: {circuit.nLaps}</p>
-                                    <p className="card-text">Longitud: {circuit.length} km</p>
-
-                                    {/* solo admins */}
-                                    {user && user.rol === "ADMIN" && (
-                                        <div className="mt-3">
-                                            <Link to={`/edit-circuit/${circuit.id.city}/${circuit.id.name}`} className="btn btn-outline-primary">
-                                                Editar
-                                            </Link>
-                                            <button className="btn btn-danger ms-2" onClick={() => deleteCircuit(circuit)}>
-                                                Eliminar
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
+                    <div key={`${circuit.id.city}-${circuit.id.name}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                        <div className="card h-100 bg-transparent text-white border-white">
+                            <div className="card-body">
+                                <h5 className="card-title">{circuit.id.name}</h5>
+                                <p className="card-text">Ciudad: {circuit.id.city}</p>
+                                <p className="card-text">País: {circuit.country}</p>
+                                {user && user.rol === "ADMIN" && (
+                                    <div className="mt-3">
+                                        <Link to={`/edit-circuit/${circuit.id.city}/${circuit.id.name}`} className="btn btn-outline-primary">
+                                            Editar
+                                        </Link>
+                                        <button className="btn btn-danger ms-2" onClick={() => deleteCircuit(circuit)}>
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                    )
+                    </div>
                 ))}
             </div>
-
-            {/* solo admins */}
-            {user && user.rol === "ADMIN" && (
-                <Link to="/create-circuit" className="btn btn-outline-danger mb-4">
-                    Crear Nuevo Circuito
-                </Link>
-            )}
         </div>
     );
 }
