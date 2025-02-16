@@ -4,7 +4,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 
 function EditRace() {
     const navigate = useNavigate();
-    const { date, city, name } = useParams(); // Extracting parameters from URL
+    const { date, city, name } = useParams();
 
     const [race, setRace] = useState({
         date: "",
@@ -25,11 +25,11 @@ function EditRace() {
         } catch (error) {
             console.error("Error fetching race details:", error);
         }
-    }, [date, name, city]); // Memoize the function based on these dependencies
+    }, [date, name, city]);
 
     useEffect(() => {
         loadRace();
-    }, [loadRace]); // Include the memoized function as a dependency
+    }, [loadRace]);
 
     const onInputChange = (e) => {
         setRace({ ...race, [e.target.name]: e.target.value });
@@ -46,7 +46,7 @@ function EditRace() {
                 },
             };
             await axios.put(
-                `http://localhost:8000/calendar/race?date=${date}&name=${name}&city=${city}`,
+                `http://localhost:8000/calendar/race/${date}/${city}/${name}`,
                 updatedRace
             );
             navigate("/races");

@@ -17,17 +17,21 @@ function NewsDetailsModal({ show, onHide, news }) {
                         </div>
 
                         <div className="modal-body">
-                            <img
-                                src={news.image}
-                                alt={news.title}
-                                className="img-fluid mb-3"
-                                style={{ width: "100%", height: "auto", objectFit: "cover" }}
-                            />
+                            {news.image && (
+                                <img
+                                    src={news.image}
+                                    alt={news.title}
+                                    className="img-fluid mb-3"
+                                    style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                                />
+                            )}
                             <p>{news.text}</p>
                         </div>
 
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-danger mx-auto" onClick={onHide}>Volver al Listado de Noticias</button>
+                            <button type="button" className="btn btn-danger mx-auto" onClick={onHide}>
+                                Volver al Listado de Noticias
+                            </button>
                         </div>
 
                     </div>

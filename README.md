@@ -4,9 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-npm install --save-dev @babel/plugin-proposal-private-property-in-object
-
 npm i bootstrap
+
+npm install --save-dev @babel/plugin-proposal-private-property-in-object
 
 npm install moment
 

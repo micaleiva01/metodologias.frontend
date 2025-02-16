@@ -28,6 +28,24 @@ function RacesList() {
         }
     };
 
+    const handleDeleteRace = async (date, city, name) => {
+        if (!window.confirm("¿Estás seguro de que quieres eliminar esta carrera?")) {
+            return;
+        }
+
+        try {
+            await axios.delete(`http://localhost:8000/calendar/race/${date}/${city}/${name}`, {
+                withCredentials: true,
+            });
+
+            alert("Carrera eliminada correctamente.");
+            loadRaces(); 
+        } catch (error) {
+            console.error("Error deleting race:", error);
+            alert("Error eliminando la carrera. Inténtalo de nuevo.");
+        }
+    };
+
     return (
         <div className="container my-5">
             <div className="row row-cols-1 row-cols-md-3 g-4">
@@ -51,7 +69,10 @@ function RacesList() {
                                     <Link to={`/edit-race/${race.id.date}/${race.id.city}/${race.id.name}`} className="btn btn-outline-primary btn-sm m-1">
                                         Editar
                                     </Link>
-                                    <button className="btn btn-outline-danger btn-sm m-1">
+                                    <button
+                                        className="btn btn-outline-danger btn-sm m-1"
+                                        onClick={() => handleDeleteRace(race.id.date, race.id.city, race.id.name)}
+                                    >
                                         Eliminar
                                     </button>
                                 </div>
