@@ -60,20 +60,12 @@ function FuelConsumptionTool() {
   const calculateFuelPerLap = () => {
     if (!selectedCar || !selectedCircuit) return 0;
 
-    const { length, slowCorners, midCorners, fastCorners } = selectedCircuit;
-    const { consumption, ersSlow, ersMid, ersFast } = selectedCar;
+    const { length } = selectedCircuit;
+    const { consumption } = selectedCar;
 
-    const totalCorners = slowCorners + midCorners + fastCorners;
-    if (totalCorners === 0) return 0; // Avoid division by zero
+    const consumptionPerLap = (consumption / 100000) * length
 
-    // Weighted ERS impact on fuel consumption
-    const ersFactor =
-      (slowCorners * ersSlow + midCorners * ersMid + fastCorners * ersFast) / totalCorners;
-
-    // Base fuel consumption adjusted by ERS efficiency
-    const baseFuelConsumption = (consumption * length) / 100000;
-
-    return (baseFuelConsumption * (100 / ersFactor)).toFixed(2);
+    return (consumptionPerLap).toFixed(2);
   };
 
   const calculateTotalFuel = () => {

@@ -65,9 +65,9 @@ function ErsCalculationTool() {
     const capacidadBateriaKWh = batteryCapacity / 3.6;
 
     let energiaRecuperada =
-      (slowCorners * (ersSlow / 100) * 0.01) +
-      (midCorners * (ersMid / 100) * 0.01) +
-      (fastCorners * (ersFast / 100) * 0.01);
+      (slowCorners * ersSlow) +
+      (midCorners * ersMid) +
+      (fastCorners * ersFast);
 
     let energiaAjustada = energiaRecuperada * factor;
 
