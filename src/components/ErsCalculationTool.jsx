@@ -62,8 +62,6 @@ function ErsCalculationTool() {
 
     if (slowCorners + midCorners + fastCorners === 0) return;
 
-    const capacidadBateriaKWh = batteryCapacity / 3.6;
-
     let energiaRecuperada =
       (slowCorners * ersSlow) +
       (midCorners * ersMid) +
@@ -73,7 +71,7 @@ function ErsCalculationTool() {
 
     energiaAjustada = Math.min(energiaAjustada, maxEnergyPerLap);
 
-    const vueltasRequeridas = energiaAjustada > 0 ? Math.ceil(capacidadBateriaKWh / energiaAjustada) : 0;
+    const vueltasRequeridas = energiaAjustada > 0 ? Math.ceil(batteryCapacity / energiaAjustada) : 0;
 
     setEnergyPerLap(energiaAjustada);
     setLapsNeeded(vueltasRequeridas);
